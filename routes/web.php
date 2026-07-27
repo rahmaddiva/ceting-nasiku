@@ -39,8 +39,6 @@ Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
-    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -61,6 +59,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
 
     Route::post('recipes/generate-images', [RecipeImageController::class, 'generate'])->name('recipes.generate-images');
+    Route::post('recipes/generate-single-image', [RecipeImageController::class, 'generateSingle'])->name('recipes.generate-single-image');
 
     Route::get('recipes/data', [RecipeController::class, 'data'])->name('recipes.data');
     Route::resource('recipes', RecipeController::class);

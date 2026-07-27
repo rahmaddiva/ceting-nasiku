@@ -28,29 +28,41 @@ class RecipeController extends Controller
             $query,
             [
                 0 => null,
-                1 => 'title',
-                2 => 'category_id',
-                3 => 'age_group',
-                4 => 'servings',
-                5 => 'is_published',
-                6 => 'created_at',
-                7 => null,
+                1 => 'image',
+                2 => 'title',
+                3 => 'category_id',
+                4 => 'age_group',
+                5 => 'servings',
+                6 => 'is_published',
+                7 => 'created_at',
+                8 => null,
             ],
             ['title', 'age_group'],
             function (Recipe $recipe, int $no) {
+                $image = $recipe->image
+                    ? '<img src="'.asset($recipe->image).'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">'
+                    : '<div style="width:48px;height:48px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#9ca3af;"><i class="fas fa-image"></i></div>';
+
                 $status = $recipe->is_published
                     ? '<span class="badge badge-success">Publik</span>'
                     : '<span class="badge badge-warning">Draft</span>';
+
+                $generateBtn = $recipe->image
+                    ? ''
+                    : ' <button class="btn-icon generate" title="Generate Gambar" onclick="generateSingleImage('.$recipe->id.', this)"><i class="fas fa-wand-magic-sparkles"></i></button>';
 
                 $actions = '<div class="actions">'
                     .'<a href="'.e(route('admin.recipes.edit', $recipe)).'" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
                     .'<form action="'.e(route('admin.recipes.destroy', $recipe)).'" method="POST" onsubmit="return confirm(\'Yakin hapus resep ini?\')" style="display:inline">'
                     .csrf_field().method_field('DELETE')
                     .'<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
-                    .'</form></div>';
+                    .'</form>'
+                    .$generateBtn
+                    .'</div>';
 
                 return [
                     $no,
+                    $image,
                     '<strong>'.e($recipe->title).'</strong>',
                     e($recipe->category->name ?? '—'),
                     e($recipe->age_group ?? '—'),

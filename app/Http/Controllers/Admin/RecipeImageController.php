@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Recipe;
 use App\Services\RecipeImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -23,5 +24,28 @@ class RecipeImageController extends Controller
             'remaining' => $result['remaining'],
             'errors' => $result['errors'],
         ]);
+    }
+
+    public function generateSingle(Request $request, RecipeImageService $service): JsonResponse
+    {
+        $request->validate([
+            'id' => 'required|exists:recipes,id',
+            'model' => 'nullable|string',
+        ]);
+
+        $recipe = Recipe::findOrFail($request->input('id'));
+        $result = $service->generateForRecipe($recipe, $request->input('model'));
+
+        if ($result['success']) {
+            return response()->json([
+                'success' => true,
+                'image' => asset($result['image']),
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'error' => $result['error'],
+        ], 500);
     }
 }

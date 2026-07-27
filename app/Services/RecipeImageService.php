@@ -109,4 +109,59 @@ class RecipeImageService
             .'warm lighting, ceramic plate, wooden table, garnished, appetizing, '
             .'top-down angle, shallow depth of field, high quality, 4k';
     }
+
+    public function generateForRecipe(Recipe $recipe, ?string $model = null): array
+    {
+        $apiKey = env('OPENAGENTIC_API_KEY');
+
+        if (! $apiKey) {
+            return ['success' => false, 'error' => 'API key tidak ditemukan.'];
+        }
+
+        $model = $model ?: $this->model;
+        $prompt = $this->buildPrompt($recipe);
+
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer '.$apiKey,
+                'Content-Type' => 'application/json',
+            ])->timeout(120)->post($this->apiUrl, [
+                'model' => $model,
+                'prompt' => $prompt,
+                'n' => 1,
+                'size' => '1024x1024',
+                'response_format' => 'b64_json',
+            ]);
+
+            if ($response->failed()) {
+                $body = $response->json();
+                $errMsg = $body['error']['message'] ?? 'Unknown error';
+
+                return ['success' => false, 'error' => $errMsg];
+            }
+
+            $data = $response->json();
+            $b64 = $data['data'][0]['b64_json'] ?? null;
+
+            if (! $b64) {
+                return ['success' => false, 'error' => 'Response tidak valid.'];
+            }
+
+            $filename = Str::random(40).'.jpg';
+            $dir = public_path('images/recipes');
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            file_put_contents($dir.'/'.$filename, base64_decode($b64));
+
+            $imagePath = 'images/recipes/'.$filename;
+            $recipe->update(['image' => $imagePath]);
+
+            return ['success' => true, 'image' => $imagePath];
+        } catch (\Exception $e) {
+            Log::error('RecipeImageService Exception: '.$e->getMessage());
+
+            return ['success' => false, 'error' => $e->getMessage()];
+        }
+    }
 }

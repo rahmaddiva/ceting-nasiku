@@ -49,10 +49,7 @@
                 </button>
             </form>
 
-            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-secondary);">
-                Belum punya akun? <a href="/register" style="color: var(--primary-600); font-weight: 600;">Daftar di sini</a>
-            </p>
-            <p style="text-align: center; margin-top: 0.5rem;">
+            <p style="text-align: center; margin-top: 1.5rem;">
                 <a href="/" style="color: var(--text-muted); font-size: 0.85rem;"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
             </p>
         </div>

@@ -1906,6 +1906,15 @@ a.ceting-page-btn:hover {
     color: white;
 }
 
+.btn-icon.generate {
+    background: #f0fdf4;
+    color: #16a34a;
+}
+.btn-icon.generate:hover {
+    background: #16a34a;
+    color: white;
+}
+
 /* ---- Filter bar ---- */
 .filter-bar {
     display: flex;
