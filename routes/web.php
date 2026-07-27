@@ -58,7 +58,13 @@ use App\Http\Controllers\Admin\CategoryController;
 
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('recipes/data', [RecipeController::class, 'data'])->name('recipes.data');
     Route::resource('recipes', RecipeController::class);
+
+    Route::get('ingredients/data', [IngredientController::class, 'data'])->name('ingredients.data');
     Route::resource('ingredients', IngredientController::class);
+
+    Route::get('categories/data', [CategoryController::class, 'data'])->name('categories.data');
     Route::resource('categories', CategoryController::class);
 });

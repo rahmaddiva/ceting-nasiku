@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\DataTableQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Ingredient;
@@ -11,10 +12,55 @@ use Illuminate\Support\Str;
 
 class RecipeController extends Controller
 {
+    use DataTableQuery;
+
     public function index()
     {
-        $recipes = Recipe::with(['category'])->latest()->get();
-        return view('admin.recipes.index', compact('recipes'));
+        return view('admin.recipes.index');
+    }
+
+    public function data(Request $request)
+    {
+        $query = Recipe::query()->with('category');
+
+        return $this->dataTable(
+            $request,
+            $query,
+            [
+                0 => null,
+                1 => 'title',
+                2 => 'category_id',
+                3 => 'age_group',
+                4 => 'servings',
+                5 => 'is_published',
+                6 => 'created_at',
+                7 => null,
+            ],
+            ['title', 'age_group'],
+            function (Recipe $recipe, int $no) {
+                $status = $recipe->is_published
+                    ? '<span class="badge badge-success">Publik</span>'
+                    : '<span class="badge badge-warning">Draft</span>';
+
+                $actions = '<div class="actions">'
+                    . '<a href="' . e(route('admin.recipes.edit', $recipe)) . '" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
+                    . '<form action="' . e(route('admin.recipes.destroy', $recipe)) . '" method="POST" onsubmit="return confirm(\'Yakin hapus resep ini?\')" style="display:inline">'
+                    . csrf_field() . method_field('DELETE')
+                    . '<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    . '</form></div>';
+
+                return [
+                    $no,
+                    '<strong>' . e($recipe->title) . '</strong>',
+                    e($recipe->category->name ?? '—'),
+                    e($recipe->age_group ?? '—'),
+                    e((string) $recipe->servings),
+                    $status,
+                    $recipe->created_at?->format('d M Y') ?? '—',
+                    $actions,
+                ];
+            }
+        );
     }
 
     public function create()

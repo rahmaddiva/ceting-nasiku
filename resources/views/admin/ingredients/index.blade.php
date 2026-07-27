@@ -4,7 +4,7 @@
 @section('content')
 <div class="admin-header">
     <h1><i class="fas fa-carrot" style="color: var(--accent-500);"></i> Bahan Makanan</h1>
-    <a href="/admin/ingredients/create" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Bahan</a>
+    <a href="{{ route('admin.ingredients.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Bahan</a>
 </div>
 
 <div class="data-table-wrapper">
@@ -23,30 +23,6 @@
                 <th class="no-sort">Aksi</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach($ingredients as $i => $ing)
-            <tr>
-                <td>{{ $i + 1 }}</td>
-                <td><strong>{{ $ing->name }}</strong></td>
-                <td><small style="color: var(--text-muted);">{{ $ing->unit }}</small></td>
-                <td>{{ $ing->calories ?? $ing->calories_per_100g ?? 0 }} kkal</td>
-                <td>{{ $ing->protein ?? $ing->protein_per_100g ?? 0 }} g</td>
-                <td>{{ $ing->fat ?? $ing->fat_per_100g ?? 0 }} g</td>
-                <td>{{ $ing->carbohydrates ?? $ing->carbohydrates_per_100g ?? 0 }} g</td>
-                <td>{{ $ing->calcium ?? $ing->calcium_per_100g ?? 0 }} mg</td>
-                <td>{{ $ing->iron ?? $ing->iron_per_100g ?? 0 }} mg</td>
-                <td>
-                    <div class="actions">
-                        <a href="/admin/ingredients/{{ $ing->id }}/edit" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>
-                        <form action="/admin/ingredients/{{ $ing->id }}" method="POST" onsubmit="return confirm('Yakin hapus bahan ini?')" style="display:inline">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
     </table>
 </div>
 @endsection
@@ -55,16 +31,32 @@
 <script>
 $(document).ready(function () {
     $('#ingredientsTable').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/id.json'
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: @json(route('admin.ingredients.data')),
+            type: 'GET'
         },
-        pageLength: 25,
-        order: [[1, 'asc']],
-        columnDefs: [
-            { orderable: false, targets: 9 },
-            { searchable: false, targets: [0, 3, 4, 5, 6, 7, 8, 9] }
+        columns: [
+            { data: 0, orderable: false, searchable: false, width: '48px' },
+            { data: 1 },
+            { data: 2 },
+            { data: 3, searchable: false },
+            { data: 4, searchable: false },
+            { data: 5, searchable: false },
+            { data: 6, searchable: false },
+            { data: 7, searchable: false },
+            { data: 8, searchable: false },
+            { data: 9, orderable: false, searchable: false, width: '90px' }
         ],
-        dom: '<"dt-topbar"lf>rtip',
+        order: [[1, 'asc']],
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/id.json',
+            processing: '<div class="dt-loading"><i class="fas fa-spinner fa-spin"></i> Memuat data…</div>'
+        },
+        dom: '<"dt-toolbar"<"dt-toolbar-left"l><"dt-toolbar-right"f>>rt<"dt-footer"<"dt-footer-info"i><"dt-footer-paginate"p>>',
         responsive: true,
     });
 });

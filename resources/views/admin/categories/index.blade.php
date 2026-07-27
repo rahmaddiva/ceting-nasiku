@@ -4,7 +4,7 @@
 @section('content')
 <div class="admin-header">
     <h1><i class="fas fa-tags" style="color: var(--primary-600);"></i> Kategori</h1>
-    <a href="/admin/categories/create" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Kategori</a>
+    <a href="{{ route('admin.categories.create') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Tambah Kategori</a>
 </div>
 
 <div class="data-table-wrapper">
@@ -18,25 +18,6 @@
                 <th class="no-sort">Aksi</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach($categories as $i => $cat)
-            <tr>
-                <td>{{ $i + 1 }}</td>
-                <td><strong>{{ $cat->name }}</strong></td>
-                <td>{{ Str::limit($cat->description, 60) }}</td>
-                <td><span class="badge badge-success">{{ $cat->recipes_count }}</span></td>
-                <td>
-                    <div class="actions">
-                        <a href="/admin/categories/{{ $cat->id }}/edit" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>
-                        <form action="/admin/categories/{{ $cat->id }}" method="POST" onsubmit="return confirm('Yakin hapus kategori ini?')" style="display:inline">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>
-                        </form>
-                    </div>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
     </table>
 </div>
 @endsection
@@ -45,16 +26,28 @@
 <script>
 $(document).ready(function () {
     $('#categoriesTable').DataTable({
-        language: {
-            url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/id.json'
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: @json(route('admin.categories.data')),
+            type: 'GET'
         },
-        pageLength: 25,
-        order: [[3, 'desc']],
-        columnDefs: [
-            { orderable: false, targets: 4 },
-            { searchable: false, targets: [0, 3, 4] }
+        columns: [
+            { data: 0, orderable: false, searchable: false, width: '48px' },
+            { data: 1 },
+            { data: 2 },
+            { data: 3, searchable: false },
+            { data: 4, orderable: false, searchable: false, width: '90px' }
         ],
-        dom: '<"dt-topbar"lf>rtip',
+        order: [[1, 'asc']],
+        pageLength: 25,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.13.8/i18n/id.json',
+            processing: '<div class="dt-loading"><i class="fas fa-spinner fa-spin"></i> Memuat data…</div>'
+        },
+        dom: '<"dt-toolbar"<"dt-toolbar-left"l><"dt-toolbar-right"f>>rt<"dt-footer"<"dt-footer-info"i><"dt-footer-paginate"p>>',
+        responsive: true,
     });
 });
 </script>

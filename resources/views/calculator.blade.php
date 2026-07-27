@@ -44,6 +44,12 @@
                         <i class="fas fa-calculator"></i> Hitung Gizi
                     </button>
                 </div>
+
+                {{-- Disclaimer Medis --}}
+                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid #fcd34d; border-radius:var(--radius-sm); font-size:0.8rem; color:#78350f; line-height:1.5;">
+                    <i class="fas fa-circle-info" style="color:#d97706;"></i>
+                    <strong>Catatan:</strong> Hasil perhitungan ini bersifat <strong>referensi umum</strong> dan tidak menggantikan konsultasi langsung dengan dokter atau ahli gizi terdaftar.
+                </div>
             </div>
 
             <!-- Results -->
@@ -146,6 +152,12 @@
                 <button type="button" class="btn btn-primary" onclick="calculateBMI()" style="width: 100%; margin-top: 1.5rem; background: linear-gradient(135deg, #059669, #10b981);">
                     <i class="fas fa-calculator"></i> Hitung BMI
                 </button>
+
+                {{-- Disclaimer Medis BMI --}}
+                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid #fcd34d; border-radius:var(--radius-sm); font-size:0.8rem; color:#78350f; line-height:1.5;">
+                    <i class="fas fa-circle-info" style="color:#d97706;"></i>
+                    <strong>Catatan:</strong> BMI adalah <strong>alat skrining</strong>, bukan diagnosis. Untuk anak, interpretasi tepat memerlukan pemantauan kurva pertumbuhan WHO oleh tenaga kesehatan.
+                </div>
             </div>
 
             <!-- BMI Results -->
@@ -264,8 +276,10 @@
     /* ═══════ BMI CALCULATOR ═══════ */
     function toggleBmiFields() {
         const cat = document.getElementById('bmi-category').value;
+        // Usia anak hanya tampil untuk kategori 'anak'
         document.getElementById('bmi-age-group').style.display = cat === 'anak' ? 'block' : 'none';
-        document.getElementById('bmi-gender-group').style.display = cat !== 'dewasa' ? 'block' : 'none';
+        // Gender hanya relevan untuk anak (bumil selalu perempuan, dewasa tidak gender-specific pada BMI umum)
+        document.getElementById('bmi-gender-group').style.display = cat === 'anak' ? 'block' : 'none';
     }
 
     function calculateBMI() {
@@ -301,31 +315,89 @@
     }
 
     function interpretChildBMI(bmi) {
-        const yr = parseInt(document.getElementById('bmi-age-years').value)||0;
-        const mo = parseInt(document.getElementById('bmi-age-months').value)||0;
-        const tot = yr*12+mo;
-        const g = document.querySelector('input[name="bmi-gender"]:checked').value;
-        let uw,nw,ow;
-        if (tot<=24)      { uw=g==='L'?14.5:14.0; nw=g==='L'?18.5:18.0; ow=g==='L'?19.5:19.0; }
-        else if (tot<=60)  { uw=g==='L'?14.0:13.5; nw=g==='L'?17.0:17.0; ow=g==='L'?18.0:18.0; }
-        else if (tot<=120) { uw=g==='L'?13.5:13.0; nw=g==='L'?18.5:18.5; ow=g==='L'?20.0:20.0; }
-        else               { uw=g==='L'?14.5:14.5; nw=g==='L'?23.0:23.0; ow=g==='L'?25.0:25.0; }
-        const age = yr>0 ? `${yr} tahun${mo>0?' '+mo+' bulan':''}` : `${mo} bulan`;
-        const jk = g==='L'?'laki-laki':'perempuan';
-        const b = Math.round(bmi*10)/10;
+        /**
+         * Standar WHO 2006 (usia 0-5 thn) & WHO 2007 (usia 5-18 thn)
+         * Ambang batas BMI-for-age: [-3SD, -2SD, +1SD, +2SD]
+         * Kategori (Kemenkes PMK No.2/2020):
+         *   < -3 SD  → Gizi Buruk
+         *   -3 s/d -2 SD → Gizi Kurang
+         *   -2 s/d +1 SD → Gizi Baik
+         *   +1 s/d +2 SD → Risiko Gizi Lebih
+         *   > +2 SD  → Gizi Lebih / Obesitas
+         */
+        const whoRef = {
+            L: {
+                 0: [11.5, 12.9, 16.0, 17.6],  1: [13.7, 15.0, 18.3, 19.7],
+                 2: [13.3, 14.7, 18.1, 19.4],  3: [12.6, 13.9, 17.2, 18.5],
+                 4: [12.1, 13.4, 16.7, 18.0],  5: [11.8, 13.1, 16.6, 17.9],
+                 6: [11.7, 13.0, 16.7, 18.2],  7: [11.8, 13.1, 17.2, 19.0],
+                 8: [11.9, 13.3, 18.0, 20.0],  9: [12.1, 13.6, 18.8, 21.1],
+                10: [12.3, 13.9, 19.7, 22.4], 11: [12.6, 14.2, 20.6, 23.6],
+                12: [13.0, 14.7, 21.5, 24.7], 13: [13.4, 15.2, 22.2, 25.6],
+                14: [13.9, 15.8, 22.8, 26.3], 15: [14.4, 16.3, 23.3, 26.9],
+                16: [14.8, 16.8, 23.7, 27.3], 17: [15.2, 17.2, 24.0, 27.6],
+                18: [15.5, 17.5, 24.3, 27.8],
+            },
+            P: {
+                 0: [11.1, 12.5, 15.7, 17.2],  1: [13.2, 14.5, 17.8, 19.2],
+                 2: [13.0, 14.3, 17.7, 19.2],  3: [12.2, 13.5, 17.0, 18.4],
+                 4: [11.8, 13.1, 16.7, 18.1],  5: [11.6, 12.9, 16.7, 18.2],
+                 6: [11.6, 12.9, 17.0, 18.8],  7: [11.7, 13.0, 17.6, 19.7],
+                 8: [11.8, 13.2, 18.3, 20.7],  9: [12.0, 13.5, 19.2, 21.9],
+                10: [12.2, 13.8, 20.2, 23.2], 11: [12.6, 14.2, 21.2, 24.5],
+                12: [13.1, 14.8, 22.1, 25.5], 13: [13.7, 15.4, 22.8, 26.3],
+                14: [14.2, 16.0, 23.4, 26.9], 15: [14.6, 16.4, 23.8, 27.3],
+                16: [14.9, 16.8, 24.2, 27.7], 17: [15.2, 17.0, 24.5, 27.9],
+                18: [15.4, 17.2, 24.7, 28.1],
+            }
+        };
 
-        if (bmi<uw) return { status:'Gizi Kurang', color:'#2563eb', bg:'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos:10,
-            interpretation:`⚠️ <strong>Gizi Kurang</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} menunjukkan gizi kurang. Berisiko <strong>stunting</strong>.`,
-            tips:`<strong>💡 Saran:</strong><br>• Segera ke Posyandu/Puskesmas<br>• Makanan tinggi protein dan energi<br>• Makan 3x utama + 2x camilan sehat<br>• Ikuti prinsip "Isi Piringku"<br>• Pantau BB setiap bulan` };
-        if (bmi<nw) return { status:'Gizi Baik (Normal)', color:'#059669', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', gaugePos:30,
-            interpretation:`✅ <strong>Gizi Baik</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} menunjukkan gizi baik. Tumbuh kembang normal.`,
-            tips:`<strong>💡 Tips:</strong><br>• Pertahankan pola makan "Isi Piringku"<br>• ASI eksklusif / MPASI sesuai usia<br>• Imunisasi lengkap<br>• Stimulasi tumbuh kembang<br>• Pantau pertumbuhan rutin` };
-        if (bmi<ow) return { status:'Risiko Gizi Lebih', color:'#d97706', bg:'linear-gradient(135deg,#fef3c7,#fde68a)', gaugePos:60,
-            interpretation:`⚡ <strong>Risiko Gizi Lebih</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} menunjukkan risiko gizi lebih.`,
-            tips:`<strong>💡 Saran:</strong><br>• Kurangi makanan manis dan gorengan<br>• Perbanyak sayur dan buah<br>• Ajak bermain aktif / olahraga<br>• Batasi screen time (max 2 jam/hari)` };
-        return { status:'Obesitas Anak', color:'#dc2626', bg:'linear-gradient(135deg,#fecaca,#fca5a5)', gaugePos:85,
-            interpretation:`🚨 <strong>Obesitas</strong><br>Anak ${jk} usia ${age} dengan BMI ${b}. Risiko diabetes dan gangguan metabolik dini.`,
-            tips:`<strong>💡 Saran Penting:</strong><br>• Konsultasi ke dokter anak<br>• Ubah pola makan keluarga<br>• Tingkatkan aktivitas fisik<br>• Hindari minuman manis<br>• Makanan rumahan bergizi seimbang` };
+        const yr  = parseInt(document.getElementById('bmi-age-years').value)  || 0;
+        const mo  = parseInt(document.getElementById('bmi-age-months').value) || 0;
+        const g   = document.querySelector('input[name="bmi-gender"]:checked').value;
+        const b   = Math.round(bmi * 10) / 10;
+        const age = yr > 0 ? `${yr} tahun${mo > 0 ? ' ' + mo + ' bulan' : ''}` : `${mo} bulan`;
+        const jk  = g === 'L' ? 'laki-laki' : 'perempuan';
+
+        // Gunakan usia dalam tahun (max 18)
+        const refAge = Math.min(Math.max(yr, 0), 18);
+        const [sd3n, sd2n, sd1p, sd2p] = whoRef[g][refAge];
+
+        // Catatan khusus untuk bayi < 2 tahun
+        const infoBalita = yr < 2
+            ? '<br><small style="opacity:0.85;">⚠️ <em>Untuk usia &lt; 2 tahun, indeks BB/PB lebih dianjurkan WHO. Pantau di Posyandu.</em></small>'
+            : '';
+
+        if (bmi < sd3n) return {
+            status: 'Gizi Buruk',
+            color: '#1e40af', bg: 'linear-gradient(135deg,#dbeafe,#93c5fd)', gaugePos: 5,
+            interpretation: `🚨 <strong>Gizi Buruk</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (di bawah -3 SD WHO). Memerlukan penanganan segera.${infoBalita}`,
+            tips: `<strong>💡 Tindakan Segera:</strong><br>• Segera rujuk ke Puskesmas / RS<br>• Pemberian makanan terapeutik (F-75/F-100)<br>• Pemantauan ketat oleh tenaga kesehatan<br>• Ikuti program Therapeutic Feeding Center`
+        };
+        if (bmi < sd2n) return {
+            status: 'Gizi Kurang',
+            color: '#2563eb', bg: 'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos: 15,
+            interpretation: `⚠️ <strong>Gizi Kurang</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (antara -3 SD dan -2 SD WHO). Berisiko <strong>stunting</strong>.${infoBalita}`,
+            tips: `<strong>💡 Saran:</strong><br>• Segera ke Posyandu / Puskesmas<br>• Makanan tinggi protein dan energi<br>• Makan 3× utama + 2× camilan sehat<br>• Ikuti prinsip "Isi Piringku"<br>• Pantau BB/TB setiap bulan`
+        };
+        if (bmi < sd1p) return {
+            status: 'Gizi Baik (Normal)',
+            color: '#059669', bg: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', gaugePos: 35,
+            interpretation: `✅ <strong>Gizi Baik</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (antara -2 SD dan +1 SD WHO). Tumbuh kembang normal.${infoBalita}`,
+            tips: `<strong>💡 Tips:</strong><br>• Pertahankan pola makan "Isi Piringku"<br>• ASI eksklusif / MPASI sesuai usia<br>• Imunisasi lengkap sesuai jadwal<br>• Stimulasi tumbuh kembang<br>• Pantau pertumbuhan rutin di Posyandu`
+        };
+        if (bmi < sd2p) return {
+            status: 'Risiko Gizi Lebih',
+            color: '#d97706', bg: 'linear-gradient(135deg,#fef3c7,#fde68a)', gaugePos: 60,
+            interpretation: `⚡ <strong>Risiko Gizi Lebih</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (antara +1 SD dan +2 SD WHO). Perlu perhatian khusus.${infoBalita}`,
+            tips: `<strong>💡 Saran:</strong><br>• Kurangi makanan manis dan gorengan<br>• Perbanyak sayur dan buah segar<br>• Ajak bermain aktif / olahraga rutin<br>• Batasi screen time (maks 2 jam/hari)<br>• Konsultasi ke Puskesmas`
+        };
+        return {
+            status: 'Gizi Lebih / Obesitas',
+            color: '#dc2626', bg: 'linear-gradient(135deg,#fecaca,#fca5a5)', gaugePos: 85,
+            interpretation: `🚨 <strong>Gizi Lebih / Obesitas</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (di atas +2 SD WHO). Risiko penyakit metabolik dini.${infoBalita}`,
+            tips: `<strong>💡 Saran Penting:</strong><br>• Konsultasi ke dokter anak / ahli gizi<br>• Ubah pola makan seluruh keluarga<br>• Tingkatkan aktivitas fisik bertahap<br>• Hindari minuman manis dan ultra-proses<br>• Utamakan makanan rumahan bergizi`
+        };
     }
 
     function interpretPregnantBMI(bmi) {

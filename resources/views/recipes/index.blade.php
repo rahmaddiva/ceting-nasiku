@@ -54,7 +54,7 @@
         </div>
 
         <div class="pagination-wrapper">
-            {{ $recipes->withQueryString()->links() }}
+            {{ $recipes->withQueryString()->links('pagination.ceting') }}
         </div>
         @else
         <div style="text-align: center; padding: 4rem 0;">

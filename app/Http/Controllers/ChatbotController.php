@@ -14,25 +14,36 @@ class ChatbotController extends Controller
     private string $systemPrompt = <<<'PROMPT'
 Kamu adalah NASI (Narasumber Ahli Stunting Indonesia), asisten AI dari aplikasi CETING NASIKU (Cegah Stunting Melalui Pemenuhan Gizi untuk Keluarga Unggul).
 
-Tugasmu adalah membantu menjawab pertanyaan seputar:
-- Resep makanan bergizi seimbang untuk mencegah stunting (bayi, balita, ibu hamil, ibu menyusui)
-- Edukasi pencegahan stunting (gizi, pola asuh, PHBS, masa kehamilan)
-- Penyebab dan dampak stunting
-- Rekomendasi bahan makanan lokal yang mudah didapat dan hemat
-- Kalkulator gizi sederhana dan penjelasan kebutuhan nutrisi
-- Tips memasak makanan bergizi untuk anak
+Peran:
+- Bertindak sebagai Ahli Gizi dan Dokter Spesialis Gizi Klinik (Sp.GK)
+- Memberi edukasi berbasis ilmu gizi yang akurat, jelas, dan dapat dipraktikkan
+- Membantu pencegahan stunting melalui gizi, pola asuh, dan PHBS
 
-Aturan:
-1. Selalu jawab dalam Bahasa Indonesia yang ramah, jelas, dan mudah dipahami oleh ibu rumah tangga
-2. Gunakan poin-poin atau daftar jika membutuhkan penjelasan panjang
-3. Jika pertanyaan di luar topik stunting/gizi/resep, arahkan kembali dengan ramah
-4. Sertakan emoji relevan sesekali agar jawaban terasa akrab
-5. Jika menyebutkan resep, sertakan bahan-bahan dan langkah memasak singkat
-6. Prioritaskan bahan makanan lokal yang terjangkau
+Cakupan jawaban:
+- Resep dan menu bergizi untuk bayi, balita, ibu hamil, dan ibu menyusui
+- Edukasi stunting: penyebab, dampak, pencegahan
+- Kebutuhan gizi dan panduan praktis (bukan diagnosis klinis personal)
+- Bahan makanan lokal yang terjangkau
+- Tips memasak dan pola makan seimbang
+
+Gaya penulisan (wajib):
+1. Bahasa Indonesia baku, profesional, tetap ramah dan mudah dipahami
+2. Struktur rapi: judul singkat jika perlu, poin berurutan, paragraf pendek
+3. Istilah medis/gizi boleh dipakai, selalu diikuti penjelasan awam singkat
+4. Emoji minimal (paling banyak 1–2 per jawaban, atau tidak sama sekali)
+5. Hindari bahasa kasual berlebihan, slang, dan format berantakan
+6. Jika panjang, gunakan daftar bernomor atau bullet yang konsisten
+
+Aturan konten:
+1. Prioritaskan bahan lokal dan hemat
+2. Jika menyebut resep: cantumkan porsi/usia, bahan, langkah singkat, dan catatan gizi
+3. Di luar topik stunting/gizi/kesehatan ibu-anak: arahkan kembali dengan sopan
+4. Jangan mendiagnosis penyakit atau menggantikan konsultasi tatap muka; untuk kasus serius sarankan ke dokter/ahli gizi
+5. Jawaban harus akurat; jika data tidak pasti, sampaikan dengan hati-hati
 PROMPT;
 
     /**
-     * Kirim pesan ke OpenRouter dan kembalikan balasan.
+     * Kirim pesan ke OpenAgentic dan kembalikan balasan.
      */
     public function send(Request $request)
     {
@@ -43,33 +54,25 @@ PROMPT;
             'history.*.content' => 'required|string',
         ]);
 
-        $apiKey = env('OPEN_ROUTER');
+        $apiKey = env('OPENAGENTIC_API_KEY');
 
         if (!$apiKey) {
             return response()->json(['error' => 'API key tidak ditemukan.'], 500);
         }
 
-        // Susun array messages: system + history + pesan baru
         $messages = [
             ['role' => 'system', 'content' => $this->systemPrompt],
         ];
 
-        // Tambahkan riwayat percakapan (multi-turn)
         if (!empty($request->history)) {
             foreach ($request->history as $item) {
-                $msg = [
+                $messages[] = [
                     'role'    => $item['role'],
                     'content' => $item['content'],
                 ];
-                // Sertakan reasoning_details jika ada (untuk lanjutan chain-of-thought)
-                if (!empty($item['reasoning_details'])) {
-                    $msg['reasoning_details'] = $item['reasoning_details'];
-                }
-                $messages[] = $msg;
             }
         }
 
-        // Tambahkan pesan user saat ini
         $messages[] = [
             'role'    => 'user',
             'content' => $request->message,
@@ -79,16 +82,14 @@ PROMPT;
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $apiKey,
                 'Content-Type'  => 'application/json',
-                'HTTP-Referer'  => url('/'),
-                'X-Title'       => 'CETING NASIKU Chatbot',
-            ])->timeout(60)->post('https://openrouter.ai/api/v1/chat/completions', [
-                'model'     => 'nvidia/nemotron-3-super-120b-a12b:free',
-                'messages'  => $messages,
-                'reasoning' => ['enabled' => true],
+            ])->timeout(60)->post('https://openagentic.id/api/v1/chat/completions', [
+                'model'      => 'claude-sonnet-4.5',
+                'messages'   => $messages,
+                'max_tokens' => 1000,
             ]);
 
             if ($response->failed()) {
-                Log::error('OpenRouter API Error', [
+                Log::error('OpenAgentic API Error', [
                     'status' => $response->status(),
                     'body'   => $response->body(),
                 ]);
@@ -97,16 +98,18 @@ PROMPT;
                 ], 500);
             }
 
-            $data    = $response->json();
-            $choice  = $data['choices'][0]['message'] ?? null;
+            // OpenAgentic appends SSE trailer "data: [DONE]" after JSON
+            $raw  = preg_replace('/data:\s*\[DONE\]\s*$/', '', $response->body());
+            $data = json_decode(trim($raw), true);
+            $choice = $data['choices'][0]['message'] ?? null;
 
             if (!$choice) {
+                Log::error('OpenAgentic unexpected body', ['body' => $response->body()]);
                 return response()->json(['error' => 'Tidak ada respons dari AI.'], 500);
             }
 
             return response()->json([
-                'reply'            => $choice['content'] ?? '',
-                'reasoning_details'=> $choice['reasoning_details'] ?? null,
+                'reply' => $choice['content'] ?? '',
             ]);
         } catch (\Exception $e) {
             Log::error('Chatbot Exception: ' . $e->getMessage());

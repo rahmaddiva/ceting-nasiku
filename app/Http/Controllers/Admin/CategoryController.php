@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\DataTableQuery;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -9,10 +10,45 @@ use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
+    use DataTableQuery;
+
     public function index()
     {
-        $categories = Category::withCount('recipes')->orderBy('name')->get();
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index');
+    }
+
+    public function data(Request $request)
+    {
+        $query = Category::query()->withCount('recipes');
+
+        return $this->dataTable(
+            $request,
+            $query,
+            [
+                0 => null,
+                1 => 'name',
+                2 => 'description',
+                3 => 'recipes_count',
+                4 => null,
+            ],
+            ['name', 'description'],
+            function (Category $cat, int $no) {
+                $actions = '<div class="actions">'
+                    . '<a href="' . e(route('admin.categories.edit', $cat)) . '" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
+                    . '<form action="' . e(route('admin.categories.destroy', $cat)) . '" method="POST" onsubmit="return confirm(\'Yakin hapus kategori ini?\')" style="display:inline">'
+                    . csrf_field() . method_field('DELETE')
+                    . '<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    . '</form></div>';
+
+                return [
+                    $no,
+                    '<strong>' . e($cat->name) . '</strong>',
+                    e(Str::limit($cat->description ?? '', 60)),
+                    '<span class="badge badge-success">' . e((string) $cat->recipes_count) . '</span>',
+                    $actions,
+                ];
+            }
+        );
     }
 
     public function create()
