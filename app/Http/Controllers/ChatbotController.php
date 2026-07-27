@@ -78,15 +78,31 @@ PROMPT;
             'content' => $request->message,
         ];
 
+        // ponytail: fallback chain, add more models if needed
+        $models = ['claude-sonnet-4.5', 'deepseek-v4-flash'];
+
         try {
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(60)->post('https://openagentic.id/api/v1/chat/completions', [
-                'model' => 'claude-sonnet-4.5',
-                'messages' => $messages,
-                'max_tokens' => 1000,
-            ]);
+            $response = null;
+
+            foreach ($models as $model) {
+                $response = Http::withHeaders([
+                    'Authorization' => 'Bearer '.$apiKey,
+                    'Content-Type' => 'application/json',
+                ])->timeout(60)->post('https://openagentic.id/api/v1/chat/completions', [
+                    'model' => $model,
+                    'messages' => $messages,
+                    'max_tokens' => 1000,
+                ]);
+
+                if ($response->successful()) {
+                    break;
+                }
+
+                Log::warning('OpenAgentic model failed, trying next', [
+                    'model' => $model,
+                    'status' => $response->status(),
+                ]);
+            }
 
             if ($response->failed()) {
                 Log::error('OpenAgentic API Error', [
