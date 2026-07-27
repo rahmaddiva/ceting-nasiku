@@ -123,7 +123,7 @@
                 <div class="recipe-card">
                     <div class="recipe-card-image">
                         @if($rel->image)
-                            <img src="{{ asset('storage/' . $rel->image) }}" alt="{{ $rel->title }}">
+                            <img src="{{ asset($rel->image) }}" alt="{{ $rel->title }}">
                         @else
                             <i class="fas fa-utensils"></i>
                         @endif

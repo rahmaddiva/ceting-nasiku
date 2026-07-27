@@ -5,22 +5,23 @@ namespace App\Services;
 use App\Models\Recipe;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class RecipeImageService
 {
     private string $apiUrl = 'https://openagentic.id/api/v1/images/generations';
 
-    private string $model = 'flux-2-klein-4b';
+    private string $model = 'ali-z-image-turbo';
 
-    public function generateForRecipes(?int $limit = null): array
+    public function generateForRecipes(?int $limit = null, ?string $model = null): array
     {
         $apiKey = env('OPENAGENTIC_API_KEY');
 
         if (! $apiKey) {
             return ['generated' => 0, 'remaining' => 0, 'errors' => ['API key tidak ditemukan.']];
         }
+
+        $model = $model ?: $this->model;
 
         $query = Recipe::whereNull('image')->orWhere('image', '');
         $total = $query->count();
@@ -41,7 +42,7 @@ class RecipeImageService
                     'Authorization' => 'Bearer '.$apiKey,
                     'Content-Type' => 'application/json',
                 ])->timeout(120)->post($this->apiUrl, [
-                    'model' => $this->model,
+                    'model' => $model,
                     'prompt' => $prompt,
                     'n' => 1,
                     'size' => '1024x1024',
@@ -74,9 +75,13 @@ class RecipeImageService
                 }
 
                 $filename = Str::random(40).'.jpg';
-                Storage::disk('public')->put('recipes/'.$filename, base64_decode($b64));
+                $dir = public_path('images/recipes');
+                if (! is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                file_put_contents($dir.'/'.$filename, base64_decode($b64));
 
-                $recipe->update(['image' => 'recipes/'.$filename]);
+                $recipe->update(['image' => 'images/recipes/'.$filename]);
                 $generated++;
             } catch (\Exception $e) {
                 Log::error('RecipeImageService Exception: '.$e->getMessage());

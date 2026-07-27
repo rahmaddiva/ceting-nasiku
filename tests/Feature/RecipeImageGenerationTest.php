@@ -7,7 +7,6 @@ use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class RecipeImageGenerationTest extends TestCase
@@ -30,8 +29,6 @@ class RecipeImageGenerationTest extends TestCase
 
     public function test_admin_can_generate_recipe_images(): void
     {
-        Storage::fake('public');
-
         $category = Category::create(['name' => 'MPASI 6-8 Bulan', 'slug' => 'mpasi-6-8']);
 
         $recipe1 = Recipe::create([
@@ -81,11 +78,10 @@ class RecipeImageGenerationTest extends TestCase
 
         $this->assertNotNull($recipe1->image);
         $this->assertNotNull($recipe2->image);
-        $this->assertStringStartsWith('recipes/', $recipe1->image);
-        $this->assertStringStartsWith('recipes/', $recipe2->image);
-
-        Storage::disk('public')->assertExists($recipe1->image);
-        Storage::disk('public')->assertExists($recipe2->image);
+        $this->assertStringStartsWith('images/recipes/', $recipe1->image);
+        $this->assertStringStartsWith('images/recipes/', $recipe2->image);
+        $this->assertFileExists(public_path($recipe1->image));
+        $this->assertFileExists(public_path($recipe2->image));
     }
 
     public function test_returns_success_when_no_recipes_need_images(): void
@@ -103,8 +99,6 @@ class RecipeImageGenerationTest extends TestCase
 
     public function test_handles_api_rate_limit_gracefully(): void
     {
-        Storage::fake('public');
-
         $category = Category::create(['name' => 'MPASI', 'slug' => 'mpasi']);
 
         Recipe::create([

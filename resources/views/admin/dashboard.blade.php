@@ -75,6 +75,16 @@
         </div>
     </div>
     <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <select id="image-model" style="padding: 0.5rem 0.75rem; border: 1px solid #d1d5db; border-radius: 6px; font-size: 0.875rem;">
+            <option value="ali-z-image-turbo">Z Image Turbo (Free)</option>
+            <option value="flux-2-klein-4b">Flux 2 Klein (Free)</option>
+            <option value="ali-qwen-image-plus">Qwen Image Plus</option>
+            <option value="ali-qwen-image-2.0">Qwen Image 2.0</option>
+            <option value="ali-qwen-image-2.0-pro">Qwen Image 2.0 Pro</option>
+            <option value="ali-qwen-image-max">Qwen Image Max</option>
+            <option value="ali-wan2.7-image">Wan2.7 Image</option>
+            <option value="ali-wan2.7-image-pro">Wan2.7 Image Pro</option>
+        </select>
         <button id="btn-generate-images" class="btn btn-primary" onclick="generateImages()">
             <i class="fas fa-wand-magic-sparkles"></i> Generate Gambar ({{ $stats['recipes_without_image'] }} resep)
         </button>
@@ -210,6 +220,9 @@ function generateImages() {
             'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Accept': 'application/json',
         },
+        body: JSON.stringify({
+            model: document.getElementById('image-model').value,
+        }),
     })
     .then(r => r.json())
     .then(data => {

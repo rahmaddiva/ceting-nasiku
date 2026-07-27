@@ -105,7 +105,7 @@
             <div class="recipe-card">
                 <div class="recipe-card-image">
                     @if($recipe->image)
-                        <img src="{{ asset('storage/' . $recipe->image) }}" alt="{{ $recipe->title }}">
+                        <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}">
                     @endif
                     <span class="recipe-card-badge">{{ $recipe->category->name ?? 'Umum' }}</span>
                 </div>

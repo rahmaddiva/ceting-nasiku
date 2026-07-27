@@ -5,12 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Services\RecipeImageService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class RecipeImageController extends Controller
 {
-    public function generate(RecipeImageService $service): JsonResponse
+    public function generate(Request $request, RecipeImageService $service): JsonResponse
     {
-        $result = $service->generateForRecipes();
+        $request->validate([
+            'model' => 'nullable|string',
+        ]);
+
+        $result = $service->generateForRecipes(null, $request->input('model'));
 
         return response()->json([
             'success' => $result['generated'] > 0,

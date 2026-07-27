@@ -34,7 +34,7 @@
             <div class="recipe-card">
                 <div class="recipe-card-image">
                     @if($recipe->image)
-                        <img src="{{ asset('storage/' . $recipe->image) }}" alt="{{ $recipe->title }}">
+                        <img src="{{ asset($recipe->image) }}" alt="{{ $recipe->title }}">
                     @else
                         <i class="fas fa-utensils"></i>
                     @endif
