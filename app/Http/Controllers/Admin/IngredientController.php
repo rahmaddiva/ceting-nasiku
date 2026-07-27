@@ -38,22 +38,22 @@ class IngredientController extends Controller
             ['name', 'unit'],
             function (Ingredient $ing, int $no) {
                 $actions = '<div class="actions">'
-                    . '<a href="' . e(route('admin.ingredients.edit', $ing)) . '" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
-                    . '<form action="' . e(route('admin.ingredients.destroy', $ing)) . '" method="POST" onsubmit="return confirm(\'Yakin hapus bahan ini?\')" style="display:inline">'
-                    . csrf_field() . method_field('DELETE')
-                    . '<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
-                    . '</form></div>';
+                    .'<a href="'.e(route('admin.ingredients.edit', $ing)).'" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
+                    .'<form action="'.e(route('admin.ingredients.destroy', $ing)).'" method="POST" onsubmit="return confirm(\'Yakin hapus bahan ini?\')" style="display:inline">'
+                    .csrf_field().method_field('DELETE')
+                    .'<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    .'</form></div>';
 
                 return [
                     $no,
-                    '<strong>' . e($ing->name) . '</strong>',
-                    '<small style="color: var(--text-muted)">' . e($ing->unit) . '</small>',
-                    e(number_format((float) $ing->calories, 1)) . ' kkal',
-                    e(number_format((float) $ing->protein, 1)) . ' g',
-                    e(number_format((float) $ing->fat, 1)) . ' g',
-                    e(number_format((float) $ing->carbohydrates, 1)) . ' g',
-                    e(number_format((float) $ing->calcium, 1)) . ' mg',
-                    e(number_format((float) $ing->iron, 1)) . ' mg',
+                    '<strong>'.e($ing->name).'</strong>',
+                    '<small style="color: var(--text-muted)">'.e($ing->unit).'</small>',
+                    e(number_format((float) $ing->calories, 1)).' kkal',
+                    e(number_format((float) $ing->protein, 1)).' g',
+                    e(number_format((float) $ing->fat, 1)).' g',
+                    e(number_format((float) $ing->carbohydrates, 1)).' g',
+                    e(number_format((float) $ing->calcium, 1)).' mg',
+                    e(number_format((float) $ing->iron, 1)).' mg',
                     $actions,
                 ];
             }
@@ -115,6 +115,7 @@ class IngredientController extends Controller
     public function destroy(Ingredient $ingredient)
     {
         $ingredient->delete();
+
         return redirect('/admin/ingredients')->with('success', 'Bahan makanan berhasil dihapus!');
     }
 }

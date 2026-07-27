@@ -18,8 +18,8 @@ class Ingredient extends Model
     public function recipes()
     {
         return $this->belongsToMany(Recipe::class, 'recipe_ingredients')
-                    ->withPivot('quantity_grams')
-                    ->withTimestamps();
+            ->withPivot('quantity_grams')
+            ->withTimestamps();
     }
 
     /**
@@ -28,16 +28,17 @@ class Ingredient extends Model
     public function nutritionFor(float $grams): array
     {
         $factor = $grams / 100;
+
         return [
-            'calories'      => round($this->calories * $factor, 2),
-            'protein'       => round($this->protein * $factor, 2),
-            'fat'           => round($this->fat * $factor, 2),
+            'calories' => round($this->calories * $factor, 2),
+            'protein' => round($this->protein * $factor, 2),
+            'fat' => round($this->fat * $factor, 2),
             'carbohydrates' => round($this->carbohydrates * $factor, 2),
-            'fiber'         => round($this->fiber * $factor, 2),
-            'calcium'       => round($this->calcium * $factor, 2),
-            'iron'          => round($this->iron * $factor, 2),
-            'vitamin_a'     => round($this->vitamin_a * $factor, 2),
-            'vitamin_c'     => round($this->vitamin_c * $factor, 2),
+            'fiber' => round($this->fiber * $factor, 2),
+            'calcium' => round($this->calcium * $factor, 2),
+            'iron' => round($this->iron * $factor, 2),
+            'vitamin_a' => round($this->vitamin_a * $factor, 2),
+            'vitamin_c' => round($this->vitamin_c * $factor, 2),
         ];
     }
 }

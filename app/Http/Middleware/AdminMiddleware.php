@@ -13,7 +13,7 @@ class AdminMiddleware
         /** @var \App\Models\User|null $user */
         $user = auth()->user();
 
-        if (!$user || !$user->isAdmin()) {
+        if (! $user || ! $user->isAdmin()) {
             abort(403, 'Akses ditolak. Anda bukan administrator.');
         }
 

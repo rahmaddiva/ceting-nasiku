@@ -18,6 +18,8 @@ class AdminDashboardController extends Controller
             'total_categories' => Category::count(),
             'total_users' => User::where('role', 'user')->count(),
             'published_recipes' => Recipe::where('is_published', true)->count(),
+            'recipes_without_image' => Recipe::whereNull('image')->orWhere('image', '')->count(),
+            'recipes_with_image' => Recipe::whereNotNull('image')->where('image', '!=', '')->count(),
         ];
 
         $latest_recipes = Recipe::with('category')->latest()->take(5)->get();

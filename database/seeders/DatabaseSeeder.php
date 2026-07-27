@@ -6,8 +6,8 @@ use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Models\User;
+use App\Services\RecipeImageService;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -578,5 +578,15 @@ class DatabaseSeeder extends Seeder
 
         // ── Seed Resep Lokal "Isi Piringku" ──
         $this->call(IsiPiringkuSeeder::class);
+
+        // ── Generate gambar resep via OpenAgentic AI ──
+        $this->command->info('Generating recipe images via OpenAgentic...');
+        $result = app(RecipeImageService::class)->generateForRecipes();
+        $this->command->info("Generated: {$result['generated']} gambar, Remaining: {$result['remaining']} tanpa gambar");
+        if (! empty($result['errors'])) {
+            foreach ($result['errors'] as $error) {
+                $this->command->warn("  - {$error}");
+            }
+        }
     }
 }

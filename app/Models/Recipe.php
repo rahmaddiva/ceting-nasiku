@@ -31,8 +31,8 @@ class Recipe extends Model
     public function ingredients()
     {
         return $this->belongsToMany(Ingredient::class, 'recipe_ingredients')
-                    ->withPivot('quantity_grams')
-                    ->withTimestamps();
+            ->withPivot('quantity_grams')
+            ->withTimestamps();
     }
 
     /**
@@ -53,7 +53,7 @@ class Recipe extends Model
             }
         }
 
-        return array_map(fn($v) => round($v, 2), $totals);
+        return array_map(fn ($v) => round($v, 2), $totals);
     }
 
     /**
@@ -63,7 +63,8 @@ class Recipe extends Model
     {
         $total = $this->total_nutrition;
         $servings = max($this->servings, 1);
-        return array_map(fn($v) => round($v / $servings, 2), $total);
+
+        return array_map(fn ($v) => round($v / $servings, 2), $total);
     }
 
     public function scopePublished($query)

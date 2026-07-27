@@ -48,15 +48,15 @@ PROMPT;
     public function send(Request $request)
     {
         $request->validate([
-            'message'   => 'required|string|max:2000',
-            'history'   => 'nullable|array',
-            'history.*.role'    => 'required|string|in:user,assistant',
+            'message' => 'required|string|max:2000',
+            'history' => 'nullable|array',
+            'history.*.role' => 'required|string|in:user,assistant',
             'history.*.content' => 'required|string',
         ]);
 
         $apiKey = env('OPENAGENTIC_API_KEY');
 
-        if (!$apiKey) {
+        if (! $apiKey) {
             return response()->json(['error' => 'API key tidak ditemukan.'], 500);
         }
 
@@ -64,47 +64,49 @@ PROMPT;
             ['role' => 'system', 'content' => $this->systemPrompt],
         ];
 
-        if (!empty($request->history)) {
+        if (! empty($request->history)) {
             foreach ($request->history as $item) {
                 $messages[] = [
-                    'role'    => $item['role'],
+                    'role' => $item['role'],
                     'content' => $item['content'],
                 ];
             }
         }
 
         $messages[] = [
-            'role'    => 'user',
+            'role' => 'user',
             'content' => $request->message,
         ];
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $apiKey,
-                'Content-Type'  => 'application/json',
+                'Authorization' => 'Bearer '.$apiKey,
+                'Content-Type' => 'application/json',
             ])->timeout(60)->post('https://openagentic.id/api/v1/chat/completions', [
-                'model'      => 'claude-sonnet-4.5',
-                'messages'   => $messages,
+                'model' => 'claude-sonnet-4.5',
+                'messages' => $messages,
                 'max_tokens' => 1000,
             ]);
 
             if ($response->failed()) {
                 Log::error('OpenAgentic API Error', [
                     'status' => $response->status(),
-                    'body'   => $response->body(),
+                    'body' => $response->body(),
                 ]);
+
                 return response()->json([
-                    'error' => 'Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.'
+                    'error' => 'Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.',
                 ], 500);
             }
 
             // OpenAgentic appends SSE trailer "data: [DONE]" after JSON
-            $raw  = preg_replace('/data:\s*\[DONE\]\s*$/', '', $response->body());
+            $raw = preg_replace('/data:\s*\[DONE\]\s*$/', '', $response->body());
             $data = json_decode(trim($raw), true);
             $choice = $data['choices'][0]['message'] ?? null;
 
-            if (!$choice) {
+            if (! $choice) {
                 Log::error('OpenAgentic unexpected body', ['body' => $response->body()]);
+
                 return response()->json(['error' => 'Tidak ada respons dari AI.'], 500);
             }
 
@@ -112,9 +114,10 @@ PROMPT;
                 'reply' => $choice['content'] ?? '',
             ]);
         } catch (\Exception $e) {
-            Log::error('Chatbot Exception: ' . $e->getMessage());
+            Log::error('Chatbot Exception: '.$e->getMessage());
+
             return response()->json([
-                'error' => 'Koneksi ke AI bermasalah. Pastikan jaringan internet tersedia.'
+                'error' => 'Koneksi ke AI bermasalah. Pastikan jaringan internet tersedia.',
             ], 500);
         }
     }

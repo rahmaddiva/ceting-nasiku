@@ -34,17 +34,17 @@ class CategoryController extends Controller
             ['name', 'description'],
             function (Category $cat, int $no) {
                 $actions = '<div class="actions">'
-                    . '<a href="' . e(route('admin.categories.edit', $cat)) . '" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
-                    . '<form action="' . e(route('admin.categories.destroy', $cat)) . '" method="POST" onsubmit="return confirm(\'Yakin hapus kategori ini?\')" style="display:inline">'
-                    . csrf_field() . method_field('DELETE')
-                    . '<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
-                    . '</form></div>';
+                    .'<a href="'.e(route('admin.categories.edit', $cat)).'" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
+                    .'<form action="'.e(route('admin.categories.destroy', $cat)).'" method="POST" onsubmit="return confirm(\'Yakin hapus kategori ini?\')" style="display:inline">'
+                    .csrf_field().method_field('DELETE')
+                    .'<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    .'</form></div>';
 
                 return [
                     $no,
-                    '<strong>' . e($cat->name) . '</strong>',
+                    '<strong>'.e($cat->name).'</strong>',
                     e(Str::limit($cat->description ?? '', 60)),
-                    '<span class="badge badge-success">' . e((string) $cat->recipes_count) . '</span>',
+                    '<span class="badge badge-success">'.e((string) $cat->recipes_count).'</span>',
                     $actions,
                 ];
             }
@@ -104,6 +104,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+
         return redirect('/admin/categories')->with('success', 'Kategori berhasil dihapus!');
     }
 }

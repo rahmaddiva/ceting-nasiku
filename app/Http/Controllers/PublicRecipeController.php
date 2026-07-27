@@ -13,7 +13,7 @@ class PublicRecipeController extends Controller
         $query = Recipe::published()->with(['category', 'ingredients']);
 
         if ($request->filled('search')) {
-            $query->where('title', 'like', '%' . $request->search . '%');
+            $query->where('title', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('category')) {

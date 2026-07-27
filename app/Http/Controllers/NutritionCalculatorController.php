@@ -10,6 +10,7 @@ class NutritionCalculatorController extends Controller
     public function index()
     {
         $ingredients = Ingredient::orderBy('name')->get();
+
         return view('calculator', compact('ingredients'));
     }
 
@@ -44,7 +45,7 @@ class NutritionCalculatorController extends Controller
             }
         }
 
-        $totals = array_map(fn($v) => round($v, 2), $totals);
+        $totals = array_map(fn ($v) => round($v, 2), $totals);
 
         return response()->json([
             'items' => $results,

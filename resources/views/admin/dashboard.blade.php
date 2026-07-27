@@ -50,7 +50,46 @@
             <div class="stat-label">Pengguna</div>
         </div>
     </div>
+    <div class="stat-card">
+        <div class="stat-icon red"><i class="fas fa-image"></i></div>
+        <div class="stat-body">
+            <div class="stat-number">{{ $stats['recipes_without_image'] }}</div>
+            <div class="stat-label">Tanpa Gambar</div>
+        </div>
+    </div>
 </div>
+
+@if($stats['recipes_without_image'] > 0)
+<div class="dash-panel" style="margin-bottom: 1.5rem;">
+    <div class="dash-panel-header">
+        <div>
+            <h3><i class="fas fa-wand-magic-sparkles"></i> Generate Gambar Resep</h3>
+            <p>{{ $stats['recipes_with_image'] }} dari {{ $stats['total_recipes'] }} resep sudah punya gambar</p>
+        </div>
+    </div>
+    <div style="margin-bottom: 1rem;">
+        <div style="background: #e9ecef; border-radius: 8px; height: 24px; overflow: hidden;">
+            <div id="image-progress-bar" style="background: linear-gradient(90deg, #10b981, #059669); height: 100%; width: {{ $stats['total_recipes'] > 0 ? round(($stats['recipes_with_image'] / $stats['total_recipes']) * 100) : 0 }}%; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600;">
+                {{ $stats['total_recipes'] > 0 ? round(($stats['recipes_with_image'] / $stats['total_recipes']) * 100) : 0 }}%
+            </div>
+        </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <button id="btn-generate-images" class="btn btn-primary" onclick="generateImages()">
+            <i class="fas fa-wand-magic-sparkles"></i> Generate Gambar ({{ $stats['recipes_without_image'] }} resep)
+        </button>
+        <span id="generate-status" style="color: #6b7280; font-size: 0.875rem;"></span>
+    </div>
+    <div id="generate-result" style="margin-top: 0.75rem; display: none;"></div>
+</div>
+@else
+<div class="dash-panel" style="margin-bottom: 1.5rem;">
+    <div style="display: flex; align-items: center; gap: 0.75rem; color: #10b981;">
+        <i class="fas fa-check-circle" style="font-size: 1.25rem;"></i>
+        <span>Semua resep sudah memiliki gambar.</span>
+    </div>
+</div>
+@endif
 
 <div class="dash-grid">
     <section class="data-table-wrapper dash-panel">
@@ -151,3 +190,57 @@
     </aside>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function generateImages() {
+    const btn = document.getElementById('btn-generate-images');
+    const status = document.getElementById('generate-status');
+    const result = document.getElementById('generate-result');
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    status.textContent = 'Mohon tunggu, proses ini bisa memakan waktu beberapa menit...';
+    result.style.display = 'none';
+
+    fetch('{{ route("admin.recipes.generate-images") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json',
+        },
+    })
+    .then(r => r.json())
+    .then(data => {
+        result.style.display = 'block';
+
+        if (data.success) {
+            result.innerHTML = '<div style="color: #10b981; font-weight: 500;">' +
+                '<i class="fas fa-check-circle"></i> Berhasil generate ' + data.generated + ' gambar!' +
+                (data.remaining > 0 ? ' Sisa ' + data.remaining + ' resep belum punya gambar.' : ' Semua resep sudah punya gambar!') +
+                '</div>';
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            result.innerHTML = '<div style="color: #f59e0b; font-weight: 500;">' +
+                '<i class="fas fa-exclamation-triangle"></i> ' +
+                (data.errors.length > 0 ? data.errors.join(', ') : 'Tidak ada gambar yang berhasil di-generate.') +
+                '</div>';
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Gambar';
+        status.textContent = '';
+    })
+    .catch(err => {
+        result.style.display = 'block';
+        result.innerHTML = '<div style="color: #ef4444; font-weight: 500;">' +
+            '<i class="fas fa-times-circle"></i> Terjadi kesalahan: ' + err.message +
+            '</div>';
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-wand-magic-sparkles"></i> Generate Gambar';
+        status.textContent = '';
+    });
+}
+</script>
+@endpush

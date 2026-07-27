@@ -85,7 +85,9 @@ class IsiPiringkuSeeder extends Seeder
             ['Puree Ubi Ikan Mas', 'puree-ubi-ungu-ikan-mas', 'Puree ubi alami dengan ikan mas kolam, karbohidrat dan protein seimbang.', '6-8 bulan', 1, ['Ubi Jalar' => 40, 'Ikan Mas' => 20], "1. Kupas ubi jalar, potong kecil-kecil\n2. Bersihkan ikan mas, buang sisik dan isi perut\n3. Kukus ubi jalar hingga empuk sekitar 15 menit\n4. Kukus ikan mas hingga matang, pisahkan daging dari tulang\n5. Masukkan ubi dan daging ikan ke blender\n6. Tambahkan air matang secukupnya\n7. Blender hingga halus lembut\n8. Sajikan hangat"],
         ];
 
-        foreach ($mpasi6 as $r) { $makeRecipe($r); }
+        foreach ($mpasi6 as $r) {
+            $makeRecipe($r);
+        }
 
         // ═══════════════════════════════════════════════════════════════════
         // MPASI 9-11 BULAN — Resep Lokal "Isi Piringku"
@@ -106,7 +108,9 @@ class IsiPiringkuSeeder extends Seeder
             ['Bubur Sagu Ikan Mas Kangkung', 'bubur-sagu-ikan-mas-kangkung', 'Bubur sagu dengan ikan mas dan kangkung, menu khas lokal untuk bayi.', '9-11 bulan', 2, ['Sagu' => 25, 'Ikan Mas' => 25, 'Kangkung' => 15], "1. Larutkan sagu dalam air dingin\n2. Bersihkan ikan mas, buang sisik dan tulang\n3. Kukus ikan mas hingga matang, suwir halus\n4. Petik kangkung muda, cincang halus\n5. Didihkan air, tuang larutan sagu sambil diaduk\n6. Masak hingga mengental\n7. Campurkan ikan dan kangkung, aduk rata\n8. Sajikan hangat"],
         ];
 
-        foreach ($mpasi9 as $r) { $makeRecipe($r); }
+        foreach ($mpasi9 as $r) {
+            $makeRecipe($r);
+        }
 
         // ═══════════════════════════════════════════════════════════════════
         // BALITA 1-3 TAHUN — Resep Lokal "Isi Piringku"
@@ -130,7 +134,9 @@ class IsiPiringkuSeeder extends Seeder
             ['Nasi Tim Hati Sapi Wortel', 'nasi-tim-hati-sapi-wortel', 'Nasi tim hati sapi dan wortel, sumber zat besi tertinggi untuk cegah anemia.', '1-3 tahun', 3, ['Beras Putih' => 80, 'Hati Sapi' => 30, 'Wortel' => 20], "1. Masak beras menjadi nasi agak lembek\n2. Rendam hati sapi di air jeruk nipis 10 menit\n3. Rebus hati sapi hingga matang, potong dadu kecil\n4. Kupas wortel, parut kasar\n5. Campurkan nasi, hati sapi, dan wortel\n6. Tim dalam panci kukusan 15 menit\n7. Aduk rata, sajikan hangat\n8. Bisa ditambahkan sedikit kecap manis", 3],
         ];
 
-        foreach ($balita as $r) { $makeRecipe($r); }
+        foreach ($balita as $r) {
+            $makeRecipe($r);
+        }
 
         // ═══════════════════════════════════════════════════════════════════
         // ANAK 4-6 TAHUN — Resep Lokal "Isi Piringku"
@@ -159,7 +165,9 @@ class IsiPiringkuSeeder extends Seeder
             ['Sup Kerang Tahu Sayuran', 'sup-kerang-tahu-sayuran', 'Sup kerang segar dengan tahu lembut dan sayuran, kaya mineral dan protein.', '4-6 tahun', 4, ['Kerang' => 50, 'Tahu' => 30, 'Wortel' => 20, 'Bayam' => 15, 'Beras Putih' => 120], "1. Cuci kerang bersih, rendam air garam 30 menit\n2. Potong tahu dadu kecil\n3. Kupas wortel, potong tipis\n4. Didihkan air, masukkan kerang hingga cangkang terbuka\n5. Tambahkan wortel dan tahu, masak 5 menit\n6. Petik bayam, masukkan terakhir\n7. Beri garam dan merica secukupnya\n8. Sajikan sup hangat dengan nasi", 3],
         ];
 
-        foreach ($anak as $r) { $makeRecipe($r); }
+        foreach ($anak as $r) {
+            $makeRecipe($r);
+        }
 
         // ═══════════════════════════════════════════════════════════════════
         // CAMILAN SEHAT — Resep Lokal
@@ -183,6 +191,8 @@ class IsiPiringkuSeeder extends Seeder
             ['Smoothie Mangga Pisang', 'smoothie-mangga-pisang-lokal', 'Smoothie segar mangga lokal dan pisang, kaya vitamin C dan kalium alami.', '1-3 tahun', 5, ['Mangga' => 60, 'Pisang' => 50, 'Susu UHT' => 80], "1. Kupas mangga matang, potong dadu\n2. Kupas pisang, potong-potong\n3. Masukkan mangga dan pisang ke blender\n4. Tambahkan susu UHT\n5. Blender hingga halus dan creamy\n6. Tuang ke gelas, sajikan segera\n7. Bisa ditambahkan es batu jika suka", 3],
         ];
 
-        foreach ($camilan as $r) { $makeRecipe($r); }
+        foreach ($camilan as $r) {
+            $makeRecipe($r);
+        }
     }
 }

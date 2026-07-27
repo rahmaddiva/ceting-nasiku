@@ -43,15 +43,15 @@ class RecipeController extends Controller
                     : '<span class="badge badge-warning">Draft</span>';
 
                 $actions = '<div class="actions">'
-                    . '<a href="' . e(route('admin.recipes.edit', $recipe)) . '" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
-                    . '<form action="' . e(route('admin.recipes.destroy', $recipe)) . '" method="POST" onsubmit="return confirm(\'Yakin hapus resep ini?\')" style="display:inline">'
-                    . csrf_field() . method_field('DELETE')
-                    . '<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
-                    . '</form></div>';
+                    .'<a href="'.e(route('admin.recipes.edit', $recipe)).'" class="btn-icon edit" title="Edit"><i class="fas fa-pen"></i></a>'
+                    .'<form action="'.e(route('admin.recipes.destroy', $recipe)).'" method="POST" onsubmit="return confirm(\'Yakin hapus resep ini?\')" style="display:inline">'
+                    .csrf_field().method_field('DELETE')
+                    .'<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
+                    .'</form></div>';
 
                 return [
                     $no,
-                    '<strong>' . e($recipe->title) . '</strong>',
+                    '<strong>'.e($recipe->title).'</strong>',
                     e($recipe->category->name ?? '—'),
                     e($recipe->age_group ?? '—'),
                     e((string) $recipe->servings),
@@ -67,6 +67,7 @@ class RecipeController extends Controller
     {
         $categories = Category::all();
         $ingredients = Ingredient::orderBy('name')->get();
+
         return view('admin.recipes.create', compact('categories', 'ingredients'));
     }
 
@@ -86,7 +87,7 @@ class RecipeController extends Controller
         ]);
 
         $data = $request->only(['title', 'category_id', 'description', 'instructions', 'servings', 'age_group']);
-        $data['slug'] = Str::slug($request->title) . '-' . Str::random(5);
+        $data['slug'] = Str::slug($request->title).'-'.Str::random(5);
         $data['user_id'] = auth()->id();
         $data['is_published'] = $request->boolean('is_published');
 
@@ -109,6 +110,7 @@ class RecipeController extends Controller
         $categories = Category::all();
         $ingredients = Ingredient::orderBy('name')->get();
         $recipe->load('ingredients');
+
         return view('admin.recipes.edit', compact('recipe', 'categories', 'ingredients'));
     }
 
