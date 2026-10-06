@@ -9,19 +9,25 @@ use Illuminate\Support\Str;
 
 class RecipeImageService
 {
-    private string $apiUrl = 'https://openagentic.id/api/v1/images/generations';
+    private function apiUrl(): string
+    {
+        return rtrim(config('services.openagentic.base_url', 'https://openagentic.id/api/v1'), '/').'/images/generations';
+    }
 
-    private string $model = 'ali-z-image-turbo';
+    private function defaultModel(): string
+    {
+        return config('services.openagentic.model', 'ali-z-image-turbo');
+    }
 
     public function generateForRecipes(?int $limit = null, ?string $model = null): array
     {
-        $apiKey = env('OPENAGENTIC_API_KEY');
+        $apiKey = config('services.openagentic.key');
 
         if (! $apiKey) {
             return ['generated' => 0, 'remaining' => 0, 'errors' => ['API key tidak ditemukan.']];
         }
 
-        $model = $model ?: $this->model;
+        $model = $model ?: $this->defaultModel();
 
         $query = Recipe::whereNull('image')->orWhere('image', '');
         $total = $query->count();
@@ -41,7 +47,7 @@ class RecipeImageService
                 $response = Http::withHeaders([
                     'Authorization' => 'Bearer '.$apiKey,
                     'Content-Type' => 'application/json',
-                ])->timeout(120)->post($this->apiUrl, [
+                ])->timeout(120)->post($this->apiUrl(), [
                     'model' => $model,
                     'prompt' => $prompt,
                     'n' => 1,
@@ -112,20 +118,20 @@ class RecipeImageService
 
     public function generateForRecipe(Recipe $recipe, ?string $model = null): array
     {
-        $apiKey = env('OPENAGENTIC_API_KEY');
+        $apiKey = config('services.openagentic.key');
 
         if (! $apiKey) {
             return ['success' => false, 'error' => 'API key tidak ditemukan.'];
         }
 
-        $model = $model ?: $this->model;
+        $model = $model ?: $this->defaultModel();
         $prompt = $this->buildPrompt($recipe);
 
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$apiKey,
                 'Content-Type' => 'application/json',
-            ])->timeout(120)->post($this->apiUrl, [
+            ])->timeout(120)->post($this->apiUrl(), [
                 'model' => $model,
                 'prompt' => $prompt,
                 'n' => 1,

@@ -31,6 +31,12 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'openagentic' => [
+        'base_url' => env('OPENAGENTIC_BASE_URL', 'https://openagentic.id/api/v1'),
+        'key'      => env('OPENAGENTIC_API_KEY'),
+        'model'    => env('OPENAGENTIC_MODEL', 'ali-z-image-turbo'),
+    ],
+
     'cartethyia' => [
         'base_url' => env('CARTETHYIA_BASE_URL', 'https://carte.risun.web.id/v1'),
         'key'      => env('CARTETHYIA_API_KEY'),

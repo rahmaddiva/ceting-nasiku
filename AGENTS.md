@@ -56,6 +56,7 @@ routes/web.php             # semua route publik + admin
 | `CARTETHYIA_API_KEY` | API key Cartethyia untuk chatbot NASI |
 | `CARTETHYIA_MODEL` | Model chatbot (default `bansos/deepseek-v4.1-flash`) |
 | `CARTETHYIA_TIMEOUT` | Timeout request chatbot (detik) |
+| `OPENAGENTIC_API_KEY` | API key OpenAgentic untuk generate gambar resep (admin) |
 | `DB_*` | Koneksi database standar Laravel |
 Jangan pernah commit nilai `.env`. Gunakan `.env.example` sebagai referensi.
 
