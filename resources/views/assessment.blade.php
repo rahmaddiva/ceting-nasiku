@@ -1,6 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Cek Risiko Stunting — Self Assessment | CETING NASIKU')
+@section('body_class', 'page-inner')
+@section('title', 'Cek Risiko Stunting — Self Assessment — CETING NASIKU')
 @section('meta_description', 'Evaluasi mandiri risiko stunting pada anak Anda melalui kuis singkat seputar pola asuh, gizi, dan kebersihan lingkungan keluarga.')
+@section('og_title', 'Cek Risiko Stunting — Self Assessment — CETING NASIKU')
+@section('og_description', 'Evaluasi mandiri risiko stunting pada anak Anda melalui kuis singkat seputar pola asuh, gizi, dan kebersihan lingkungan keluarga.')
+@section('og_type', 'article')
 
 @section('content')
 <!-- Hero -->
@@ -394,18 +398,18 @@
             // 10-20 : Tinggi
             if (totalScore <= 4) {
                 riskLevelStr = "Risiko Rendah";
-                riskColor = "#16a34a"; // green-600
+                riskColor = "var(--accent-600)"; // green-600
                 riskIcon = "fa-shield-check";
                 riskDesc = "Hebat! Kebiasaan asuh, pemenuhan gizi, dan kebersihan yang Anda terapkan sudah sangat baik. Terus pertahankan untuk mendukung tumbuh kembang optimal anak Anda.";
-                ui.resultIcon.style.background = "#dcfce7";
-                ui.resultIcon.style.color = "#16a34a";
+                ui.resultIcon.style.background = "var(--accent-100)";
+                ui.resultIcon.style.color = "var(--accent-600)";
             } else if (totalScore <= 9) {
                 riskLevelStr = "Risiko Sedang";
-                riskColor = "#ea580c"; // orange-600
+                riskColor = "var(--warning)"; // orange-600
                 riskIcon = "fa-triangle-exclamation";
                 riskDesc = "Kebiasaan Anda sudah cukup baik, namun ada beberapa area yang berpotensi menghambat pertumbuhan anak. Perhatikan rekomendasi di bawah ini untuk menurunkan risiko stunting.";
-                ui.resultIcon.style.background = "#ffedd5";
-                ui.resultIcon.style.color = "#ea580c";
+                ui.resultIcon.style.background = "#fef3c7";
+                ui.resultIcon.style.color = "var(--warning)";
             } else {
                 riskLevelStr = "Risiko Tinggi";
                 riskColor = "#dc2626"; // red-600
@@ -449,7 +453,7 @@
                 ui.resultAlert.style.background = "var(--primary-50)";
                 ui.resultAlert.style.borderLeftColor = "var(--primary-500)";
             } else if (riskLevelStr === "Risiko Sedang") {
-                ui.resultAlert.style.background = "#ffedd5";
+                ui.resultAlert.style.background = "#fef3c7";
             } else {
                 ui.resultAlert.style.background = "#fef2f2";
             }

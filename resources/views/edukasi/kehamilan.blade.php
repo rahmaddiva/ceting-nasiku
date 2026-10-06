@@ -1,6 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Perawatan Kehamilan — Modul Edukasi | CETING NASIKU')
+@section('body_class', 'page-inner')
+@section('title', 'Perawatan Kehamilan — Modul Edukasi — CETING NASIKU')
 @section('meta_description', 'Panduan perawatan kehamilan: pemeriksaan ANC, nutrisi ibu hamil, tanda bahaya kehamilan, persiapan persalinan, dan 1000 hari pertama kehidupan.')
+@section('og_title', 'Perawatan Kehamilan — Modul Edukasi — CETING NASIKU')
+@section('og_description', 'Panduan perawatan kehamilan: pemeriksaan ANC, nutrisi ibu hamil, tanda bahaya kehamilan.')
+@section('og_type', 'article')
 
 @section('content')
 <!-- Hero -->
@@ -94,7 +98,7 @@
                             <p>Konsumsi sayuran hijau, kacang-kacangan, dan suplemen asam folat terutama di trimester pertama untuk mencegah cacat tabung saraf.</p>
                         </div>
                         <div class="edu-mini-card">
-                            <div class="edu-mini-card-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-bone"></i></div>
+                            <div class="edu-mini-card-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-bone"></i></div>
                             <h4>Kalsium</h4>
                             <p>Susu, ikan teri, brokoli, dan tahu kaya kalsium yang dibutuhkan untuk pembentukan tulang dan gigi janin.</p>
                         </div>
@@ -180,7 +184,7 @@
                 <!-- Section 4: Persiapan Persalinan -->
                 <div class="edu-article-section" id="persiapan-persalinan">
                     <div class="edu-article-section-num">04</div>
-                    <h2><i class="fas fa-clipboard-list" style="color: #9333ea;"></i> Persiapan Persalinan</h2>
+                    <h2><i class="fas fa-clipboard-list" style="color: var(--accent-700);"></i> Persiapan Persalinan</h2>
                     <p>Persiapan persalinan yang matang membantu memastikan proses kelahiran yang aman bagi ibu dan bayi.</p>
 
                     <div class="edu-timeline">

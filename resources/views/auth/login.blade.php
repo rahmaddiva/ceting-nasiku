@@ -6,7 +6,7 @@
     <title>Masuk — CETING NASIKU</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
@@ -50,6 +50,8 @@
             </form>
 
             <p style="text-align: center; margin-top: 1.5rem;">
+                Belum punya akun? <a href="/register" style="color: var(--primary-600); font-weight: 600;">Daftar</a>
+                &nbsp;•&nbsp;
                 <a href="/" style="color: var(--text-muted); font-size: 0.85rem;"><i class="fas fa-arrow-left"></i> Kembali ke Beranda</a>
             </p>
         </div>

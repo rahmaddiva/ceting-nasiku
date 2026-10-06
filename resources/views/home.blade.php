@@ -1,6 +1,24 @@
 @extends('layouts.public')
 @section('title', 'CETING NASIKU — Panduan Resep Gizi Seimbang Anti Stunting')
 @section('meta_description', 'CETING NASIKU menyediakan resep makanan bergizi seimbang untuk mencegah stunting. Temukan resep MPASI, balita, dan kalkulator gizi.')
+@section('og_type', 'website')
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "CETING NASIKU",
+    "url": "{{ url('/') }}",
+    "description": "Panduan resep makanan bergizi seimbang untuk mencegah stunting pada anak.",
+    "publisher": {
+        "@type": "Organization",
+        "name": "CETING NASIKU",
+        "url": "{{ url('/') }}"
+    }
+}
+</script>
+@endsection
 
 @section('content')
 <!-- Hero Section with Real Photo -->
@@ -158,7 +176,7 @@
                     </div>
                 </div>
                 <div class="info-card">
-                    <div class="info-card-icon" style="background: #eff6ff; color: var(--info);">1K</div>
+                    <div class="info-card-icon" style="background: var(--primary-50); color: var(--info);">1K</div>
                     <div class="info-card-content">
                         <h3>1000 Hari Pertama</h3>
                         <p>Periode 1000 hari pertama kehidupan adalah masa emas untuk memastikan nutrisi optimal demi pertumbuhan yang sehat.</p>

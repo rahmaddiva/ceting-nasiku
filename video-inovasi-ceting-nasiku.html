@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Video Inovasi — CETING NASIKU</title>
+<style>
+  :root {
+    --green-900: #14532d;
+    --green-800: #166534;
+    --green-700: #15803d;
+    --green-600: #16a34a;
+    --green-500: #22c55e;
+    --green-100: #dcfce7;
+    --green-50: #f0fdf4;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+    --amber: #d97706;
+    --amber-bg: #fef3c7;
+    --red: #b91c1c;
+    --red-bg: #fee2e2;
+    --blue: #1d4ed8;
+    --blue-bg: #dbeafe;
+    --font: 'Segoe UI', Calibri, 'Helvetica Neue', Arial, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0c2417;
+    font-family: var(--font);
+    color: var(--ink);
+    overflow: hidden;
+    height: 100vh;
+  }
+
+  /* ---- 1280x720 canvas scaled to window ---- */
+  #stage { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+  #deck {
+    position: relative;
+    width: 1280px; height: 720px;
+    background: linear-gradient(160deg, #ffffff 0%, #f6fbf7 55%, #ecf6ee 100%);
+    overflow: hidden;
+    box-shadow: 0 0 60px rgba(0,0,0,.55);
+    border-radius: 6px;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    padding: 52px 64px 56px;
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity .45s ease;
+  }
+  .slide.active { display: flex; opacity: 1; }
+  .slide-inner { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+  /* ---- Typography ---- */
+  .kicker {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 13px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase;
+    color: var(--green-700);
+    margin-bottom: 14px;
+  }
+  .kicker .num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--green-700); color: #fff; font-size: 14px; letter-spacing: 0;
+  }
+  h1 { font-size: 40px; line-height: 1.15; color: var(--green-900); font-weight: 800; }
+  h2 { font-size: 30px; line-height: 1.2; color: var(--green-900); font-weight: 800; }
+  .lead { font-size: 19px; line-height: 1.55; color: var(--ink); margin-top: 12px; max-width: 1120px; }
+  .muted { color: var(--muted); }
+
+  .head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 18px; }
+
+  /* ---- Cover ---- */
+  .cover-slide { align-items: center; justify-content: center; text-align: center; padding: 40px 80px; }
+  .cover-badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    border: 1.5px solid var(--green-600); color: var(--green-700);
+    font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+    padding: 9px 22px; border-radius: 999px; background: #fff; margin-bottom: 30px;
+  }
+  .cover-logo {
+    width: 104px; height: 104px; border-radius: 26px;
+    background: linear-gradient(135deg, var(--green-700), var(--green-500));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 26px;
+    box-shadow: 0 14px 34px rgba(22,163,74,.35);
+  }
+  .cover-title { font-size: 62px; font-weight: 800; letter-spacing: 5px; color: var(--green-900); line-height: 1.05; }
+  .cover-sub { font-size: 21px; font-weight: 600; color: var(--green-700); margin-top: 14px; }
+  .cover-rule { width: 90px; height: 4px; border-radius: 2px; background: var(--green-600); margin: 26px auto; }
+  .cover-meta { font-size: 15px; color: var(--muted); letter-spacing: 1px; line-height: 1.7; }
+  .cover-chips { display: flex; gap: 12px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+  .chip {
+    font-size: 13px; font-weight: 600; color: var(--green-800);
+    background: var(--green-50); border: 1px solid var(--green-100);
+    padding: 7px 16px; border-radius: 999px;
+  }
+
+  /* ---- Cards ---- */
+  .grid { display: grid; gap: 18px; margin-top: 16px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g4 { grid-template-columns: repeat(4, 1fr); }
+  .g2 { grid-template-columns: 1fr 1fr; }
+
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 2px 10px rgba(20,83,45,.05);
+  }
+  .card .icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .card h3 { font-size: 17px; color: var(--green-900); margin-bottom: 6px; }
+  .card p { font-size: 14.5px; line-height: 1.55; color: var(--ink); }
+  .card .tag { display: inline-block; font-size: 11.5px; font-weight: 700; letter-spacing: 1px; margin-bottom: 10px; color: var(--muted); }
+
+  .icon-green { background: var(--green-100); color: var(--green-700); }
+  .icon-amber { background: var(--amber-bg); color: var(--amber); }
+  .icon-red { background: var(--red-bg); color: var(--red); }
+  .icon-blue { background: var(--blue-bg); color: var(--blue); }
+
+  /* ---- Problem / stat strip ---- */
+  .stat-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 20px; }
+  .stat {
+    background: var(--green-900); color: #fff; border-radius: 12px; padding: 16px 18px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .stat .s-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,.14); display: flex; align-items: center; justify-content: center; flex: none; }
+  .stat strong { display: block; font-size: 15.5px; line-height: 1.3; }
+  .stat span { font-size: 12.5px; color: rgba(255,255,255,.75); }
+
+  /* ---- Idea cards ---- */
+  .idea { position: relative; background: #fff; border: 1.5px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+  .idea .letter {
+    position: absolute; top: -12px; left: 18px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--green-700); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+  .idea h3 { font-size: 15.5px; color: var(--green-900); margin: 6px 0 5px; }
+  .idea p { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+  .idea .src { font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+
+  /* ---- Criteria ---- */
+  .criteria { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+  .crit { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 13px 18px; }
+  .crit .c-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center; flex: none; }
+  .crit strong { font-size: 15.5px; color: var(--green-900); display: block; }
+  .crit span { font-size: 13.5px; color: var(--ink); }
+
+  .decision {
+    margin-top: 18px;
+    background: linear-gradient(90deg, var(--green-700), var(--green-600));
+    color: #fff; border-radius: 12px; padding: 14px 20px;
+    font-size: 15.5px; font-weight: 600; line-height: 1.5;
+    display: flex; align-items: center; gap: 14px;
+  }
+
+  /* ---- Screenshots ---- */
+  .shots { display: flex; gap: 16px; margin-top: 14px; flex: 1; min-height: 0; }
+  .shot {
+    flex: 1; min-width: 0;
+    background: #fff; border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 4px 16px rgba(20,83,45,.08);
+  }
+  .shot img { width: 100%; display: block; object-fit: cover; object-position: top; flex: 1; min-height: 0; }
+  .shot .cap { padding: 9px 14px; font-size: 13px; font-weight: 600; color: var(--green-800); background: var(--green-50); border-top: 1px solid var(--green-100); display: flex; align-items: center; gap: 8px; }
+  .shot .cap .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-500); flex: none; }
+
+  /* ---- Feature list (S7) ---- */
+  .split { display: grid; grid-template-columns: 1.05fr 1fr; gap: 30px; margin-top: 14px; flex: 1; min-height: 0; }
+  .feat { display: flex; align-items: center; gap: 14px; padding: 11px 0; border-bottom: 1px dashed var(--line); }
+  .feat:last-child { border-bottom: none; }
+  .feat .f-icon { width: 40px; height: 40px; border-radius: 11px; background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center; flex: none; }
+  .feat strong { font-size: 16px; color: var(--green-900); display: block; }
+  .feat span { font-size: 13.5px; color: var(--muted); }
+
+  /* ---- Benefits ---- */
+  .benefit { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 15px 18px; }
+  .benefit .b-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center; flex: none; }
+  .benefit strong { font-size: 15.5px; color: var(--green-900); display: block; margin-bottom: 3px; }
+  .benefit p { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+
+  /* ---- KPI ---- */
+  .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 16px; }
+  .kpi-box { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--green-600); border-radius: 12px; padding: 16px; text-align: center; }
+  .kpi-box .num { font-size: 34px; font-weight: 800; color: var(--green-900); line-height: 1.1; }
+  .kpi-box .lab { font-size: 12.5px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+  .impact { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+  .impact-row { display: flex; align-items: flex-start; gap: 16px; background: #fff; border: 1px solid var(--line); border-left: 5px solid var(--green-600); border-radius: 10px; padding: 13px 18px; }
+  .impact-row .ph { font-size: 12px; font-weight: 800; letter-spacing: 1.5px; color: var(--green-700); text-transform: uppercase; width: 130px; flex: none; padding-top: 3px; }
+  .impact-row p { font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+  /* ---- Timeline ---- */
+  .timeline { display: flex; margin-top: 34px; }
+  .tl-item { flex: 1; position: relative; padding: 0 12px; }
+  .tl-item::before {
+    content: ''; position: absolute; top: 9px; left: 0; right: 0; height: 3px;
+    background: var(--green-100);
+  }
+  .tl-item:first-child::before { left: 50%; }
+  .tl-item:last-child::before { right: 50%; }
+  .tl-dot {
+    position: relative; z-index: 1;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--green-600); border: 4px solid #fff;
+    box-shadow: 0 0 0 2px var(--green-600);
+    margin: 0 auto 14px;
+  }
+  .tl-item h3 { font-size: 14.5px; color: var(--green-900); text-align: center; line-height: 1.35; min-height: 42px; }
+  .tl-item .per { display: block; text-align: center; font-size: 12px; font-weight: 700; color: var(--green-700); margin-top: 6px; letter-spacing: .5px; }
+  .tl-item ul { margin: 10px 4px 0; padding-left: 16px; }
+  .tl-item li { font-size: 12.5px; line-height: 1.5; color: var(--ink); margin-bottom: 5px; }
+
+  /* ---- Closing ---- */
+  .closing { align-items: center; justify-content: center; text-align: center; }
+  .closing h2 { font-size: 38px; }
+  .closing .cta { margin-top: 26px; display: inline-flex; align-items: center; gap: 12px; background: var(--green-700); color: #fff; font-weight: 700; font-size: 16px; padding: 14px 30px; border-radius: 999px; box-shadow: 0 10px 26px rgba(22,163,74,.3); }
+  .closing .foot { margin-top: 34px; color: var(--muted); font-size: 14px; letter-spacing: 1px; }
+
+  /* ---- Notes ---- */
+  #notes {
+    position: fixed; right: 18px; top: 18px; z-index: 50;
+    width: 400px; max-height: calc(100vh - 36px); overflow: auto;
+    background: rgba(12,36,23,.92); color: #e8f5ec;
+    border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 16px 18px; font-size: 14px; line-height: 1.6;
+    display: none;
+  }
+  #notes.open { display: block; }
+  #notes h4 { color: #7de3a0; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  #notes .n-text { white-space: pre-line; }
+
+  /* ---- Chrome ---- */
+  #progress { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, var(--green-600), var(--green-500)); z-index: 60; width: 0; transition: width .3s; }
+  #controls {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 14px; z-index: 60;
+    background: rgba(12,36,23,.88); border-radius: 999px; padding: 8px 16px;
+    transition: opacity .3s;
+  }
+  #controls.hidden { opacity: 0; pointer-events: none; }
+  #controls button {
+    width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,.14); color: #fff; font-size: 16px; line-height: 1;
+  }
+  #controls button:hover { background: rgba(255,255,255,.28); }
+  #controls .cnt { color: rgba(255,255,255,.7); font-size: 13px; min-width: 52px; text-align: center; }
+  #hint { position: fixed; bottom: 18px; right: 20px; z-index: 60; color: rgba(255,255,255,.4); font-size: 12px; }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div id="stage"><div id="deck">
+
+  <!-- ══ 1. COVER ══ -->
+  <section class="slide cover-slide active">
+    <div>
+      <span class="cover-badge"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-6 6-6 0 3-2 6-6 6z"/><path d="M12 8c0-3-2-6-6-6 0 3 2 6 6 6z"/></svg>Inovasi Daerah &bull; Layanan Publik Digital</span>
+      <div class="cover-logo"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-6 6-6 0 3-2 6-6 6z"/><path d="M12 8c0-3-2-6-6-6 0 3 2 6 6 6z"/></svg></div>
+      <h1 class="cover-title">CETING NASIKU</h1>
+      <div class="cover-sub">Cegah Stunting Melalui Pemenuhan Gizi untuk Keluarga Unggul</div>
+      <div class="cover-rule"></div>
+      <div class="cover-meta">VIDEO INOVASI DAERAH<br>Proses Penciptaan &amp; Pengembangan Inovasi &bull; Agustus 2026</div>
+      <div class="cover-chips">
+        <span class="chip">Resep Gizi</span><span class="chip">Edukasi Stunting</span><span class="chip">Kalkulator Gizi</span><span class="chip">Cek Risiko</span><span class="chip">Asisten AI NASI</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 2. PETA VIDEO ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">▶</span> Perjalanan Inovasi</div>
+      <h1>Lima Tahap Penciptaan Inovasi</h1>
+      <p class="lead">Video ini memaparkan perjalanan lahirnya CETING NASIKU &mdash; dari permasalahan nyata di lapangan hingga dampak yang diharapkan bagi keluarga Indonesia.</p>
+      <div class="grid g5" style="grid-template-columns: repeat(5, 1fr); margin-top: 34px;">
+        <div class="card" style="text-align:center;"><div class="icon icon-green" style="margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div><h3 style="font-size:15px;">1. Latar Belakang</h3><p style="font-size:12.5px;">Masalah &amp; kebutuhan</p></div>
+        <div class="card" style="text-align:center;"><div class="icon icon-amber" style="margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg></div><h3 style="font-size:15px;">2. Penjaringan Ide</h3><p style="font-size:12.5px;">Gagasan yang dijaring</p></div>
+        <div class="card" style="text-align:center;"><div class="icon icon-blue" style="margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.25 3.4 10.2 8 11 4.6-.8 8-5.75 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></div><h3 style="font-size:15px;">3. Pemilihan Ide</h3><p style="font-size:12.5px;">Kriteria &amp; keputusan</p></div>
+        <div class="card" style="text-align:center;"><div class="icon icon-green" style="margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.7 9a1.2 1.2 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/></svg></div><h3 style="font-size:15px;">4. Manfaat</h3><p style="font-size:12.5px;">Nilai bagi pengguna</p></div>
+        <div class="card" style="text-align:center;"><div class="icon icon-amber" style="margin:0 auto 12px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><h3 style="font-size:15px;">5. Dampak</h3><p style="font-size:12.5px;">Hasil yang diharapkan</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 3. LATAR BELAKANG — MASALAH ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">1</span> Latar Belakang Inovasi</div>
+      <h1>Masalah Nyata: Stunting &amp; Kesenjangan Informasi Gizi</h1>
+      <p class="lead">Tingginya angka stunting dan rendahnya pemahaman gizi masyarakat menjadi dasar penciptaan inovasi. Stunting adalah gangguan tumbuh kembang akibat kekurangan gizi kronis &mdash; dampaknya berlangsung jangka panjang.</p>
+      <div class="stat-strip">
+        <div class="stat"><div class="s-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div><div><strong>Akses informasi gizi terbatas</strong><span>Masyarakat sulit mendapat sumber terpercaya</span></div></div>
+        <div class="stat"><div class="s-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><strong>Resep bahan lokal sulit dijangkau</strong><span>Referensi menu bergizi belum mudah diakses</span></div></div>
+        <div class="stat"><div class="s-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h8"/><path d="M8 16h5"/></svg></div><div><strong>Tanpa sarana mandiri</strong><span>Belum ada alat hitung gizi &amp; cek risiko</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 4. LATAR BELAKANG — SASARAN ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">1</span> Latar Belakang Inovasi</div>
+      <h1>Siapa yang Paling Terdampak?</h1>
+      <p class="lead">Periode 1.000 hari pertama kehidupan menentukan masa depan anak. Kelompok inilah yang menjadi pusat perhatian inovasi CETING NASIKU.</p>
+      <div class="grid g4">
+        <div class="card"><div class="icon icon-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.5-1.4 2-3.2 2-5 0-2.8-2.2-5-5-5-1.7 0-3.2.8-4.1 2.1A5.6 5.6 0 0 0 8 6c-2.8 0-5 2.2-5 5 0 1.8.5 3.6 2 5"/><path d="M8 14v5"/><path d="M12 12v7"/><path d="M16 14v5"/></svg></div><h3>Ibu Hamil</h3><p>Membutuhkan asupan gizi yang tepat untuk mendukung janin dan mencegah stunting sejak dalam kandungan.</p></div>
+        <div class="card"><div class="icon icon-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v2c0 2.8 2.2 5 5 5"/><path d="M16 3h3a2 2 0 0 1 2 2v2c0 2.8-2.2 5-5 5"/><path d="M12 8a4 4 0 0 0 4 4h0"/><path d="M12 8a4 4 0 0 1 4 4"/><path d="M12 4v4"/></svg></div><h3>Ibu Menyusui</h3><p>Membutuhkan panduan menu bernutrisi agar ASI berkualitas bagi tumbuh kembang bayi.</p></div>
+        <div class="card"><div class="icon icon-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></div><h3>Bayi &amp; Balita</h3><p>Anak usia 6 bulan &ndash; 6 tahun: masa MPASI dan pertumbuhan paling pesat yang harus dipantau gizinya.</p></div>
+        <div class="card"><div class="icon icon-red"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v3a1 1 0 0 0 1 1h2l3 5h1v-6H6"/><path d="M21 11v3a1 1 0 0 1-1 1h-2l-3 5h-1v-6h3"/><path d="M12 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/></svg></div><h3>Keluarga</h3><p>Rumah tangga secara keseluruhan: pola asuh, perilaku hidup bersih dan sehat, serta kebiasaan makan keluarga.</p></div>
+      </div>
+      <div class="decision" style="margin-top:auto; margin-bottom: 6px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>Kebutuhannya sama: <strong>informasi gizi yang mudah diakses, resep berbahan lokal yang terjangkau, dan alat penilaian mandiri.</strong></div>
+    </div>
+  </section>
+
+  <!-- ══ 5. PENJARINGAN IDE ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">2</span> Penjaringan Ide</div>
+      <h1>Empat Gagasan yang Dijaring</h1>
+      <p class="lead">Dari identifikasi masalah, tim menjaring berbagai gagasan solusi. Empat kandidat utama muncul sebagai jawaban atas kebutuhan masyarakat.</p>
+      <div class="grid g4" style="margin-top: 26px;">
+        <div class="idea"><span class="letter">A</span><h3>Katalog Resep MPASI</h3><p>Database resep makanan bergizi berbasis bahan pangan lokal untuk bayi, balita, ibu hamil, dan menyusui.</p><div class="src">Menjawab: keterbatasan referensi menu</div></div>
+        <div class="idea"><span class="letter">B</span><h3>Media Edukasi Gizi</h3><p>Materi edukasi pola asuh, PHBS, gizi seimbang, dan perawatan kehamilan dalam format yang mudah dipahami.</p><div class="src">Menjawab: rendahnya pemahaman gizi</div></div>
+        <div class="idea"><span class="letter">C</span><h3>Asisten Konsultasi AI</h3><p>Chatbot cerdas yang siap menjawab pertanyaan gizi dan stunting kapan saja, tanpa antre dan tanpa biaya.</p><div class="src">Menjawab: akses konsultasi terbatas</div></div>
+        <div class="idea"><span class="letter">D</span><h3>Alat Hitung Mandiri</h3><p>Kalkulator kebutuhan gizi harian dan pemeriksaan risiko stunting yang bisa dilakukan keluarga secara mandiri.</p><div class="src">Menjawab: tidak ada sarana mandiri</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 6. PEMILIHAN IDE — KRITERIA ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">3</span> Pemilihan Ide</div>
+      <h1>Kriteria Penilaian Gagasan</h1>
+      <p class="lead">Seluruh gagasan diuji terhadap indikator keberhasilan yang ditetapkan sejak awal perancangan konsep.</p>
+      <div class="criteria">
+        <div class="crit"><div class="c-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><strong>Keterjangkauan</strong><span>Solusi dapat diakses seluruh lapisan masyarakat tanpa hambatan biaya.</span></div></div>
+        <div class="crit"><div class="c-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9"/><path d="M3 4v5h5"/><path d="M3 12a9 9 0 0 1 9-9"/></svg></div><div><strong>Kemudahan Akses</strong><span>Mudah digunakan kapan pun dan di mana pun, termasuk oleh kader dan keluarga.</span></div></div>
+        <div class="crit"><div class="c-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-6 6-6 0 3-2 6-6 6z"/><path d="M12 8c0-3-2-6-6-6 0 3 2 6 6 6z"/></svg></div><div><strong>Pemanfaatan Bahan Pangan Lokal</strong><span>Mendorong penggunaan bahan lokal yang murah dan tersedia di sekitar keluarga.</span></div></div>
+      </div>
+      <div class="decision">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg>
+        <span>Hasil penilaian: <strong>tidak ada satu gagasan tunggal yang mampu menjawab seluruh kebutuhan</strong>. Keputusan diambil: gagasan A&ndash;D dipadukan menjadi satu platform terpadu.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 7. PEMILIHAN IDE — IDE TERPILIH ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">3</span> Pemilihan Ide</div>
+      <h1>Ide Terpilih: Satu Aplikasi, Lima Fitur Utama</h1>
+      <div class="split">
+        <div>
+          <div class="feat"><div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div><strong>Database Resep Gizi</strong><span>Resep MPASI, balita, dan keluarga berbahan lokal + kandungan gizi per porsi</span></div></div>
+          <div class="feat"><div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><strong>Edukasi Stunting</strong><span>Modul gizi, pola asuh, PHBS, dan perawatan kehamilan</span></div></div>
+          <div class="feat"><div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8"/><path d="M8 11h8"/><path d="M8 16h5"/></svg></div><div><strong>Kalkulator Gizi</strong><span>Hitung kebutuhan nutrisi harian berdasarkan bahan dan jumlah</span></div></div>
+          <div class="feat"><div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.25 3.4 10.2 8 11 4.6-.8 8-5.75 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></div><div><strong>Cek Risiko Stunting</strong><span>Pemeriksaan mandiri berbasis kuis pola asuh, gizi, dan kebersihan</span></div></div>
+          <div class="feat"><div class="f-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="14" r="2.5"/><path d="M9.5 14H4"/><path d="M14.5 14H20"/></svg></div><div><strong>Asisten AI NASI</strong><span>Narasumber Ahli Stunting Indonesia &mdash; konsultasi gizi 24 jam</span></div></div>
+        </div>
+        <div class="shots" style="flex-direction: column; gap: 12px;">
+          <div class="shot"><img src="video-assets/recipes.webp" alt="Katalog resep"><div class="cap"><span class="dot"></span>Katalog resep berbahan lokal</div></div>
+          <div class="shot"><img src="video-assets/calculator.webp" alt="Kalkulator gizi"><div class="cap"><span class="dot"></span>Kalkulator gizi &amp; BMI</div></div>
+          <div class="shot"><img src="video-assets/chatbot.webp" alt="Chatbot NASI"><div class="cap"><span class="dot"></span>Asisten AI NASI</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 8. MANFAAT — MASYARAKAT ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">4</span> Manfaat Inovasi</div>
+      <h1>Manfaat bagi Masyarakat</h1>
+      <div class="split">
+        <div class="benefits" style="display:flex; flex-direction:column; gap:12px; justify-content:center;">
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><div><strong>Akses gratis, 24 jam</strong><p>Informasi gizi dan resep dapat diakses publik kapan saja tanpa biaya.</p></div></div>
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-6 6-6 0 3-2 6-6 6z"/><path d="M12 8c0-3-2-6-6-6 0 3 2 6 6 6z"/></svg></div><div><strong>Menu berbahan lokal</strong><p>Resep terjangkau dengan bahan pangan yang tersedia di sekitar rumah.</p></div></div>
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div><div><strong>Edukasi terstruktur</strong><p>Materi pola asuh, PHBS, dan kehamilan yang mudah dipahami keluarga.</p></div></div>
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><div><strong>Deteksi dini mandiri</strong><p>Kalkulator gizi &amp; cek risiko untuk memantau tumbuh kembang anak sendiri.</p></div></div>
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="12" rx="2"/><path d="M12 8V4"/><circle cx="12" cy="14" r="2.5"/><path d="M9.5 14H4"/><path d="M14.5 14H20"/></svg></div><div><strong>Konsultasi AI NASI</strong><p>Pertanyaan gizi dijawab cepat, tanpa antre dan tanpa malu bertanya.</p></div></div>
+        </div>
+        <div class="shots" style="flex-direction: column; gap: 12px;">
+          <div class="shot"><img src="video-assets/home.webp" alt="Beranda CETING NASIKU"><div class="cap"><span class="dot"></span>Beranda &mdash; satu pintu layanan gizi</div></div>
+          <div class="shot"><img src="video-assets/recipe-detail.webp" alt="Detail resep"><div class="cap"><span class="dot"></span>Resep lengkap dengan gizi per porsi</div></div>
+          <div class="shot"><img src="video-assets/edukasi.webp" alt="Modul edukasi"><div class="cap"><span class="dot"></span>Modul edukasi keluarga</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 9. MANFAAT — KADER & OPD ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">4</span> Manfaat Inovasi</div>
+      <h1>Manfaat bagi Kader &amp; Perangkat Daerah</h1>
+      <div class="split">
+        <div>
+          <div class="benefit" style="margin-bottom:12px;"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div><strong>Alat pendampingan kader</strong><p>Pendamping PKK, PPKBD/Sub-PPKBD, dan tenaga kesehatan memiliki materi terstandar untuk edukasi keluarga.</p></div></div>
+          <div class="benefit" style="margin-bottom:12px;"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v6h-6"/><path d="M12 7v5l3 3"/></svg></div><div><strong>Panel admin terpusat</strong><p>Kelola resep, bahan, dan kategori dalam satu dashboard &mdash; konten selalu mutakhir.</p></div></div>
+          <div class="benefit"><div class="b-icon"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><div><strong>Mendukung program PPS</strong><p>Media digital yang selaras dengan program penurunan angka stunting di tingkat desa/kelurahan.</p></div></div>
+        </div>
+        <div style="display:flex; flex-direction:column;">
+          <div class="shot" style="flex:1;"><img src="video-assets/admin.webp" alt="Dashboard admin" style="height:100%;"><div class="cap"><span class="dot"></span>Panel admin &mdash; pengelolaan konten</div></div>
+          <div class="kpi" style="grid-template-columns: repeat(3, 1fr); margin-top: 12px;">
+            <div class="kpi-box"><div class="num">100</div><div class="lab">Resep Bergizi</div></div>
+            <div class="kpi-box"><div class="num">65</div><div class="lab">Bahan Pangan Lokal</div></div>
+            <div class="kpi-box"><div class="num">5</div><div class="lab">Kategori Sasaran</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 10. DAMPAK ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">5</span> Dampak Inovasi</div>
+      <h1>Dampak yang Diharapkan</h1>
+      <p class="lead">Dampak dirancang berjenjang &mdash; dari perubahan pengetahuan, perilaku, hingga kontribusi pada indikator nasional.</p>
+      <div class="impact">
+        <div class="impact-row"><span class="ph">Jangka Pendek</span><p><strong>Meningkatnya pengetahuan gizi</strong> masyarakat; akses informasi yang setara bagi keluarga di desa dan kelurahan.</p></div>
+        <div class="impact-row"><span class="ph">Jangka Menengah</span><p><strong>Praktik pemberian makan yang lebih baik</strong>; pemanfaatan bahan pangan lokal; deteksi risiko stunting lebih dini.</p></div>
+        <div class="impact-row"><span class="ph">Jangka Panjang</span><p><strong>Kontribusi nyata pada penurunan angka stunting</strong> melalui keterjangkauan, kemudahan akses, dan edukasi berkelanjutan.</p></div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-box"><div class="num">4</div><div class="lab">Kategori Sasaran: ibu hamil, menyusui, bayi/balita, keluarga</div></div>
+        <div class="kpi-box"><div class="num">5</div><div class="lab">Fitur Layanan dalam satu platform</div></div>
+        <div class="kpi-box"><div class="num">100+</div><div class="lab">Resep &amp; bahan pangan lokal siap pakai</div></div>
+        <div class="kpi-box"><div class="num">24/7</div><div class="lab">Konsultasi gizi via asisten AI NASI</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 11. TIMELINE ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">✓</span> Bukti Rentang Waktu</div>
+      <h1>Proses Penciptaan: Maret &ndash; Juli 2026</h1>
+      <p class="lead">Inovasi diciptakan dan dikembangkan secara bertahap dalam kurang lebih 5 bulan, tercatat pada repositori pengembangan aplikasi.</p>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-dot"></div><h3>Identifikasi Masalah &amp; Perencanaan</h3><span class="per">Maret 2026</span><ul><li>Pemetaan masalah &amp; kebutuhan</li><li>Desain basis data</li></ul></div>
+        <div class="tl-item"><div class="tl-dot"></div><h3>Pembangunan Sistem Inti (MVP)</h3><span class="per">Maret 2026</span><ul><li>Modul resep, bahan, kategori</li><li>Panel admin</li></ul></div>
+        <div class="tl-item"><div class="tl-dot"></div><h3>Integrasi Asisten AI NASI</h3><span class="per">Maret 2026</span><ul><li>Chatbot gizi terhubung</li><li>Persona narasumber ahli</li></ul></div>
+        <div class="tl-item"><div class="tl-dot"></div><h3>Pengembangan Fitur &amp; Konten</h3><span class="per">April&ndash;Juni 2026</span><ul><li>Edukasi &amp; cek risiko</li><li>Puluhan resep &amp; bahan lokal</li></ul></div>
+        <div class="tl-item"><div class="tl-dot"></div><h3>Penyempurnaan &amp; Pengujian</h3><span class="per">Juli 2026</span><ul><li>Gambar resep otomatis</li><li>Optimasi &amp; sitemap</li></ul></div>
+        <div class="tl-item"><div class="tl-dot"></div><h3>Peluncuran &amp; Operasional</h3><span class="per">Juli 2026</span><ul><li>Publikasi ke masyarakat</li><li>Pemantauan &amp; umpan balik</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 12. KESIMPULAN ══ -->
+  <section class="slide">
+    <div class="slide-inner">
+      <div class="kicker"><span class="num">★</span> Kesimpulan</div>
+      <h1>Mengapa Inovasi Ini Layak?</h1>
+      <div class="grid g2" style="margin-top: 24px;">
+        <div class="card" style="display:flex; gap:16px; align-items:flex-start;"><div class="icon icon-red" style="flex:none; margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg></div><div><h3>Masalah Nyata</h3><p>Berangkat dari kendala nyata: stunting, keterbatasan informasi, dan tidak adanya sarana mandiri bagi keluarga.</p></div></div>
+        <div class="card" style="display:flex; gap:16px; align-items:flex-start;"><div class="icon icon-amber" style="flex:none; margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7c.6.5 1 1.4 1 2.3h6c0-.9.4-1.8 1-2.3A7 7 0 0 0 12 2z"/></svg></div><div><h3>Ide Teruji</h3><p>Gagasan dijaring dan diseleksi dengan kriteria jelas &mdash; keputusan dipadukan menjadi satu platform utuh.</p></div></div>
+        <div class="card" style="display:flex; gap:16px; align-items:flex-start;"><div class="icon icon-blue" style="flex:none; margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5.25 3.4 10.2 8 11 4.6-.8 8-5.75 8-11V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></div><div><h3>Solusi Utuh</h3><p>Resep, edukasi, kalkulator, cek risiko, dan asisten AI dalam satu aplikasi gratis yang dapat diakses semua orang.</p></div></div>
+        <div class="card" style="display:flex; gap:16px; align-items:flex-start;"><div class="icon icon-green" style="flex:none; margin:0;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><div><h3>Dampak Terukur</h3><p>Indikator keberhasilan jelas: keterjangkauan, kemudahan akses, dan pemanfaatan pangan lokal untuk turunkan stunting.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 13. PENUTUP ══ -->
+  <section class="slide closing">
+    <div>
+      <div class="cover-logo" style="margin-bottom: 22px;"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22V8"/><path d="M12 8c0-3 2-6 6-6 0 3-2 6-6 6z"/><path d="M12 8c0-3-2-6-6-6 0 3 2 6 6 6z"/></svg></div>
+      <h2>Keluarga Unggul, Bebas Stunting</h2>
+      <p class="lead" style="max-width: 860px; margin: 14px auto 0;">CETING NASIKU adalah wujud nyata inovasi daerah untuk kesehatan generasi Indonesia &mdash; dari desa, oleh kader, untuk keluarga.</p>
+      <div class="cta">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        Mari bersama wujudkan Indonesia bebas stunting
+      </div>
+      <div class="foot">CETING NASIKU &bull; Inovasi Daerah 2026</div>
+    </div>
+  </section>
+
+</div></div>
+
+<div id="controls">
+  <button onclick="prevSlide()" aria-label="Sebelumnya">&#8249;</button>
+  <span class="cnt"><span id="current">1</span> / <span id="total">13</span></span>
+  <button onclick="nextSlide()" aria-label="Berikutnya">&#8250;</button>
+</div>
+<div id="hint">Navigasi: &larr; &rarr; / Spasi &bull; N = narasi</div>
+<div id="notes"><h4>Narasi Pembicara</h4><div class="n-text"></div></div>
+
+<script>
+  const NOTES = [
+    "Selamat datang. Perkenalkan, CETING NASIKU \u2014 Cegah Stunting Melalui Pemenuhan Gizi untuk Keluarga Unggul. Sebuah inovasi daerah berupa layanan publik digital yang lahir dari kepedulian terhadap masa depan generasi Indonesia.",
+    "Video ini memaparkan perjalanan lahirnya inovasi dalam lima tahap: latar belakang, penjaringan ide, pemilihan ide, manfaat, dan dampak inovasi.",
+    "Angka stunting masih menjadi tantangan serius, dan rendahnya pemahaman gizi masyarakat memperparah keadaan. Tiga kendala utama: akses informasi gizi yang terbatas, referensi resep berbahan lokal yang sulit dijangkau, dan tidak adanya sarana mandiri untuk menghitung kebutuhan gizi serta memeriksa risiko stunting.",
+    "Kelompok yang paling menentukan tumbuh kembang adalah ibu hamil, ibu menyusui, bayi dan balita usia 6 bulan hingga 6 tahun, serta keluarga secara keseluruhan. Mereka membutuhkan informasi yang mudah diakses, resep berbahan lokal, dan alat penilaian mandiri.",
+    "Dari kebutuhan tersebut, tim menjaring empat gagasan: katalog resep MPASI berbahan lokal, media edukasi gizi dan pola asuh, asisten konsultasi berbasis AI, serta alat hitung kebutuhan gizi dan pemeriksaan risiko secara mandiri.",
+    "Keempat gagasan dinilai berdasarkan indikator keberhasilan yang ditetapkan sejak awal: keterjangkauan, kemudahan akses, dan pemanfaatan bahan pangan lokal. Hasilnya, tidak ada satu gagasan pun yang berdiri sendiri mampu menjawab seluruh kebutuhan. Tim memutuskan menggabungkan seluruh gagasan dalam satu aplikasi terpadu.",
+    "Terpilihlah CETING NASIKU: satu aplikasi web yang memadukan database resep bergizi, edukasi stunting, kalkulator gizi, cek risiko, dan asisten AI NASI. Seluruhnya dapat diakses publik secara gratis.",
+    "Bagi masyarakat, aplikasi ini memberi akses informasi gizi yang mudah dan gratis: resep MPASI dan makanan keluarga berbahan lokal, modul edukasi pola asuh, PHBS, dan kehamilan, serta konsultasi gizi lewat NASI kapan pun dibutuhkan.",
+    "Bagi kader dan perangkat daerah, aplikasi menjadi alat pendampingan yang terstandar. Panel admin memudahkan pengelolaan resep, bahan, dan kategori. Saat ini platform telah memuat seratus resep dan enam puluh lima bahan makanan lokal, siap mendukung program penurunan angka stunting.",
+    "Dampak yang diharapkan berjenjang. Jangka pendek: meningkatnya pengetahuan gizi masyarakat. Jangka menengah: praktik pemberian makan yang lebih baik dan deteksi risiko lebih dini. Jangka panjang: kontribusi nyata pada penurunan angka stunting.",
+    "Inovasi ini diciptakan secara bertahap dalam rentang waktu Maret hingga Juli 2026: identifikasi masalah, pembangunan sistem inti, integrasi asisten AI, pengembangan fitur dan konten, penyempurnaan dan pengujian, hingga peluncuran publik.",
+    "Kesimpulannya, CETING NASIKU menjawab masalah nyata dengan ide yang teruji dan solusi utuh: dari identifikasi kebutuhan, penjaringan dan pemilihan ide, hingga aplikasi yang berdampak terukur bagi keluarga Indonesia.",
+    "Kami mengajak seluruh pihak \u2014 masyarakat, kader, dan perangkat daerah \u2014 untuk memanfaatkan dan mendukung CETING NASIKU. Bersama, wujudkan keluarga unggul, bebas stunting. Terima kasih."
+  ];
+
+  let current = 1;
+  const total = document.querySelectorAll('.slide').length;
+  document.getElementById('total').textContent = total;
+  let hideTimer;
+
+  function scaleDeck() {
+    const s = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+    document.getElementById('deck').style.transform = 'scale(' + s + ')';
+  }
+
+  function showSlide(n) {
+    if (n < 1) n = 1;
+    if (n > total) n = total;
+    current = n;
+    document.querySelectorAll('.slide').forEach((s, i) => s.classList.toggle('active', i === n - 1));
+    document.getElementById('current').textContent = n;
+    document.getElementById('progress').style.width = (n / total * 100) + '%';
+    document.getElementById('notes').querySelector('.n-text').textContent = NOTES[n - 1] || '';
+  }
+
+  function nextSlide() { showSlide(current + 1); }
+  function prevSlide() { showSlide(current - 1); }
+
+  function wake() {
+    document.getElementById('controls').classList.remove('hidden');
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => document.getElementById('controls').classList.add('hidden'), 2600);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); nextSlide(); wake(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevSlide(); wake(); }
+    if (e.key === 'Home') { showSlide(1); wake(); }
+    if (e.key === 'End') { showSlide(total); wake(); }
+    if (e.key === 'n' || e.key === 'N') document.getElementById('notes').classList.toggle('open');
+  });
+
+  document.getElementById('stage').addEventListener('click', (e) => {
+    if (e.target.closest('#controls') || e.target.closest('#notes')) return;
+    nextSlide(); wake();
+  });
+  document.addEventListener('mousemove', wake);
+
+  window.addEventListener('resize', scaleDeck);
+  scaleDeck();
+  showSlide(1);
+  wake();
+</script>
+</body>
+</html>

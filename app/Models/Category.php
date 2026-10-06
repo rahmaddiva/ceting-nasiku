@@ -15,4 +15,13 @@ class Category extends Model
     {
         return $this->hasMany(Recipe::class);
     }
+
+    public function getImageAttribute($value)
+    {
+        if ($value && ! str_starts_with($value, 'images/')) {
+            return 'images/'.$value;
+        }
+
+        return $value;
+    }
 }

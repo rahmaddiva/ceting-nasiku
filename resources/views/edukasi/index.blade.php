@@ -1,6 +1,10 @@
 @extends('layouts.public')
+@section('body_class', 'page-inner')
 @section('title', 'Modul Edukasi — CETING NASIKU')
 @section('meta_description', 'Pelajari pola asuh anak, PHBS, dan perawatan kehamilan untuk mencegah stunting. Edukasi kesehatan dari CETING NASIKU Kab. Tanah Laut.')
+@section('og_title', 'Modul Edukasi — CETING NASIKU')
+@section('og_description', 'Pelajari pola asuh anak, PHBS, dan perawatan kehamilan untuk mencegah stunting.')
+@section('og_type', 'website')
 
 @section('content')
 <!-- Hero -->
@@ -63,7 +67,7 @@
                     <div class="edu-module-card__badge"><i class="fas fa-heart"></i> 5 Materi</div>
                 </div>
                 <div class="edu-module-card__body">
-                    <div class="edu-module-card__icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-person-pregnant"></i></div>
+                    <div class="edu-module-card__icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-person-pregnant"></i></div>
                     <h3>Perawatan Kehamilan</h3>
                     <p>Panduan pemeriksaan ANC, nutrisi ibu hamil, tanda bahaya kehamilan, persiapan persalinan, dan 1000 hari pertama kehidupan.</p>
                     <span class="edu-module-card__link">Pelajari <i class="fas fa-arrow-right"></i></span>

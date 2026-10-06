@@ -10,9 +10,21 @@ class Ingredient extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'unit', 'calories', 'protein', 'fat',
+        'name', 'unit', 'substitution_group', 'calories', 'protein', 'fat',
         'carbohydrates', 'fiber', 'calcium', 'iron',
         'vitamin_a', 'vitamin_c',
+    ];
+
+    protected $casts = [
+        'calories' => 'float',
+        'protein' => 'float',
+        'fat' => 'float',
+        'carbohydrates' => 'float',
+        'fiber' => 'float',
+        'calcium' => 'float',
+        'iron' => 'float',
+        'vitamin_a' => 'float',
+        'vitamin_c' => 'float',
     ];
 
     public function recipes()
@@ -20,6 +32,21 @@ class Ingredient extends Model
         return $this->belongsToMany(Recipe::class, 'recipe_ingredients')
             ->withPivot('quantity_grams')
             ->withTimestamps();
+    }
+
+    /**
+     * Bahan lain dalam grup substitusi yang sama (tanpa diri sendiri).
+     */
+    public function substitutes()
+    {
+        if (! $this->substitution_group) {
+            return collect();
+        }
+
+        return static::where('substitution_group', $this->substitution_group)
+            ->whereKeyNot($this->getKey())
+            ->orderBy('name')
+            ->get();
     }
 
     /**

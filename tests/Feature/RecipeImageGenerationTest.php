@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
@@ -25,6 +26,13 @@ class RecipeImageGenerationTest extends TestCase
             'password' => bcrypt('password'),
             'role' => 'admin',
         ]);
+    }
+
+    protected function tearDown(): void
+    {
+        File::deleteDirectory(public_path('images/recipes'));
+
+        parent::tearDown();
     }
 
     public function test_admin_can_generate_recipe_images(): void

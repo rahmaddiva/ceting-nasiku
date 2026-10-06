@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposal Inovasi Daerah — CETING NASIKU</title>
+<style>
+  :root {
+    --green-900: #14532d;
+    --green-700: #15803d;
+    --green-600: #16a34a;
+    --green-100: #dcfce7;
+    --green-50: #f0fdf4;
+    --gray-700: #374151;
+    --gray-500: #6b7280;
+    --gray-200: #e5e7eb;
+    --gray-100: #f3f4f6;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Calibri', Arial, sans-serif;
+    color: #111827;
+    font-size: 12px;
+    line-height: 1.6;
+    background: #fff;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 18mm 20mm;
+    margin: 0 auto;
+    page-break-after: always;
+    position: relative;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ── Cover ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 297mm;
+    text-align: center;
+  }
+  .cover .logo {
+    width: 90mm;
+    margin: 0 auto 8mm;
+  }
+  .cover .kategori {
+    letter-spacing: 3px;
+    font-size: 11px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    margin-bottom: 12mm;
+  }
+  .cover h1 {
+    font-size: 34px;
+    color: var(--green-900);
+    letter-spacing: 6px;
+    margin-bottom: 4mm;
+  }
+  .cover .title-desc {
+    font-size: 18px;
+    color: var(--green-700);
+    font-weight: 600;
+    margin-bottom: 12mm;
+  }
+  .cover .institution {
+    font-size: 14px;
+    color: var(--gray-700);
+    margin-bottom: 2mm;
+  }
+  .cover .year {
+    font-size: 13px;
+    color: var(--gray-500);
+    margin-top: 16mm;
+  }
+
+  /* ── Headings ── */
+  h2 {
+    font-size: 16px;
+    color: var(--green-900);
+    border-left: 5px solid var(--green-600);
+    padding-left: 8px;
+    margin: 8mm 0 4mm;
+  }
+  h3 {
+    font-size: 13px;
+    color: var(--green-700);
+    margin: 5mm 0 2mm;
+  }
+  p { margin-bottom: 3mm; text-align: justify; }
+  ul, ol { margin: 0 0 3mm 6mm; }
+  li { margin-bottom: 1.5mm; }
+
+  /* ── Info table ── */
+  table { width: 100%; border-collapse: collapse; margin-bottom: 5mm; }
+  th, td { border: 1px solid var(--gray-200); padding: 2.5mm 3mm; vertical-align: top; text-align: left; }
+  th { background: var(--green-100); color: var(--green-900); font-size: 11px; }
+  tr:nth-child(even) td { background: var(--green-50); }
+
+  .info td:first-child { width: 32%; background: var(--green-100); font-weight: 600; color: var(--green-900); }
+
+  /* ── Timeline ── */
+  .timeline { position: relative; padding-left: 8mm; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 2.2mm; top: 2mm; bottom: 2mm;
+    width: 2px;
+    background: var(--green-600);
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 5mm;
+    padding: 3mm 4mm;
+    background: var(--green-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 4px;
+  }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -6.7mm; top: 4mm;
+    width: 4mm; height: 4mm;
+    background: var(--green-600);
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 2px var(--green-600);
+  }
+  .timeline-item .periode {
+    font-weight: 700;
+    color: var(--green-700);
+    font-size: 11px;
+  }
+  .timeline-item .judul { font-weight: 700; font-size: 12px; }
+
+  .badge {
+    display: inline-block;
+    padding: 1mm 3mm;
+    border-radius: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    background: var(--green-600);
+    color: #fff;
+  }
+
+  .kpi {
+    display: flex;
+    gap: 4mm;
+    margin-bottom: 5mm;
+  }
+  .kpi > div {
+    flex: 1;
+    border: 1px solid var(--gray-200);
+    border-top: 4px solid var(--green-600);
+    border-radius: 4px;
+    padding: 3mm;
+    text-align: center;
+    background: #fff;
+  }
+  .kpi .num { font-size: 20px; font-weight: 700; color: var(--green-900); }
+  .kpi .label { font-size: 10px; color: var(--gray-500); }
+
+  .screenshot {
+    display: inline-block;
+    width: 30%;
+    border: 1px dashed var(--gray-200);
+    border-radius: 4px;
+    background: var(--gray-100);
+    color: var(--gray-500);
+    font-size: 10px;
+    text-align: center;
+    padding: 20mm 2mm;
+    margin: 0 1% 3mm;
+    vertical-align: top;
+  }
+  .screenshot strong { display: block; color: var(--gray-700); margin-bottom: 2mm; }
+
+  .ttd { display: flex; justify-content: flex-end; margin-top: 12mm; }
+  .ttd .blok { text-align: center; font-size: 12px; }
+
+  .footer-note {
+    position: absolute;
+    bottom: 10mm; left: 20mm; right: 20mm;
+    border-top: 1px solid var(--gray-200);
+    padding-top: 2mm;
+    font-size: 9px;
+    color: var(--gray-500);
+    text-align: center;
+  }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════ COVER ══════════════ -->
+<div class="page cover">
+  <div class="logo" style="font-size:11px;color:#15803d;font-weight:800;letter-spacing:1px;">logo-daerah</div>
+  <div class="kategori">Inovasi Daerah &bull; Layanan Publik Digital</div>
+  <h1>CETING NASIKU</h1>
+  <div class="title-desc">Cegah Stunting Melalui Pemenuhan Gizi untuk Keluarga Unggul</div>
+  <div class="institution"><strong>PROPOSAL INOVASI DAERAH</strong></div>
+  <div class="institution">Tahapan Proses &amp; Pengembangan Inovasi Daerah</div>
+  <div class="institution">(Lampiran Bukti Rentang Waktu Penciptaan Inovasi)</div>
+  <div class="year">Agustus 2026</div>
+</div>
+
+<!-- ══════════════ IDENTITAS & RINGKASAN ══════════════ -->
+<div class="page">
+  <h2>1. Identitas Inovasi</h2>
+  <table class="info">
+    <tr><td>Nama Inovasi</td><td><strong>CETING NASIKU</strong> (Cegah Stunting Melalui Pemenuhan Gizi untuk Keluarga Unggul)</td></tr>
+    <tr><td>Jenis Inovasi</td><td>Inovasi Pelayanan Publik &mdash; Sistem Informasi Pencegahan Stunting Berbasis Web &amp; AI</td></tr>
+    <tr><td>Bentuk Inovasi</td><td>Aplikasi web (digital) dengan fitur resep gizi, edukasi, kalkulator gizi, cek risiko stunting, dan asisten AI (chatbot)</td></tr>
+    <tr><td>Pengampu</td><td>[Nama Perangkat Daerah / OPD]</td></tr>
+    <tr><td>Tim Inovator</td><td>[Nama Tim / Inovator]</td></tr>
+    <tr><td>Bidang</td><td>Kesehatan &mdash; Penurunan Angka Stunting (PPS)</td></tr>
+    <tr><td>Target Sasaran</td><td>Ibu hamil, ibu menyusui, bayi, balita, dan keluarga dengan anak usia 6 bulan &ndash; 6 tahun</td></tr>
+    <tr><td>Rentang Waktu Penciptaan</td><td><strong>Maret 2026 s.d. Juli 2026</strong> (kurang lebih 5 bulan)<br><em>dengan pemeliharaan dan pengembangan berkelanjutan hingga Agustus 2026</em></td></tr>
+  </table>
+
+  <h2>2. Ringkasan Eksekutif</h2>
+  <p>
+    CETING NASIKU merupakan inovasi daerah berupa sistem informasi digital yang menjawab permasalahan
+    gizi dan stunting melalui penyediaan <em>database</em> resep berbasis bahan makanan lokal,
+    edukasi gizi &amp; pola asuh, kalkulator kebutuhan gizi, pemeriksaan risiko stunting secara mandiri,
+    serta asisten virtual <strong>NASI</strong> (Narasumber Ahli Stunting Indonesia) berbasis kecerdasan buatan.
+    Seluruh fitur dibangun sebagai aplikasi web yang dapat diakses publik tanpa biaya.
+  </p>
+  <p>
+    Inovasi ini diciptakan dan dikembangkan secara bertahap dalam rentang waktu <strong>Maret 2026 sampai dengan Juli 2026</strong>,
+    melalui tahapan identifikasi masalah, perancangan konsep, pengembangan sistem, pengujian, hingga peluncuran publik.
+    Dokumen ini menyajikan bukti rentang waktu serta tahapan proses penciptaan dan pengembangan inovasi sebagaimana dimaksud.
+  </p>
+
+  <div class="kpi">
+    <div><div class="num">4</div><div class="label">Kategori Sasar</div></div>
+    <div><div class="num">2</div><div class="label">Konseling AI (NASI)</div></div>
+    <div><div class="num">2</div><div class="label">Alat Cek Risiko &amp; Kalkulator</div></div>
+    <div><div class="num">±5 bln</div><div class="label">Rentang Penciptaan</div></div>
+  </div>
+
+  <div class="footer-note">CETING NASIKU &mdash; Proposal Inovasi Daerah &bull; Halaman 2</div>
+</div>
+
+<!-- ══════════════ RENTANG WAKTU & TIMELINE ══════════════ -->
+<div class="page">
+  <h2>3. Rentang Waktu Penciptaan Inovasi Daerah</h2>
+  <p>
+    Rentang waktu yang digunakan untuk menciptakan inovasi daerah CETING NASIKU adalah
+    <strong>Maret 2026 sampai dengan Juli 2026</strong> (kurang lebih 5 bulan), terbagi dalam
+    enam tahap sebagaimana diagram waktu berikut. Bukti teknis pengembangan tercatat pada
+    sistem pengelolaan versi kode (<em>repository</em> aplikasi) pada kurun waktu tersebut.
+  </p>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="periode">Maret 2026</div>
+      <div class="judul">Identifikasi Masalah &amp; Perencanaan</div>
+      <ul>
+        <li>Pemetaan masalah stunting, gizi bayi/balita, dan kebutuhan edukasi masyarakat.</li>
+        <li>Penyusunan konsep inovasi dan peta kebutuhan fitur (resep, edukasi, kalkulator, cek risiko).</li>
+        <li>Perancangan basis data: kategori, bahan makanan beserta kandungan gizi, dan resep.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="periode">Maret 2026 (awal)</div>
+      <div class="judul">Pembangunan Sistem Inti (MVP)</div>
+      <ul>
+        <li>Pembangunan modul resep, kategori, dan bahan makanan.</li>
+        <li>Modul perhitungan gizi per 100 gram bahan dan per porsi resep.</li>
+        <li>Panel pengelolaan admin untuk resep, bahan, dan kategori.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="periode">Maret 2026 (akhir)</div>
+      <div class="judul">Penambahan Asisten AI (Chatbot NASI)</div>
+      <ul>
+        <li>Integrasi layanan kecerdasan buatan untuk asisten gizi virtual <strong>NASI</strong>.</li>
+        <li>Penyusunan <em>prompt</em> persona NASI sebagai narasumber ahli gizi.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="periode">April &ndash; Juni 2026</div>
+      <div class="judul">Pengembangan Fitur &amp; Konten</div>
+      <ul>
+        <li>Penambahan halaman edukasi (gizi, pola asuh, PHBS, kehamilan) dan cek risiko stunting.</li>
+        <li>Pengayaan basis data bahan lokal (ikan, telur, sayur, umbi, kacang-kacangan).</li>
+        <li>Pengisian puluhan resep MPASI, balita, anak, dan camilan sehat berbahan lokal.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="periode">Juli 2026</div>
+      <div class="judul">Penyempurnaan, Pengujian &amp; Kelengkapan Teknis</div>
+      <ul>
+        <li>Penambahan fitur pembuatan gambar resep otomatis.</li>
+        <li>Penyempurnaan tampilan, optimasi, dan peta situs (<em>sitemap</em>) untuk keterindeksan.</li>
+        <li>Uji fungsional fitur publik dan admin serta perbaikan akhir.</li>
+      </ul>
+    </div>
+    <div class="timeline-item">
+      <div class="periode">Juli 2026</div>
+      <div class="judul">Peluncuran &amp; Operasional</div>
+      <ul>
+        <li>Publikasi inovasi kepada masyarakat secara terbuka.</li>
+        <li>Pemantauan penggunaan, umpan balik, dan pemeliharaan berkelanjutan.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Tabel Rentang Waktu dan Capaian</h3>
+  <table>
+    <tr><th>No</th><th>Tahap</th><th>Periode</th><th>Output / Capaian</th></tr>
+    <tr><td>1</td><td>Identifikasi masalah &amp; perencanaan</td><td>Maret 2026</td><td>Konsep inovasi &amp; desain basis data</td></tr>
+    <tr><td>2</td><td>Pembangunan sistem inti (MVP)</td><td>Maret 2026</td><td>Modul resep, kategori, bahan, kalkulator gizi, panel admin</td></tr>
+    <tr><td>3</td><td>Integrasi asisten AI (NASI)</td><td>Maret 2026</td><td>Chatbot edukasi gizi berjalan</td></tr>
+    <tr><td>4</td><td>Pengembangan fitur &amp; konten</td><td>Apr&ndash;Jun 2026</td><td>Edukasi, cek risiko, ratusan bahan &amp; resep lokal</td></tr>
+    <tr><td>5</td><td>Penyempurnaan &amp; pengujian</td><td>Juli 2026</td><td>Fitur gambar resep, optimasi, sitemap, uji fungsional</td></tr>
+    <tr><td>6</td><td>Peluncuran &amp; operasional</td><td>Juli 2026</td><td>Inovasi dapat diakses publik</td></tr>
+  </table>
+
+  <div class="footer-note">CETING NASIKU &mdash; Proposal Inovasi Daerah &bull; Halaman 3</div>
+</div>
+
+<!-- ══════════════ TAHAPAN PENCIptaan ══════════════ -->
+<div class="page">
+  <h2>4. Tahapan Proses Penciptaan Inovasi Daerah</h2>
+
+  <h3>4.1 Identifikasi Masalah</h3>
+  <p>
+    Tingginya angka stunting serta rendahnya pemahaman gizi masyarakat menjadi dasar penciptaan inovasi.
+    Kendala yang diidentifikasi antara lain: keterbatasan akses informasi gizi, referensi resep berbahan
+    lokal yang sulit dijangkau, serta tidak adanya sarana mandiri untuk menghitung kebutuhan gizi dan
+    memeriksa risiko stunting.
+  </p>
+
+  <h3>4.2 Gagasan &amp; Perancangan Konsep</h3>
+  <ul>
+    <li>Perumusan gagasan: satu aplikasi yang memadukan <em>database</em> resep, edukasi, kalkulator gizi, cek risiko, dan asisten AI.</li>
+    <li>Perancangan arsitektur sistem dan basis data (kategori, bahan, resep, pengguna, peran admin).</li>
+    <li>Penyusunan indikator keberhasilan: keterjangkauan, kemudahan akses, dan pemanfaatan bahan pangan lokal.</li>
+  </ul>
+
+  <h3>4.3 Penyusunan &amp; Pengujian Konsep</h3>
+  <ul>
+    <li>Pembuatan <em>prototipe</em>/MVP modul inti untuk memastikan konsep layak dikembangkan.</li>
+    <li>Validasi akurasi perhitungan gizi (per 100 gram bahan dan per porsi).</li>
+    <li>Uji coba alur penggunaan oleh admin dan calon pengguna.</li>
+  </ul>
+
+  <h3>4.4 Pelaksanaan Penciptaan</h3>
+  <p>
+    Inovasi dibangun secara bertahap selama <strong>Maret s.d. Juli 2026</strong>: pembangunan modul inti,
+    integrasi asisten AI, pengayaan konten dan bahan lokal, penyempurnaan tampilan, hingga peluncuran publik.
+  </p>
+
+  <h2>5. Tahapan Pengembangan Inovasi Daerah</h2>
+
+  <h3>5.1 Rilis Awal (MVP)</h3>
+  <ul>
+    <li>Modul resep &amp; bahan dengan perhitungan gizi, panel admin, dan halaman publik dasar.</li>
+  </ul>
+  <h3>5.2 Iterasi Pengembangan</h3>
+  <ul>
+    <li>Penambahan fitur edukasi, cek risiko stunting, kalkulator gizi lanjutan, dan asisten AI NASI.</li>
+    <li>Pengayaan konten: resep MPASI (6&ndash;8 dan 9&ndash;11 bulan), balita (1&ndash;3 tahun), anak (4&ndash;6 tahun), dan camilan sehat berbasis bahan lokal.</li>
+    <li>Penambahan fitur gambar resep otomatis dan optimasi teknis (sitemap, kinerja).</li>
+  </ul>
+  <h3>5.3 Konsolidasi &amp; Operasional</h3>
+  <ul>
+    <li>Publikasi ke masyarakat, pemantauan pemanfaatan, penanganan umpan balik, dan pemeliharaan berkelanjutan.</li>
+  </ul>
+
+  <div class="footer-note">CETING NASIKU &mdash; Proposal Inovasi Daerah &bull; Halaman 4</div>
+</div>
+
+<!-- ══════════════ BUKTI ══════════════ -->
+<div class="page">
+  <h2>6. Bukti Pendukung Tahapan</h2>
+  <p>Berikut dokumentasi antarmuka yang merepresentasikan capaian pada tiap tahapan pengembangan (tempatkan hasil tangkapan layar aplikasi):</p>
+
+  <h3>6.1 Halaman Beranda &amp; Katalog Resep (Tahap MVP &amp; Pengembangan)</h3>
+  <span class="screenshot"><strong>Beranda</strong>tampilan fitur unggulan &amp; statistik</span>
+  <span class="screenshot"><strong>Daftar Resep</strong>katalog resep berbahan lokal</span>
+  <span class="screenshot"><strong>Detail Resep</strong>informasi gizi per porsi</span>
+
+  <h3>6.2 Alat Kesehatan &amp; Edukasi</h3>
+  <span class="screenshot"><strong>Kalkulator Gizi</strong>hitung kebutuhan bahan</span>
+  <span class="screenshot"><strong>Cek Risiko</strong>pemeriksaan mandiri</span>
+  <span class="screenshot"><strong>Edukasi</strong>gizi, pola asuh, PHBS</span>
+
+  <h3>6.3 Asisten AI &amp; Panel Admin</h3>
+  <span class="screenshot"><strong>Chatbot NASI</strong>asisten gizi virtual</span>
+  <span class="screenshot"><strong>Admin &mdash; Resep</strong>pengelolaan konten</span>
+  <span class="screenshot"><strong>Admin &mdash; Dashboard</strong>statistik data</span>
+
+  <h3>6.4 Bukti Teknis Pengembangan</h3>
+  <table>
+    <tr><th>Periode</th><th>Bukti Teknis</th><th>Keterangan</th></tr>
+    <tr><td>Maret 2026</td><td>Skema basis data (migrasi) modul inti</td><td>Tabel kategori, bahan, resep, pengguna, dan peran</td></tr>
+    <tr><td>Maret 2026</td><td>Integrasi layanan asisten AI</td><td>Modul chatbot NASI terhubung</td></tr>
+    <tr><td>Juli 2026</td><td>Fitur gambar resep &amp; optimasi teknis</td><td>Penyempurnaan dan kelengkapan sistem</td></tr>
+  </table>
+
+  <h2>7. Kesimpulan</h2>
+  <p>
+    Inovasi daerah CETING NASIKU diciptakan dan dikembangkan melalui tahapan proses penciptaan dan
+    pengembangan inovasi dalam rentang waktu <strong>Maret 2026 sampai dengan Juli 2026</strong>.
+    Rentang waktu tersebut didukung oleh dokumen dan bukti pengembangan sebagaimana dipaparkan dalam
+    proposal ini dan menjadi dasar bagi penilaian tahapan penciptaan inovasi daerah.
+  </p>
+
+  <div class="ttd">
+    <div class="blok">
+      <div>............, Agustus 2026</div>
+      <div style="margin:18mm 0 2mm;">[Nama Inovator / Kepala Perangkat Daerah]</div>
+      <div style="border-top:1px solid #000;padding-top:2mm;">NIP. ................................</div>
+    </div>
+  </div>
+
+  <div class="footer-note">CETING NASIKU &mdash; Proposal Inovasi Daerah &bull; Halaman 5</div>
+</div>
+
+</body>
+</html>

@@ -10,7 +10,7 @@ Panduan untuk AI agent yang bekerja di repo ini.
 - Edukasi stunting (gizi, pola asuh, PHBS, kehamilan)
 - Kalkulator gizi
 - Cek risiko stunting
-- Chatbot **NASI** (Narasumber Ahli Stunting Indonesia) via OpenAgentic API
+- Chatbot **NASI** (Narasumber Ahli Stunting Indonesia) via Cartethyia API
 
 ## Tech Stack
 
@@ -29,7 +29,7 @@ app/
     Controllers/
       Admin/              # CRUD: recipes, ingredients, categories + dashboard
       AuthController.php
-      ChatbotController.php      # POST /chatbot/send → OpenAgentic
+      ChatbotController.php      # POST /chatbot/send → Cartethyia
       EducationController.php
       HomeController.php
       NutritionCalculatorController.php
@@ -52,9 +52,11 @@ routes/web.php             # semua route publik + admin
 
 | Key | Keterangan |
 |-----|------------|
-| `OPENAGENTIC_API_KEY` | API key OpenAgentic untuk chatbot NASI |
+| `CARTETHYIA_BASE_URL` | Base URL Cartethyia (default `https://carte.risun.web.id/v1`) |
+| `CARTETHYIA_API_KEY` | API key Cartethyia untuk chatbot NASI |
+| `CARTETHYIA_MODEL` | Model chatbot (default `bansos/deepseek-v4.1-flash`) |
+| `CARTETHYIA_TIMEOUT` | Timeout request chatbot (detik) |
 | `DB_*` | Koneksi database standar Laravel |
-
 Jangan pernah commit nilai `.env`. Gunakan `.env.example` sebagai referensi.
 
 ## Setup Lokal
@@ -75,6 +77,7 @@ php artisan migrate          # jalankan migrasi
 php artisan migrate:fresh --seed  # reset DB + seed
 php artisan pint             # format kode (PSR-12)
 php artisan test             # jalankan test suite
+APP_ENV=testing php vendor/phpunit/phpunit/phpunit   # dipakai di mesin ini (php artisan test bisa salah lapor 419 CSRF)
 npm run build                # build asset produksi
 ```
 
@@ -90,10 +93,12 @@ npm run build                # build asset produksi
 ## Chatbot (ChatbotController)
 
 - Endpoint: `POST /chatbot/send` (publik, tanpa auth)
-- Gunakan model `claude-sonnet-4.5` via OpenAgentic (`https://openagentic.id/api/v1/chat/completions`)
+- Provider: Cartethyia (OpenAI-compatible) — base URL `https://carte.risun.web.id/v1`
+- Model: `bansos/deepseek-v4.1-flash` (diatur via `CARTETHYIA_MODEL`)
 - Kirim `history` (array `{role, content}`) untuk percakapan multi-turn
 - Jangan ubah system prompt tanpa diskusi — prompt menentukan persona NASI
-- API key dibaca dari `env('OPENAGENTIC_API_KEY')`, bukan `config()`
+- Proteksi prompt-injection: `history.*.role` dibatasi `user|assistant`; pesan pengguna dibungkus pembatas data; ada rate limit per IP
+- Kredensial dibaca via `config('services.cartethyia.*')`, BUKAN `env()` langsung — agar aman saat `config:cache`
 
 ## Admin Panel
 

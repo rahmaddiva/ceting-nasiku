@@ -20,6 +20,7 @@
                 <th>Karbo</th>
                 <th>Kalsium</th>
                 <th>Zat Besi</th>
+                <th>Grup</th>
                 <th class="no-sort">Aksi</th>
             </tr>
         </thead>
@@ -47,7 +48,8 @@ $(document).ready(function () {
             { data: 6, searchable: false },
             { data: 7, searchable: false },
             { data: 8, searchable: false },
-            { data: 9, orderable: false, searchable: false, width: '90px' }
+            { data: 9 },
+            { data: 10, orderable: false, searchable: false, width: '90px' }
         ],
         order: [[1, 'asc']],
         pageLength: 25,

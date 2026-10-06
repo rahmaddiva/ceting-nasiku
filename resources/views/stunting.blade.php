@@ -1,6 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Cegah Stunting — Informasi & Edukasi | CETING NASIKU')
+@section('body_class', 'page-inner')
+@section('title', 'Cegah Stunting — Informasi & Edukasi — CETING NASIKU')
 @section('meta_description', 'Pelajari tentang stunting, penyebab, pencegahan, dan nutrisi penting untuk tumbuh kembang anak. Cegah stunting sejak dini dengan gizi seimbang.')
+@section('og_title', 'Cegah Stunting — Informasi & Edukasi — CETING NASIKU')
+@section('og_description', 'Pelajari tentang stunting, penyebab, pencegahan, dan nutrisi penting untuk tumbuh kembang anak.')
+@section('og_type', 'article')
 
 @section('content')
 <!-- Hero with Background Photo -->
@@ -41,7 +45,7 @@
                 </div>
             </div>
             <div class="stunting-stat-item">
-                <div class="stunting-stat-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-shield-heart"></i></div>
+                <div class="stunting-stat-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-shield-heart"></i></div>
                 <div>
                     <div class="stunting-stat-number">100%</div>
                     <div class="stunting-stat-desc">Stunting dapat dicegah dengan gizi tepat</div>
@@ -98,19 +102,19 @@
             </div>
             <div class="stunting-cause-card">
                 <div class="stunting-cause-num">03</div>
-                <div class="stunting-cause-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-person-pregnant"></i></div>
+                <div class="stunting-cause-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-person-pregnant"></i></div>
                 <h3>Gizi Ibu Hamil</h3>
                 <p>Kondisi kurang gizi pada ibu selama kehamilan sangat berpengaruh terhadap pertumbuhan janin dan risiko stunting pada anak.</p>
             </div>
             <div class="stunting-cause-card">
                 <div class="stunting-cause-num">04</div>
-                <div class="stunting-cause-icon" style="background: #faf5ff; color: #9333ea;"><i class="fas fa-droplet"></i></div>
+                <div class="stunting-cause-icon" style="background: var(--accent-50); color: var(--accent-700);"><i class="fas fa-droplet"></i></div>
                 <h3>Sanitasi & Air Bersih</h3>
                 <p>Akses terhadap sanitasi yang buruk dan air bersih yang terbatas meningkatkan risiko penyakit dan gangguan pertumbuhan.</p>
             </div>
             <div class="stunting-cause-card">
                 <div class="stunting-cause-num">05</div>
-                <div class="stunting-cause-icon" style="background: #fefce8; color: #ca8a04;"><i class="fas fa-baby-carriage"></i></div>
+                <div class="stunting-cause-icon" style="background: #fefce8; color: var(--warning);"><i class="fas fa-baby-carriage"></i></div>
                 <h3>Pola Asuh</h3>
                 <p>Praktik pemberian makan yang kurang tepat, seperti pemberian MPASI yang terlalu dini atau terlalu lambat.</p>
             </div>
@@ -154,13 +158,13 @@
             </div>
             <div class="stunting-prevention-card">
                 <div class="stunting-prevention-step">3</div>
-                <div class="stunting-prevention-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-stethoscope"></i></div>
+                <div class="stunting-prevention-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-stethoscope"></i></div>
                 <h3>Pemeriksaan Rutin</h3>
                 <p>Lakukan pemeriksaan kesehatan rutin di Posyandu atau Puskesmas untuk memantau pertumbuhan dan perkembangan anak secara berkala.</p>
             </div>
             <div class="stunting-prevention-card">
                 <div class="stunting-prevention-step">4</div>
-                <div class="stunting-prevention-icon" style="background: #faf5ff; color: #9333ea;"><i class="fas fa-hand-holding-droplet"></i></div>
+                <div class="stunting-prevention-icon" style="background: var(--accent-50); color: var(--accent-700);"><i class="fas fa-hand-holding-droplet"></i></div>
                 <h3>Sanitasi & Kebersihan</h3>
                 <p>Jaga kebersihan lingkungan, cuci tangan sebelum menyiapkan makanan, dan pastikan air minum yang digunakan bersih dan aman.</p>
             </div>
@@ -186,9 +190,9 @@
                     $nutrients = [
                     ['icon' => 'fas fa-drumstick-bite', 'name' => 'Protein', 'desc' => 'Membangun dan memperbaiki jaringan tubuh, penting untuk pertumbuhan otot dan organ.', 'source' => 'Telur, ikan, daging, tempe, tahu', 'color' => 'var(--primary-600)'],
                     ['icon' => 'fas fa-magnet', 'name' => 'Zat Besi', 'desc' => 'Membentuk hemoglobin untuk mengangkut oksigen dan mencegah anemia.', 'source' => 'Bayam, daging merah, hati ayam', 'color' => 'var(--danger)'],
-                    ['icon' => 'fas fa-bone', 'name' => 'Kalsium', 'desc' => 'Pembentukan tulang dan gigi yang kuat serta fungsi saraf dan otot.', 'source' => 'Susu, keju, ikan teri, brokoli', 'color' => '#ca8a04'],
+                    ['icon' => 'fas fa-bone', 'name' => 'Kalsium', 'desc' => 'Pembentukan tulang dan gigi yang kuat serta fungsi saraf dan otot.', 'source' => 'Susu, keju, ikan teri, brokoli', 'color' => 'var(--warning)'],
                     ['icon' => 'fas fa-eye', 'name' => 'Vitamin A', 'desc' => 'Mendukung kesehatan mata, sistem imun, dan pertumbuhan sel tubuh.', 'source' => 'Wortel, ubi jalar, bayam, telur', 'color' => 'var(--accent-600)'],
-                    ['icon' => 'fas fa-lemon', 'name' => 'Vitamin C', 'desc' => 'Meningkatkan daya tahan tubuh dan membantu penyerapan zat besi.', 'source' => 'Jeruk, jambu biji, tomat', 'color' => '#16a34a'],
+                    ['icon' => 'fas fa-lemon', 'name' => 'Vitamin C', 'desc' => 'Meningkatkan daya tahan tubuh dan membantu penyerapan zat besi.', 'source' => 'Jeruk, jambu biji, tomat', 'color' => 'var(--accent-600)'],
                     ['icon' => 'fas fa-atom', 'name' => 'Zinc', 'desc' => 'Berperan dalam pertumbuhan sel, fungsi imun, dan penyembuhan luka.', 'source' => 'Daging, kacang-kacangan, biji-bijian', 'color' => 'var(--info)'],
                     ];
                     @endphp

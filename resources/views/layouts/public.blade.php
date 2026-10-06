@@ -7,15 +7,26 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'CETING NASIKU') — Panduan Resep Gizi Seimbang</title>
     <meta name="description" content="@yield('meta_description', 'CETING NASIKU - Panduan resep makanan bergizi seimbang untuk mencegah stunting pada anak.')">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <meta property="og:title" content="@yield('og_title', 'CETING NASIKU — Panduan Resep Gizi Seimbang')">
+    <meta property="og:description" content="@yield('og_description', 'CETING NASIKU - Panduan resep makanan bergizi seimbang untuk mencegah stunting pada anak.')">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta property="og:type" content="@yield('og_type', 'website')">
+    <meta property="og:site_name" content="CETING NASIKU">
+    <meta property="og:locale" content="id_ID">
+    @yield('og_image')
+    @yield('structured_data')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     @stack('styles')
 </head>
 
-<body>
+<body class="@yield('body_class')">
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container navbar-content">
@@ -36,6 +47,7 @@
                 <li><a href="/edukasi" class="{{ request()->is('edukasi*') ? 'active' : '' }}"><i class="fas fa-graduation-cap"></i> Edukasi</a></li>
                 <li><a href="/kalkulator" class="{{ request()->is('kalkulator') ? 'active' : '' }}"><i class="fas fa-calculator"></i> Kalkulator Gizi</a></li>
                 @auth
+                <li><a href="{{ route('profil.index') }}" class="{{ request()->is('profil*') ? 'active' : '' }}"><i class="fas fa-child"></i> Pantau Tumbuh Kembang</a></li>
                 @if(auth()->user()->isAdmin())
                 <li><a href="/admin" class="btn btn-sm btn-accent"><i class="fas fa-cog"></i> Admin</a></li>
                 @endif
@@ -45,8 +57,6 @@
                         <button type="submit" class="btn btn-sm btn-outline">Keluar</button>
                     </form>
                 </li>
-                @else
-                <li><a href="/login" class="btn btn-sm btn-primary"><i class="fas fa-sign-in-alt"></i> Masuk</a></li>
                 @endauth
             </ul>
         </div>
@@ -147,7 +157,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: var(--gradient-primary);
             color: #fff;
             border: none;
             cursor: pointer;
@@ -155,21 +165,21 @@
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            box-shadow: 0 6px 24px rgba(46, 204, 113, .45);
+            box-shadow: 0 6px 24px rgba(8, 145, 178, .35);
             z-index: 9999;
             transition: transform .25s, box-shadow .25s;
         }
 
         #chatbot-fab:hover {
             transform: scale(1.1);
-            box-shadow: 0 8px 32px rgba(46, 204, 113, .6);
+            box-shadow: 0 8px 32px rgba(8, 145, 178, .5);
         }
 
         #chatbot-fab .chatbot-badge {
             position: absolute;
             top: -4px;
             right: -4px;
-            background: #e74c3c;
+            background: var(--danger);
             color: #fff;
             font-size: .6rem;
             font-weight: 700;
@@ -224,7 +234,7 @@
 
         /* Header */
         .cb-header {
-            background: linear-gradient(135deg, #2ecc71, #1a7a45);
+            background: var(--gradient-primary);
             color: #fff;
             padding: 14px 18px;
             display: flex;
@@ -252,7 +262,7 @@
         .cb-header-info strong {
             display: block;
             font-size: .92rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
         }
 
         .cb-header-info span {
@@ -287,7 +297,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            background: #f8fdf9;
+            background: var(--gray-50);
         }
 
         .cb-messages::-webkit-scrollbar {
@@ -295,7 +305,7 @@
         }
 
         .cb-messages::-webkit-scrollbar-thumb {
-            background: #c3e6cb;
+            background: var(--primary-200);
             border-radius: 2px;
         }
 
@@ -323,15 +333,15 @@
 
         .cb-msg.bot {
             background: #fff;
-            border: 1px solid #e8f5e9;
+            border: 1px solid var(--primary-100);
             border-bottom-left-radius: 4px;
             align-self: flex-start;
             box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
-            color: #2d3436;
+            color: var(--gray-800);
         }
 
         .cb-msg.user {
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: var(--gradient-primary);
             color: #fff;
             border-bottom-right-radius: 4px;
             align-self: flex-end;
@@ -358,7 +368,7 @@
             align-items: center;
             padding: 10px 14px;
             background: #fff;
-            border: 1px solid #e8f5e9;
+            border: 1px solid var(--primary-100);
             border-bottom-left-radius: 4px;
             border-radius: 18px;
             align-self: flex-start;
@@ -368,7 +378,7 @@
         .cb-typing span {
             width: 7px;
             height: 7px;
-            background: #2ecc71;
+            background: var(--primary-500);
             border-radius: 50%;
             animation: bounce-dot .9s infinite;
         }
@@ -398,7 +408,7 @@
         .cb-footer {
             padding: 12px 14px;
             background: #fff;
-            border-top: 1px solid #eaf7ed;
+            border-top: 1px solid var(--primary-100);
             display: flex;
             gap: 8px;
             align-items: flex-end;
@@ -407,11 +417,11 @@
 
         #cb-input {
             flex: 1;
-            border: 1.5px solid #c3e6cb;
+            border: 1.5px solid var(--primary-200);
             border-radius: 14px;
             padding: 9px 14px;
             font-size: .83rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
             resize: none;
             outline: none;
             transition: border-color .2s;
@@ -421,14 +431,14 @@
         }
 
         #cb-input:focus {
-            border-color: #2ecc71;
+            border-color: var(--primary-500);
         }
 
         #cb-send {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            background: var(--gradient-primary);
             border: none;
             color: #fff;
             cursor: pointer;
@@ -442,7 +452,7 @@
 
         #cb-send:hover {
             transform: scale(1.1);
-            box-shadow: 0 4px 16px rgba(46, 204, 113, .4);
+            box-shadow: 0 4px 16px rgba(8, 145, 178, .35);
         }
 
         #cb-send:disabled {
@@ -462,19 +472,19 @@
         }
 
         .cb-suggestion-btn {
-            background: #eafaf1;
-            border: 1px solid #c3e6cb;
+            background: var(--primary-50);
+            border: 1px solid var(--primary-200);
             border-radius: 20px;
             padding: 5px 11px;
             font-size: .73rem;
-            color: #1a7a45;
+            color: var(--primary-700);
             cursor: pointer;
             transition: background .2s;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
         }
 
         .cb-suggestion-btn:hover {
-            background: #c3e6cb;
+            background: var(--primary-200);
         }
     </style>
 

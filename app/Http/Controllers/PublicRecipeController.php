@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
@@ -43,6 +44,26 @@ class PublicRecipeController extends Controller
             ->take(3)
             ->get();
 
-        return view('recipes.show', compact('recipe', 'related'));
+        $substitutionGroups = Ingredient::whereNotNull('substitution_group')
+            ->get()
+            ->groupBy('substitution_group')
+            ->map(fn ($group) => $group->map(fn (Ingredient $ing) => [
+                'id' => $ing->id,
+                'name' => $ing->name,
+                'unit' => $ing->unit,
+                'per100' => [
+                    'calories' => $ing->calories,
+                    'protein' => $ing->protein,
+                    'fat' => $ing->fat,
+                    'carbohydrates' => $ing->carbohydrates,
+                    'fiber' => $ing->fiber,
+                    'calcium' => $ing->calcium,
+                    'iron' => $ing->iron,
+                    'vitamin_a' => $ing->vitamin_a,
+                    'vitamin_c' => $ing->vitamin_c,
+                ],
+            ])->values());
+
+        return view('recipes.show', compact('recipe', 'related', 'substitutionGroups'));
     }
 }

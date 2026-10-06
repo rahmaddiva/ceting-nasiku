@@ -579,6 +579,12 @@ class DatabaseSeeder extends Seeder
         // ── Seed Resep Lokal "Isi Piringku" ──
         $this->call(IsiPiringkuSeeder::class);
 
+        // ── Standar pertumbuhan WHO (LMS 0-59 bulan) ──
+        $this->call(WhoGrowthStandardSeeder::class);
+
+        // ── Grup substitusi bahan & bahan baru (harus setelah IsiPiringkuSeeder) ──
+        $this->call(IngredientSubstitutionGroupSeeder::class);
+
         // ── Generate gambar resep via OpenAgentic AI ──
         $this->command->info('Generating recipe images via OpenAgentic...');
         $result = app(RecipeImageService::class)->generateForRecipes();

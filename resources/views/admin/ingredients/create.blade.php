@@ -32,6 +32,17 @@
                     <option value="ml" {{ $u == 'ml' ? 'selected' : '' }}>ml</option>
                 </select>
             </div>
+
+        <div class="form-group" style="grid-column: 1 / -1; margin-top: 0.5rem; max-width: 480px;">
+            <label for="substitution_group">Grup Substitusi</label>
+            <input type="text" name="substitution_group" id="substitution_group" class="form-control" value="{{ old('substitution_group', $ingredient->substitution_group ?? '') }}" list="substitution-group-list" placeholder="cth: sayur-hijau">
+            <datalist id="substitution-group-list">
+                @foreach($groups ?? [] as $groupName)
+                <option value="{{ $groupName }}"></option>
+                @endforeach
+            </datalist>
+            <small style="color: var(--text-muted);">Bahan dalam grup sama bisa saling mengganti di halaman resep (mis. <code>sayur-hijau</code>: bayam, sawi, daun kelor). Kosongkan jika tidak bisa diganti.</small>
+        </div>
         </div>
 
         <h4 style="margin: 1.5rem 0 1rem; color: var(--gray-700);">Kandungan Gizi (per 100g/ml)</h4>

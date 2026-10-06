@@ -1,6 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Pola Asuh Anak — Modul Edukasi | CETING NASIKU')
+@section('body_class', 'page-inner')
+@section('title', 'Pola Asuh Anak — Modul Edukasi — CETING NASIKU')
 @section('meta_description', 'Panduan pola asuh anak yang benar untuk mencegah stunting. Pelajari ASI eksklusif, MPASI, jadwal makan, stimulasi tumbuh kembang, dan imunisasi.')
+@section('og_title', 'Pola Asuh Anak — Modul Edukasi — CETING NASIKU')
+@section('og_description', 'Panduan pola asuh anak yang benar untuk mencegah stunting.')
+@section('og_type', 'article')
 
 @section('content')
 <!-- Hero -->
@@ -156,7 +160,7 @@
                 <!-- Section 4: Stimulasi -->
                 <div class="edu-article-section" id="stimulasi">
                     <div class="edu-article-section-num">04</div>
-                    <h2><i class="fas fa-puzzle-piece" style="color: #9333ea;"></i> Stimulasi Tumbuh Kembang</h2>
+                    <h2><i class="fas fa-puzzle-piece" style="color: var(--accent-700);"></i> Stimulasi Tumbuh Kembang</h2>
                     <p>Selain nutrisi, stimulasi yang tepat juga penting untuk mendukung perkembangan otak, motorik, bahasa, dan sosial anak.</p>
 
                     <div class="edu-grid-2col">
@@ -171,12 +175,12 @@
                             <p>Berikan mainan yang aman untuk digenggam, menyusun balok, mewarnai, dan bermain playdough untuk melatih koordinasi tangan.</p>
                         </div>
                         <div class="edu-mini-card">
-                            <div class="edu-mini-card-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-running"></i></div>
+                            <div class="edu-mini-card-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-running"></i></div>
                             <h4>Motorik Kasar</h4>
                             <p>Biarkan anak bergerak bebas — tengkurap, merangkak, berjalan, berlari, dan bermain di luar rumah untuk memperkuat otot.</p>
                         </div>
                         <div class="edu-mini-card">
-                            <div class="edu-mini-card-icon" style="background: #faf5ff; color: #9333ea;"><i class="fas fa-people-arrows"></i></div>
+                            <div class="edu-mini-card-icon" style="background: var(--accent-50); color: var(--accent-700);"><i class="fas fa-people-arrows"></i></div>
                             <h4>Sosial & Emosional</h4>
                             <p>Ajak anak bermain bersama teman sebaya, ajarkan berbagi, dan berikan kasih sayang yang konsisten untuk membangun rasa aman.</p>
                         </div>

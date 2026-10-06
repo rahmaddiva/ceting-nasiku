@@ -104,7 +104,14 @@ class RecipeController extends Controller
         $data['is_published'] = $request->boolean('is_published');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('recipes', 'public');
+            $file = $request->file('image');
+            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
+            $dir = public_path('images/recipes');
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            $file->move($dir, $filename);
+            $data['image'] = 'images/recipes/'.$filename;
         }
 
         $recipe = Recipe::create($data);
@@ -145,7 +152,14 @@ class RecipeController extends Controller
         $data['is_published'] = $request->boolean('is_published');
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('recipes', 'public');
+            $file = $request->file('image');
+            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
+            $dir = public_path('images/recipes');
+            if (! is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }
+            $file->move($dir, $filename);
+            $data['image'] = 'images/recipes/'.$filename;
         }
 
         $recipe->update($data);

@@ -1,2 +1,6 @@
 User-agent: *
-Disallow:
+Disallow: /admin
+Disallow: /login
+Disallow: /chatbot
+
+Sitemap: https://ceting-nasiku-dp3ap2kb.tanahlautkab.go.id/sitemap.xml

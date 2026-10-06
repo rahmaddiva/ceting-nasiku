@@ -67,6 +67,15 @@ class Recipe extends Model
         return array_map(fn ($v) => round($v / $servings, 2), $total);
     }
 
+    public function getImageAttribute($value)
+    {
+        if ($value && ! str_starts_with($value, 'images/')) {
+            return 'images/'.$value;
+        }
+
+        return $value;
+    }
+
     public function scopePublished($query)
     {
         return $query->where('is_published', true);

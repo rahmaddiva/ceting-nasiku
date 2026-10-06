@@ -33,7 +33,8 @@ class IngredientController extends Controller
                 6 => 'carbohydrates',
                 7 => 'calcium',
                 8 => 'iron',
-                9 => null,
+                9 => 'substitution_group',
+                10 => null,
             ],
             ['name', 'unit'],
             function (Ingredient $ing, int $no) {
@@ -43,6 +44,10 @@ class IngredientController extends Controller
                     .csrf_field().method_field('DELETE')
                     .'<button type="submit" class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>'
                     .'</form></div>';
+
+                $group = $ing->substitution_group
+                    ? '<span class="badge badge-success">'.e($ing->substitution_group).'</span>'
+                    : '<small style="color: var(--text-muted)">-</small>';
 
                 return [
                     $no,
@@ -54,6 +59,7 @@ class IngredientController extends Controller
                     e(number_format((float) $ing->carbohydrates, 1)).' g',
                     e(number_format((float) $ing->calcium, 1)).' mg',
                     e(number_format((float) $ing->iron, 1)).' mg',
+                    $group,
                     $actions,
                 ];
             }
@@ -62,7 +68,9 @@ class IngredientController extends Controller
 
     public function create()
     {
-        return view('admin.ingredients.create');
+        $groups = $this->existingGroups();
+
+        return view('admin.ingredients.create', compact('groups'));
     }
 
     public function store(Request $request)
@@ -70,6 +78,7 @@ class IngredientController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:20',
+            'substitution_group' => 'nullable|string|max:100',
             'calories' => 'required|numeric|min:0',
             'protein' => 'required|numeric|min:0',
             'fat' => 'required|numeric|min:0',
@@ -88,7 +97,9 @@ class IngredientController extends Controller
 
     public function edit(Ingredient $ingredient)
     {
-        return view('admin.ingredients.edit', compact('ingredient'));
+        $groups = $this->existingGroups();
+
+        return view('admin.ingredients.edit', compact('ingredient', 'groups'));
     }
 
     public function update(Request $request, Ingredient $ingredient)
@@ -96,6 +107,7 @@ class IngredientController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:20',
+            'substitution_group' => 'nullable|string|max:100',
             'calories' => 'required|numeric|min:0',
             'protein' => 'required|numeric|min:0',
             'fat' => 'required|numeric|min:0',
@@ -117,5 +129,13 @@ class IngredientController extends Controller
         $ingredient->delete();
 
         return redirect('/admin/ingredients')->with('success', 'Bahan makanan berhasil dihapus!');
+    }
+
+    private function existingGroups()
+    {
+        return Ingredient::whereNotNull('substitution_group')
+            ->distinct()
+            ->orderBy('substitution_group')
+            ->pluck('substitution_group');
     }
 }

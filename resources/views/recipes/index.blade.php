@@ -1,5 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Koleksi Resep')
+@section('body_class', 'page-inner')
+@section('title', 'Koleksi Resep — CETING NASIKU')
+@section('meta_description', 'Temukan koleksi resep makanan bergizi seimbang untuk bayi, balita, ibu hamil, dan ibu menyusui. Resep MPASI dan makanan pencegah stunting.')
+@section('og_title', 'Koleksi Resep — CETING NASIKU')
+@section('og_description', 'Temukan koleksi resep makanan bergizi seimbang untuk bayi, balita, ibu hamil, dan ibu menyusui.')
+@section('og_type', 'website')
 
 @section('content')
 <section style="padding-top: 6rem;">

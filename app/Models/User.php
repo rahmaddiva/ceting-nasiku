@@ -29,4 +29,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Recipe::class);
     }
+
+    public function children()
+    {
+        return $this->hasMany(Child::class);
+    }
 }

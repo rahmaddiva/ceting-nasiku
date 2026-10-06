@@ -1,5 +1,10 @@
 @extends('layouts.public')
-@section('title', 'Kalkulator Gizi & BMI')
+@section('body_class', 'page-inner')
+@section('title', 'Kalkulator Gizi & BMI — CETING NASIKU')
+@section('meta_description', 'Hitung kebutuhan gizi dan BMI anak Anda. Kalkulator gizi untuk memastikan asupan nutrisi yang cukup untuk mencegah stunting.')
+@section('og_title', 'Kalkulator Gizi & BMI — CETING NASIKU')
+@section('og_description', 'Hitung kebutuhan gizi dan BMI anak Anda. Kalkulator gizi untuk memastikan asupan nutrisi yang cukup.')
+@section('og_type', 'website')
 
 @section('content')
 <section class="calculator-section">
@@ -46,7 +51,7 @@
                 </div>
 
                 {{-- Disclaimer Medis --}}
-                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid #fcd34d; border-radius:var(--radius-sm); font-size:0.8rem; color:#78350f; line-height:1.5;">
+                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid var(--warning); border-radius:var(--radius-sm); font-size:0.8rem; color:#92400e; line-height:1.5;">
                     <i class="fas fa-circle-info" style="color:#d97706;"></i>
                     <strong>Catatan:</strong> Hasil perhitungan ini bersifat <strong>referensi umum</strong> dan tidak menggantikan konsultasi langsung dengan dokter atau ahli gizi terdaftar.
                 </div>
@@ -79,21 +84,21 @@
 <section class="calculator-section" style="padding-top: 0;">
     <div class="container">
         <div class="section-header">
-            <div class="section-badge" style="background: linear-gradient(135deg, #059669, #10b981); color: #fff;">
+            <div class="section-badge" style="background: linear-gradient(135deg, var(--accent-600), var(--accent-500)); color: #fff;">
                 <i class="fas fa-weight-scale"></i> BMI
             </div>
             <h2>Kalkulator <span>Indeks Massa Tubuh</span></h2>
             <p>Hitung BMI untuk mengetahui status gizi berdasarkan berat dan tinggi badan</p>
 
             <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; margin-top: 1.5rem;">
-                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: #065f46;">
-                    <i class="fas fa-circle-check" style="color: #059669; font-size: 1.1rem;"></i> Menghitung berat badan
+                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--accent-100), var(--accent-200)); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: var(--accent-700);">
+                    <i class="fas fa-circle-check" style="color: var(--accent-600); font-size: 1.1rem;"></i> Menghitung berat badan
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: #065f46;">
-                    <i class="fas fa-circle-check" style="color: #059669; font-size: 1.1rem;"></i> Menentukan kategori berat badan ideal atau tidak
+                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--accent-100), var(--accent-200)); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: var(--accent-700);">
+                    <i class="fas fa-circle-check" style="color: var(--accent-600); font-size: 1.1rem;"></i> Menentukan kategori berat badan ideal atau tidak
                 </div>
-                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, #d1fae5, #a7f3d0); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: #065f46;">
-                    <i class="fas fa-circle-check" style="color: #059669; font-size: 1.1rem;"></i> Mempersiapkan program penurunan berat badan
+                <div style="display: flex; align-items: center; gap: 0.6rem; padding: 0.6rem 1.2rem; background: linear-gradient(135deg, var(--accent-100), var(--accent-200)); border-radius: 50px; font-size: 0.9rem; font-weight: 600; color: var(--accent-700);">
+                    <i class="fas fa-circle-check" style="color: var(--accent-600); font-size: 1.1rem;"></i> Mempersiapkan program penurunan berat badan
                 </div>
             </div>
         </div>
@@ -101,10 +106,10 @@
         <div class="calculator-container">
             <!-- BMI Form -->
             <div class="calculator-form">
-                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-user" style="color: #059669;"></i> Data Diri</h3>
+                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-user" style="color: var(--accent-600);"></i> Data Diri</h3>
 
                 <div class="form-group">
-                    <label><i class="fas fa-users" style="color: #059669;"></i> Kategori Usia</label>
+                    <label><i class="fas fa-users" style="color: var(--accent-600);"></i> Kategori Usia</label>
                     <select class="form-control" id="bmi-category" onchange="toggleBmiFields()">
                         <option value="anak">Anak (0–18 tahun)</option>
                         <option value="dewasa">Dewasa (>18 tahun)</option>
@@ -113,7 +118,7 @@
                 </div>
 
                 <div class="form-group" id="bmi-age-group">
-                    <label><i class="fas fa-cake-candles" style="color: #059669;"></i> Usia Anak</label>
+                    <label><i class="fas fa-cake-candles" style="color: var(--accent-600);"></i> Usia Anak</label>
                     <div style="display: flex; gap: 0.75rem;">
                         <div style="flex: 1;">
                             <input type="number" class="form-control" id="bmi-age-years" placeholder="Tahun" min="0" max="18" value="2">
@@ -127,34 +132,34 @@
                 </div>
 
                 <div class="form-group" id="bmi-gender-group">
-                    <label><i class="fas fa-venus-mars" style="color: #059669;"></i> Jenis Kelamin</label>
+                    <label><i class="fas fa-venus-mars" style="color: var(--accent-600);"></i> Jenis Kelamin</label>
                     <div style="display: flex; gap: 0.75rem;">
                         <label class="bmi-radio-label" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.65rem 1rem; border:2px solid var(--gray-200); border-radius:var(--radius-sm); cursor:pointer;">
-                            <input type="radio" name="bmi-gender" value="L" checked style="accent-color:#059669;"> <i class="fas fa-mars" style="color:#3b82f6;"></i> Laki-laki
+                            <input type="radio" name="bmi-gender" value="L" checked style="accent-color:var(--accent-600);"> <i class="fas fa-mars" style="color:var(--primary-500);"></i> Laki-laki
                         </label>
                         <label class="bmi-radio-label" style="flex:1; display:flex; align-items:center; gap:0.5rem; padding:0.65rem 1rem; border:2px solid var(--gray-200); border-radius:var(--radius-sm); cursor:pointer;">
-                            <input type="radio" name="bmi-gender" value="P" style="accent-color:#059669;"> <i class="fas fa-venus" style="color:#ec4899;"></i> Perempuan
+                            <input type="radio" name="bmi-gender" value="P" style="accent-color:var(--accent-600);"> <i class="fas fa-venus" style="color:var(--primary-600);"></i> Perempuan
                         </label>
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label><i class="fas fa-weight-scale" style="color: #059669;"></i> Berat Badan (kg)</label>
+                        <label><i class="fas fa-weight-scale" style="color: var(--accent-600);"></i> Berat Badan (kg)</label>
                         <input type="number" class="form-control" id="bmi-weight" placeholder="12" min="1" max="300" step="0.1">
                     </div>
                     <div class="form-group" style="margin-bottom: 0;">
-                        <label><i class="fas fa-ruler-vertical" style="color: #059669;"></i> Tinggi Badan (cm)</label>
+                        <label><i class="fas fa-ruler-vertical" style="color: var(--accent-600);"></i> Tinggi Badan (cm)</label>
                         <input type="number" class="form-control" id="bmi-height" placeholder="85" min="30" max="250" step="0.1">
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-primary" onclick="calculateBMI()" style="width: 100%; margin-top: 1.5rem; background: linear-gradient(135deg, #059669, #10b981);">
+                <button type="button" class="btn btn-primary" onclick="calculateBMI()" style="width: 100%; margin-top: 1.5rem; background: linear-gradient(135deg, var(--accent-600), var(--accent-500));">
                     <i class="fas fa-calculator"></i> Hitung BMI
                 </button>
 
                 {{-- Disclaimer Medis BMI --}}
-                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid #fcd34d; border-radius:var(--radius-sm); font-size:0.8rem; color:#78350f; line-height:1.5;">
+                <div style="margin-top:1rem; padding:0.75rem 1rem; background:linear-gradient(135deg,#fffbeb,#fef3c7); border:1px solid var(--warning); border-radius:var(--radius-sm); font-size:0.8rem; color:#92400e; line-height:1.5;">
                     <i class="fas fa-circle-info" style="color:#d97706;"></i>
                     <strong>Catatan:</strong> BMI adalah <strong>alat skrining</strong>, bukan diagnosis. Untuk anak, interpretasi tepat memerlukan pemantauan kurva pertumbuhan WHO oleh tenaga kesehatan.
                 </div>
@@ -162,7 +167,7 @@
 
             <!-- BMI Results -->
             <div class="calculator-results">
-                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-heartbeat" style="color: #059669;"></i> Hasil BMI</h3>
+                <h3 style="margin-bottom: 1.5rem;"><i class="fas fa-heartbeat" style="color: var(--accent-600);"></i> Hasil BMI</h3>
 
                 <div id="bmi-placeholder" style="text-align: center; padding: 3rem 0; color: var(--text-muted);">
                     <i class="fas fa-weight-scale" style="font-size: 2rem; margin-bottom: 1rem; display: block; opacity: 0.3;"></i>
@@ -180,9 +185,9 @@
                     <!-- Gauge -->
                     <div style="margin-bottom: 1.5rem;">
                         <div style="display: flex; height: 10px; border-radius: 5px; overflow: hidden; margin-bottom: 0.5rem;">
-                            <div style="flex: 18.5; background: #3b82f6;"></div>
-                            <div style="flex: 6.5; background: #10b981;"></div>
-                            <div style="flex: 5; background: #f59e0b;"></div>
+                            <div style="flex: 18.5; background: var(--primary-500);"></div>
+                            <div style="flex: 6.5; background: var(--accent-500);"></div>
+                            <div style="flex: 5; background: var(--warning);"></div>
                             <div style="flex: 10; background: #ef4444;"></div>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted);">
@@ -294,22 +299,22 @@
     }
 
     function interpretAdultBMI(bmi) {
-        if (bmi < 17) return { status:'Kurus Berat', color:'#1d4ed8', bg:'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos:5,
+        if (bmi < 17) return { status:'Kurus Berat', color:'var(--primary-700)', bg:'linear-gradient(135deg,var(--primary-100),var(--primary-200))', gaugePos:5,
             interpretation:'⚠️ <strong>Berat Badan Kurang (Berat)</strong><br>BMI Anda menunjukkan kekurangan gizi serius. Berisiko gangguan imunitas, anemia, dan masalah kesehatan lainnya.',
             tips:'<strong>💡 Saran:</strong><br>• Segera konsultasi ke dokter/ahli gizi<br>• Tingkatkan asupan kalori bertahap<br>• Makan tinggi protein dan lemak sehat<br>• Makan 5-6x sehari porsi kecil' };
-        if (bmi < 18.5) return { status:'Kurus Ringan', color:'#2563eb', bg:'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos:15,
+        if (bmi < 18.5) return { status:'Kurus Ringan', color:'var(--primary-600)', bg:'linear-gradient(135deg,var(--primary-100),var(--primary-200))', gaugePos:15,
             interpretation:'📉 <strong>Berat Badan Kurang (Ringan)</strong><br>BMI sedikit di bawah normal. Bisa memengaruhi daya tahan tubuh dan energi.',
             tips:'<strong>💡 Saran:</strong><br>• Tingkatkan porsi makanan bergizi<br>• Perbanyak protein (telur, ikan, daging, tempe)<br>• Camilan sehat antara waktu makan<br>• Olahraga ringan untuk nafsu makan' };
-        if (bmi < 25) return { status:'Normal', color:'#059669', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', gaugePos:25+((bmi-18.5)/6.5)*12,
+        if (bmi < 25) return { status:'Normal', color:'var(--accent-600)', bg:'linear-gradient(135deg,var(--accent-100),var(--accent-200))', gaugePos:25+((bmi-18.5)/6.5)*12,
             interpretation:'✅ <strong>Berat Badan Normal</strong><br>Selamat! BMI Anda dalam rentang normal. Pertahankan pola makan seimbang.',
             tips:'<strong>💡 Tips Menjaga:</strong><br>• Pertahankan pola makan "Isi Piringku"<br>• Olahraga teratur 30 menit/hari<br>• Minum air 8 gelas/hari<br>• Tidur cukup 7-8 jam/malam' };
         if (bmi < 27) return { status:'Gemuk Ringan', color:'#d97706', bg:'linear-gradient(135deg,#fef3c7,#fde68a)', gaugePos:55,
             interpretation:'⚡ <strong>Berat Badan Berlebih (Pre-Obesitas)</strong><br>BMI sedikit di atas normal. Meningkatkan risiko penyakit degeneratif.',
             tips:'<strong>💡 Saran:</strong><br>• Kurangi makanan tinggi gula dan lemak<br>• Perbanyak sayur dan buah<br>• Olahraga cardio 30-45 menit, 4-5x/minggu<br>• Kurangi porsi karbohidrat berlebih' };
-        if (bmi < 30) return { status:'Gemuk Berat', color:'#ea580c', bg:'linear-gradient(135deg,#fed7aa,#fdba74)', gaugePos:65,
+        if (bmi < 30) return { status:'Gemuk Berat', color:'var(--warning)', bg:'linear-gradient(135deg,#fde68a,#fcd34d)', gaugePos:65,
             interpretation:'⚠️ <strong>Kelebihan Berat Badan</strong><br>BMI menunjukkan BB berlebih signifikan. Perlu perubahan pola hidup.',
             tips:'<strong>💡 Saran:</strong><br>• Konsultasi ke ahli gizi<br>• Kurangi makanan olahan dan fast food<br>• Olahraga rutin cardio + kekuatan<br>• Perbanyak serat dari sayur dan buah' };
-        return { status:'Obesitas', color:'#dc2626', bg:'linear-gradient(135deg,#fecaca,#fca5a5)', gaugePos:85,
+        return { status:'Obesitas', color:'#dc2626', bg:'linear-gradient(135deg,#fecaca,#fecaca)', gaugePos:85,
             interpretation:'🚨 <strong>Obesitas</strong><br>Risiko tinggi diabetes, hipertensi, penyakit jantung, dan stroke.',
             tips:'<strong>💡 Saran Penting:</strong><br>• Segera konsultasi ke dokter<br>• Program diet terstruktur dengan ahli gizi<br>• Aktivitas fisik bertahap<br>• Periksa gula darah dan tekanan darah rutin' };
     }
@@ -370,19 +375,19 @@
 
         if (bmi < sd3n) return {
             status: 'Gizi Buruk',
-            color: '#1e40af', bg: 'linear-gradient(135deg,#dbeafe,#93c5fd)', gaugePos: 5,
+            color: '#1e40af', bg: 'linear-gradient(135deg,var(--primary-100),var(--primary-300))', gaugePos: 5,
             interpretation: `🚨 <strong>Gizi Buruk</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (di bawah -3 SD WHO). Memerlukan penanganan segera.${infoBalita}`,
             tips: `<strong>💡 Tindakan Segera:</strong><br>• Segera rujuk ke Puskesmas / RS<br>• Pemberian makanan terapeutik (F-75/F-100)<br>• Pemantauan ketat oleh tenaga kesehatan<br>• Ikuti program Therapeutic Feeding Center`
         };
         if (bmi < sd2n) return {
             status: 'Gizi Kurang',
-            color: '#2563eb', bg: 'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos: 15,
+            color: 'var(--primary-600)', bg: 'linear-gradient(135deg,var(--primary-100),var(--primary-200))', gaugePos: 15,
             interpretation: `⚠️ <strong>Gizi Kurang</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (antara -3 SD dan -2 SD WHO). Berisiko <strong>stunting</strong>.${infoBalita}`,
             tips: `<strong>💡 Saran:</strong><br>• Segera ke Posyandu / Puskesmas<br>• Makanan tinggi protein dan energi<br>• Makan 3× utama + 2× camilan sehat<br>• Ikuti prinsip "Isi Piringku"<br>• Pantau BB/TB setiap bulan`
         };
         if (bmi < sd1p) return {
             status: 'Gizi Baik (Normal)',
-            color: '#059669', bg: 'linear-gradient(135deg,#d1fae5,#a7f3d0)', gaugePos: 35,
+            color: 'var(--accent-600)', bg: 'linear-gradient(135deg,var(--accent-100),var(--accent-200))', gaugePos: 35,
             interpretation: `✅ <strong>Gizi Baik</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (antara -2 SD dan +1 SD WHO). Tumbuh kembang normal.${infoBalita}`,
             tips: `<strong>💡 Tips:</strong><br>• Pertahankan pola makan "Isi Piringku"<br>• ASI eksklusif / MPASI sesuai usia<br>• Imunisasi lengkap sesuai jadwal<br>• Stimulasi tumbuh kembang<br>• Pantau pertumbuhan rutin di Posyandu`
         };
@@ -394,23 +399,23 @@
         };
         return {
             status: 'Gizi Lebih / Obesitas',
-            color: '#dc2626', bg: 'linear-gradient(135deg,#fecaca,#fca5a5)', gaugePos: 85,
+            color: '#dc2626', bg: 'linear-gradient(135deg,#fecaca,#fecaca)', gaugePos: 85,
             interpretation: `🚨 <strong>Gizi Lebih / Obesitas</strong><br>Anak ${jk} usia ${age} dengan BMI ${b} (di atas +2 SD WHO). Risiko penyakit metabolik dini.${infoBalita}`,
             tips: `<strong>💡 Saran Penting:</strong><br>• Konsultasi ke dokter anak / ahli gizi<br>• Ubah pola makan seluruh keluarga<br>• Tingkatkan aktivitas fisik bertahap<br>• Hindari minuman manis dan ultra-proses<br>• Utamakan makanan rumahan bergizi`
         };
     }
 
     function interpretPregnantBMI(bmi) {
-        if (bmi<18.5) return { status:'BB Kurang (Bumil)', color:'#2563eb', bg:'linear-gradient(135deg,#dbeafe,#bfdbfe)', gaugePos:10,
+        if (bmi<18.5) return { status:'BB Kurang (Bumil)', color:'var(--primary-600)', bg:'linear-gradient(135deg,var(--primary-100),var(--primary-200))', gaugePos:10,
             interpretation:'⚠️ <strong>BB Kurang untuk Ibu Hamil</strong><br>Risiko bayi BBLR dan stunting meningkat.',
             tips:'<strong>💡 Saran:</strong><br>• Kenaikan BB ideal: 12,5–18 kg<br>• Makan 3x + 2-3x camilan bergizi<br>• Suplemen zat besi dan asam folat<br>• Makanan tinggi protein dan kalsium<br>• Rutin ANC sesuai jadwal' };
-        if (bmi<25) return { status:'Normal (Bumil)', color:'#059669', bg:'linear-gradient(135deg,#d1fae5,#a7f3d0)', gaugePos:30,
+        if (bmi<25) return { status:'Normal (Bumil)', color:'var(--accent-600)', bg:'linear-gradient(135deg,var(--accent-100),var(--accent-200))', gaugePos:30,
             interpretation:'✅ <strong>BMI Normal untuk Ibu Hamil</strong><br>Status gizi baik. Pertahankan untuk pertumbuhan janin optimal.',
             tips:'<strong>💡 Tips:</strong><br>• Kenaikan BB ideal: 11,5–16 kg<br>• Ikuti "Isi Piringku" untuk bumil<br>• Suplemen Fe + asam folat<br>• Makanan tinggi kalsium<br>• Rutin ANC minimal 6x' };
         if (bmi<30) return { status:'BB Lebih (Bumil)', color:'#d97706', bg:'linear-gradient(135deg,#fef3c7,#fde68a)', gaugePos:60,
             interpretation:'⚡ <strong>BB Berlebih untuk Ibu Hamil</strong><br>Risiko preeklampsia dan diabetes gestasional meningkat.',
             tips:'<strong>💡 Saran:</strong><br>• Kenaikan BB ideal: 7–11,5 kg<br>• Kurangi makanan manis dan berlemak<br>• Perbanyak sayur, buah, protein sehat<br>• Jalan kaki 30 menit/hari<br>• Periksa gula darah dan TD rutin' };
-        return { status:'Obesitas (Bumil)', color:'#dc2626', bg:'linear-gradient(135deg,#fecaca,#fca5a5)', gaugePos:85,
+        return { status:'Obesitas (Bumil)', color:'#dc2626', bg:'linear-gradient(135deg,#fecaca,#fecaca)', gaugePos:85,
             interpretation:'🚨 <strong>Obesitas pada Ibu Hamil</strong><br>Risiko tinggi komplikasi kehamilan.',
             tips:'<strong>💡 Saran Penting:</strong><br>• Kenaikan BB ideal: 5–9 kg saja<br>• Konsultasi intensif dokter kandungan<br>• Diet khusus dari ahli gizi<br>• Monitor gula darah dan TD ketat<br>• Aktivitas ringan sesuai kondisi' };
     }

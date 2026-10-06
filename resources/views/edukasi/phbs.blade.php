@@ -1,6 +1,10 @@
 @extends('layouts.public')
-@section('title', 'PHBS — Perilaku Hidup Bersih dan Sehat | CETING NASIKU')
+@section('body_class', 'page-inner')
+@section('title', 'PHBS — Perilaku Hidup Bersih dan Sehat — CETING NASIKU')
 @section('meta_description', 'Panduan PHBS untuk keluarga: cuci tangan, air bersih, sanitasi, kebersihan makanan, dan lingkungan sehat untuk mencegah stunting.')
+@section('og_title', 'PHBS — Perilaku Hidup Bersih dan Sehat — CETING NASIKU')
+@section('og_description', 'Panduan PHBS untuk keluarga: cuci tangan, air bersih, sanitasi, kebersihan makanan.')
+@section('og_type', 'article')
 
 @section('content')
 <!-- Hero -->
@@ -130,12 +134,12 @@
                             <p>Masak makanan hingga matang sempurna, terutama daging, telur, dan ikan. Hindari makanan setengah matang untuk anak.</p>
                         </div>
                         <div class="edu-mini-card">
-                            <div class="edu-mini-card-icon" style="background: #eff6ff; color: var(--info);"><i class="fas fa-box"></i></div>
+                            <div class="edu-mini-card-icon" style="background: var(--primary-50); color: var(--info);"><i class="fas fa-box"></i></div>
                             <h4>Penyimpanan Benar</h4>
                             <p>Simpan makanan dalam wadah tertutup. Pisahkan bahan mentah dari makanan matang. Gunakan kulkas jika memungkinkan.</p>
                         </div>
                         <div class="edu-mini-card">
-                            <div class="edu-mini-card-icon" style="background: #faf5ff; color: #9333ea;"><i class="fas fa-plate-wheat"></i></div>
+                            <div class="edu-mini-card-icon" style="background: var(--accent-50); color: var(--accent-700);"><i class="fas fa-plate-wheat"></i></div>
                             <h4>Penyajian Higienis</h4>
                             <p>Gunakan peralatan makan yang bersih. Sajikan makanan dalam keadaan hangat. Jangan biarkan makanan terbuka terlalu lama.</p>
                         </div>
@@ -145,10 +149,10 @@
                 <!-- Section 5: Lingkungan Bersih -->
                 <div class="edu-article-section" id="lingkungan-bersih">
                     <div class="edu-article-section-num">05</div>
-                    <h2><i class="fas fa-house-chimney" style="color: #16a34a;"></i> Lingkungan Bersih & Sehat</h2>
+                    <h2><i class="fas fa-house-chimney" style="color: var(--accent-600);"></i> Lingkungan Bersih & Sehat</h2>
                     <p>Lingkungan rumah yang bersih dan sehat berperan penting dalam menjaga kesehatan anak dan seluruh keluarga.</p>
 
-                    <div class="edu-highlight-box" style="border-left-color: #16a34a;">
+                    <div class="edu-highlight-box" style="border-left-color: var(--accent-600);">
                         <h4><i class="fas fa-broom"></i> Checklist Lingkungan Sehat</h4>
                         <div class="edu-checklist">
                             <div class="edu-checklist-item"><i class="fas fa-check-circle"></i> Gunakan jamban/toilet yang bersih dan terawat</div>
