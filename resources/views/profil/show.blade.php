@@ -106,8 +106,60 @@
             @if($chart['height_for_age']['points']->isNotEmpty() || $chart['weight_for_age']['points']->isNotEmpty())
             <div style="background: #fff; border: 1px solid var(--primary-100); border-radius: 16px; padding: 1.5rem; box-shadow: 0 2px 12px rgba(8,145,178,.07);">
                 <h2 style="color: var(--primary-900); font-size: 1.2rem; margin-bottom: 0.25rem;"><i class="fas fa-chart-line" style="color: var(--primary-600);"></i> Kurva Pertumbuhan WHO</h2>
-                <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1rem;">Garis: median (hijau), -2 SD (kuning), -3 SD (merah). Titik biru = pengukuran anak.</p>
-                <div style="height: 320px; margin-bottom: 1.5rem;"><canvas id="heightChart"></canvas></div>
+                <p class="kms-curve-intro">
+                    Kurva ini membandingkan ukuran anak Anda dengan anak seusianya menurut standar WHO.
+                    Tidak perlu hafal angka — cukup lihat posisi titik biru terhadap tiga garis berwarna.
+                </p>
+
+                <ul class="kms-legend">
+                    <li>
+                        <span class="kms-swatch" style="background: var(--accent-600);" aria-hidden="true"></span>
+                        <span><strong>Garis hijau — median.</strong> Nilai tengah anak seusia: separuh anak berada di atasnya, separuh di bawahnya.</span>
+                    </li>
+                    <li>
+                        <span class="kms-swatch" style="background: #d97706;" aria-hidden="true"></span>
+                        <span><strong>Garis kuning — −2 SD.</strong> Batas bawah rentang normal. Di bawah garis ini anak mulai masuk kategori kurang.</span>
+                    </li>
+                    <li>
+                        <span class="kms-swatch" style="background: #dc2626;" aria-hidden="true"></span>
+                        <span><strong>Garis merah — −3 SD.</strong> Batas waspada: di bawah garis ini termasuk stunting berat atau gizi buruk.</span>
+                    </li>
+                    <li>
+                        <span class="kms-swatch kms-swatch-dot" aria-hidden="true"></span>
+                        <span><strong>Titik biru — anak Anda.</strong> Satu titik = satu kali ukur. Titik paling kanan adalah pengukuran terbaru.</span>
+                    </li>
+                </ul>
+
+                <details class="kms-help">
+                    <summary><i class="fas fa-circle-question" aria-hidden="true"></i> Cara membaca kurva (panduan singkat)</summary>
+                    <div class="kms-help-body">
+                        <ol>
+                            <li><strong>Lihat sumbunya.</strong> Mendatar = umur anak dalam bulan. Tegak = tinggi badan (cm) atau berat badan (kg).</li>
+                            <li><strong>Cari titik paling kanan.</strong> Itu pengukuran terakhir. Bandingkan posisinya dengan tiga garis.</li>
+                            <li>
+                                <strong>Baca zonanya:</strong>
+                                <ul>
+                                    <li>Di atas garis kuning → <strong>normal</strong>.</li>
+                                    <li>Di antara garis kuning dan merah → <strong>perlu perhatian</strong> (kurang).</li>
+                                    <li>Di bawah garis merah → <strong>waspada</strong> (berat).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Perhatikan arah, bukan hanya posisi.</strong> Bila titik anak naik sejajar garis hijau, pertumbuhannya mengikuti pola normal — walaupun sedikit di bawah median. Yang perlu diwaspadai adalah titik yang mendatar atau menurun.</li>
+                            <li><strong>Ukur rutin tiap bulan</strong> di Posyandu. Bila dua kali berturut-turut titik berada di bawah garis kuning, konsultasikan ke bidan atau dokter.</li>
+                        </ol>
+                        <p class="kms-help-note">
+                            <i class="fas fa-circle-info" aria-hidden="true"></i>
+                            Kurva ini alat bantu pemantauan, bukan diagnosis. Penentuan status akhir tetap dilakukan tenaga kesehatan.
+                        </p>
+                    </div>
+                </details>
+
+                <h3 class="kms-chart-title"><i class="fas fa-ruler-vertical" aria-hidden="true"></i> Tinggi Badan menurut Umur (TB/U)</h3>
+                <p class="kms-chart-sub">Menilai apakah tinggi anak sesuai usianya — indikator utama stunting.</p>
+                <div style="height: 320px; margin-bottom: 1.75rem;"><canvas id="heightChart"></canvas></div>
+
+                <h3 class="kms-chart-title"><i class="fas fa-weight-scale" aria-hidden="true"></i> Berat Badan menurut Umur (BB/U)</h3>
+                <p class="kms-chart-sub">Menilai apakah berat anak sesuai usianya — mendeteksi berat kurang atau berlebih.</p>
                 <div style="height: 320px;"><canvas id="weightChart"></canvas></div>
             </div>
             @endif
@@ -154,11 +206,15 @@
                                     @else<span style="color: var(--text-muted);">-</span>@endif
                                 </td>
                                 <td style="padding: 0.7rem 0.5rem; color: var(--text-muted);">{{ $m->note ?? '-' }}</td>
-                                <td style="padding: 0.7rem 0.5rem; text-align: right;">
-                                    <form action="{{ route('profil.measurements.destroy', $m) }}" method="POST" onsubmit="return confirm('Hapus pengukuran ini?')" style="display: inline;">
+                                <td style="padding: 0.6rem 0.5rem; text-align: right;">
+                                    <form action="{{ route('profil.measurements.destroy', $m) }}" method="POST" onsubmit="return confirm('Hapus pengukuran tanggal {{ $m->measured_at->format('d/m/Y') }}? Tindakan ini tidak bisa dibatalkan.')" style="display: inline-block; margin: 0;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" style="border: none; background: none; color: #dc2626; cursor: pointer; font-size: 0.9rem;" title="Hapus"><i class="fas fa-trash"></i></button>
+                                        <button type="submit" class="btn-del"
+                                                title="Hapus pengukuran"
+                                                aria-label="Hapus pengukuran tanggal {{ $m->measured_at->format('d M Y') }}">
+                                            <i class="fas fa-trash" aria-hidden="true"></i>
+                                        </button>
                                     </form>
                                 </td>
                             </tr>
@@ -177,6 +233,9 @@
 <script>
 (function () {
     const CHART = @json($chart);
+
+    // Canvas tidak bisa memakai var(--x) langsung — ambil nilai akhirnya dulu.
+    const css = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
     function lineDataset(label, data, color, dash) {
         return {
@@ -199,8 +258,8 @@
         if (!c) return;
 
         const datasets = [
-            lineDataset('Median (0 SD)', c.sd0, 'var(--accent-600)'),
-            lineDataset('-2 SD', c.sd2neg, 'var(--warning)', [6, 4]),
+            lineDataset('Median (0 SD)', c.sd0, css('--accent-600')),
+            lineDataset('-2 SD', c.sd2neg, css('--warning'), [6, 4]),
             lineDataset('-3 SD', c.sd3neg, '#dc2626', [6, 4]),
         ];
 
@@ -208,11 +267,15 @@
             datasets.push({
                 label: 'Pengukuran anak',
                 data: c.points,
-                borderColor: 'var(--primary-600)',
-                backgroundColor: 'var(--primary-600)',
+                borderColor: css('--primary-600'),
+                backgroundColor: css('--primary-600'),
+                borderWidth: 2,
                 pointRadius: 5,
                 pointHoverRadius: 7,
-                showLine: false,
+                pointBorderColor: '#fff',
+                pointBorderWidth: 1.5,
+                tension: 0.25,
+                showLine: true,
             });
         }
 
@@ -233,7 +296,12 @@
                     }
                 },
                 plugins: {
-                    legend: { position: 'bottom' }
+                    legend: { position: 'bottom' },
+                    tooltip: {
+                        callbacks: {
+                            title: (items) => 'Usia ' + items[0].label + ' bulan',
+                        }
+                    }
                 }
             }
         });
