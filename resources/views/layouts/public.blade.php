@@ -30,9 +30,9 @@
     <!-- Navbar -->
     <nav class="navbar" id="navbar">
         <div class="container navbar-content">
-            <a href="/" class="navbar-brand" style="display: flex; align-items: center; gap: 15px;">
-                <img src="{{ asset('images/ceting_nasiku.png') }}" alt="CETING NASIKU Logo" style="height: 50px; width: auto; object-fit: contain;">
-                <img src="{{ asset('images/logo_dinas.png') }}" alt="Logo Dinas" style="height: 50px; width: auto;">
+            <a href="/" class="navbar-brand">
+                <img src="{{ asset('images/ceting_nasiku.png') }}" alt="CETING NASIKU Logo" class="navbar-logo navbar-logo-main">
+                <img src="{{ asset('images/logo_dinas.png') }}" alt="Logo Dinas" class="navbar-logo navbar-logo-dinas">
             </a>
 
             <button class="navbar-toggle" id="navbarToggle" aria-label="Toggle navigation">
