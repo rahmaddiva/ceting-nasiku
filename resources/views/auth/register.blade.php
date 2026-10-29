@@ -124,7 +124,7 @@
                                 placeholder="Minimal 8 karakter"
                                 autocomplete="new-password"
                                 minlength="8"
-                                aria-describedby="password-hint @error('password') password-error @enderror"
+                                aria-describedby="{{ $errors->has('password') ? 'password-error' : 'password-hint' }}"
                                 required
                                 @error('password') aria-invalid="true" @enderror>
                             <button type="button" class="field-action" data-reveal="password"
@@ -132,9 +132,10 @@
                                 <i class="fas fa-eye" aria-hidden="true"></i>
                             </button>
                         </div>
-                        <p class="auth-hint" id="password-hint">Gunakan minimal 8 karakter.</p>
                         @error('password')
                         <p class="form-error" id="password-error"><i class="fas fa-circle-exclamation" aria-hidden="true"></i> {{ $message }}</p>
+                        @else
+                        <p class="auth-hint" id="password-hint">Gunakan minimal 8 karakter.</p>
                         @enderror
                     </div>
 
