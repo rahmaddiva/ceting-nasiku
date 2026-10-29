@@ -313,12 +313,24 @@ body.page-inner .navbar {
 
 /* Navbar transparan di atas hero gelap: tautan terang */
 body:not(.page-inner) .navbar:not(.scrolled) {
+    background: transparent;
+}
+
+/* Scrim lebih tinggi dari navbar agar transisi ke foto tidak terlihat sebagai pita */
+body:not(.page-inner) .navbar:not(.scrolled)::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 150px;
     background: linear-gradient(
         180deg,
         rgba(6, 34, 24, 0.62) 0%,
-        rgba(6, 34, 24, 0.30) 60%,
+        rgba(6, 34, 24, 0.34) 45%,
+        rgba(6, 34, 24, 0.12) 75%,
         rgba(6, 34, 24, 0) 100%
     );
+    pointer-events: none;
+    z-index: -1;
 }
 
 body:not(.page-inner) .navbar:not(.scrolled) .navbar-menu a:not(.btn) {
