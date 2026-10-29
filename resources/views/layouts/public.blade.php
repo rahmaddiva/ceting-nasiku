@@ -111,23 +111,6 @@
                         <li><a href="/kalkulator">Kalkulator Gizi</a></li>
                     </ul>
                 </div>
-                <div class="footer-links">
-                    <h4>Tentang</h4>
-                    <ul>
-                        <li><a href="#">Tentang Kami</a></li>
-                        <li><a href="#">Kebijakan Privasi</a></li>
-                        <li><a href="#">Syarat & Ketentuan</a></li>
-                    </ul>
-                </div>
-                <div class="footer-contact">
-                    <h4>Kontak</h4>
-                    <p><i class="fas fa-envelope"></i> info@cetingnasiku.com</p>
-                    <div class="footer-social">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
             </div>
             <div class="footer-bottom">
                 <p>&copy; {{ date('Y') }} CETING NASIKU. Semua hak dilindungi.</p>
