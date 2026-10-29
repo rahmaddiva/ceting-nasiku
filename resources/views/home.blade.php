@@ -45,16 +45,25 @@
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <div class="hero-stat-number">{{ $stats['total_recipes'] }}+</div>
-                        <div class="hero-stat-label">Resep Sehat</div>
+                        <div class="hero-stat-icon"><i class="fas fa-utensils"></i></div>
+                        <div class="hero-stat-body">
+                            <div class="hero-stat-number">{{ $stats['total_recipes'] }}+</div>
+                            <div class="hero-stat-label">Resep Sehat</div>
+                        </div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-number">{{ $stats['total_ingredients'] }}+</div>
-                        <div class="hero-stat-label">Bahan Bergizi</div>
+                        <div class="hero-stat-icon"><i class="fas fa-seedling"></i></div>
+                        <div class="hero-stat-body">
+                            <div class="hero-stat-number">{{ $stats['total_ingredients'] }}+</div>
+                            <div class="hero-stat-label">Bahan Bergizi</div>
+                        </div>
                     </div>
                     <div class="hero-stat">
-                        <div class="hero-stat-number">{{ $stats['total_categories'] }}</div>
-                        <div class="hero-stat-label">Kategori Usia</div>
+                        <div class="hero-stat-icon"><i class="fas fa-layer-group"></i></div>
+                        <div class="hero-stat-body">
+                            <div class="hero-stat-number">{{ $stats['total_categories'] }}</div>
+                            <div class="hero-stat-label">Kategori Menu</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -94,13 +103,23 @@
         <div class="section-header">
             <div class="section-badge">Kategori</div>
             <h2>Resep Berdasarkan <span>Kelompok Usia</span></h2>
-            <p>Pilih kategori sesuai usia anak untuk menemukan resep yang tepat</p>
+            <p>Pilih kategori sesuai usia anak — tersedia juga menu khusus ibu hamil &amp; menyusui</p>
         </div>
         <div class="categories-grid">
+            @php
+                $categoryIcons = [
+                    'mpasi-6-8-bulan' => 'fa-baby',
+                    'mpasi-9-11-bulan' => 'fa-baby-carriage',
+                    'balita-1-3-tahun' => 'fa-child',
+                    'anak-4-6-tahun' => 'fa-children',
+                    'camilan-sehat' => 'fa-cookie-bite',
+                    'ibu-hamil-menyusui' => 'fa-person-pregnant',
+                ];
+            @endphp
             @foreach($categories as $category)
             <a href="/resep?category={{ $category->id }}" class="category-card">
                 <div class="category-card-icon">
-                    <span style="font-size: 1.5rem;">{{ Str::substr($category->name, 0, 1) }}</span>
+                    <i class="fas {{ $categoryIcons[$category->slug] ?? 'fa-bowl-food' }}"></i>
                 </div>
                 <h4>{{ $category->name }}</h4>
                 <p>{{ $category->recipes_count }} resep</p>

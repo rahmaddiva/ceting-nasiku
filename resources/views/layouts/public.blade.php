@@ -9,7 +9,11 @@
     <meta name="description" content="@yield('meta_description', 'CETING NASIKU - Panduan resep makanan bergizi seimbang untuk mencegah stunting pada anak.')">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="@yield('canonical', url()->current())">
-    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('favicon-192.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <meta name="theme-color" content="#047857">
     <meta property="og:title" content="@yield('og_title', 'CETING NASIKU — Panduan Resep Gizi Seimbang')">
     <meta property="og:description" content="@yield('og_description', 'CETING NASIKU - Panduan resep makanan bergizi seimbang untuk mencegah stunting pada anak.')">
     <meta property="og:url" content="{{ url()->current() }}">

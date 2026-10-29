@@ -579,6 +579,9 @@ class DatabaseSeeder extends Seeder
         // ── Seed Resep Lokal "Isi Piringku" ──
         $this->call(IsiPiringkuSeeder::class);
 
+        // ── Menu ibu hamil & menyusui ──
+        $this->call(BumilMenyusuiSeeder::class);
+
         // ── Standar pertumbuhan WHO (LMS 0-59 bulan) ──
         $this->call(WhoGrowthStandardSeeder::class);
 
