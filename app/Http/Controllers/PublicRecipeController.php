@@ -44,6 +44,18 @@ class PublicRecipeController extends Controller
             ->take(3)
             ->get();
 
+        $per100 = fn (Ingredient $ing) => [
+            'calories' => $ing->calories,
+            'protein' => $ing->protein,
+            'fat' => $ing->fat,
+            'carbohydrates' => $ing->carbohydrates,
+            'fiber' => $ing->fiber,
+            'calcium' => $ing->calcium,
+            'iron' => $ing->iron,
+            'vitamin_a' => $ing->vitamin_a,
+            'vitamin_c' => $ing->vitamin_c,
+        ];
+
         $substitutionGroups = Ingredient::whereNotNull('substitution_group')
             ->get()
             ->groupBy('substitution_group')
@@ -51,19 +63,20 @@ class PublicRecipeController extends Controller
                 'id' => $ing->id,
                 'name' => $ing->name,
                 'unit' => $ing->unit,
-                'per100' => [
-                    'calories' => $ing->calories,
-                    'protein' => $ing->protein,
-                    'fat' => $ing->fat,
-                    'carbohydrates' => $ing->carbohydrates,
-                    'fiber' => $ing->fiber,
-                    'calcium' => $ing->calcium,
-                    'iron' => $ing->iron,
-                    'vitamin_a' => $ing->vitamin_a,
-                    'vitamin_c' => $ing->vitamin_c,
-                ],
+                'per100' => $per100($ing),
             ])->values());
 
-        return view('recipes.show', compact('recipe', 'related', 'substitutionGroups'));
+        // Nilai gizi per 100 g untuk SEMUA bahan pada resep ini dan semua
+        // kandidat substitusinya; dipakai JS untuk hitung ulang saat bahan diganti.
+        $nutrientMap = $recipe->ingredients
+            ->mapWithKeys(fn (Ingredient $ing) => [$ing->id => $per100($ing)]);
+
+        foreach ($substitutionGroups as $group) {
+            foreach ($group as $option) {
+                $nutrientMap[$option['id']] = $option['per100'];
+            }
+        }
+
+        return view('recipes.show', compact('recipe', 'related', 'substitutionGroups', 'nutrientMap'));
     }
 }

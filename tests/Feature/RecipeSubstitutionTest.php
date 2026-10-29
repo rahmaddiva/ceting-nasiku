@@ -73,7 +73,7 @@ class RecipeSubstitutionTest extends TestCase
             ->assertDontSee('Ganti:');
     }
 
-    public function test_recipe_show_page_embeds_per_100g_nutrition_for_group_members(): void
+    public function test_recipe_show_page_embeds_per_100g_nutrition_for_all_ingredients(): void
     {
         $bayam = Ingredient::create([
             'name' => 'Bayam', 'unit' => 'gram',
@@ -89,14 +89,22 @@ class RecipeSubstitutionTest extends TestCase
             'iron' => 2.9, 'vitamin_a' => 0, 'vitamin_c' => 102,
             'substitution_group' => 'sayur-hijau',
         ]);
+        $beras = Ingredient::create([
+            'name' => 'Beras Putih', 'unit' => 'gram',
+            'calories' => 360, 'protein' => 6.8, 'fat' => 0.7,
+            'carbohydrates' => 78.9, 'fiber' => 0.3, 'calcium' => 6,
+            'iron' => 0.8, 'vitamin_a' => 0, 'vitamin_c' => 0,
+        ]);
 
-        $recipe = $this->makeRecipe([$bayam->id => 20]);
+        $recipe = $this->makeRecipe([$bayam->id => 20, $beras->id => 30]);
 
         $response = $this->get('/resep/'.$recipe->slug);
 
-        $response->assertSee('"per100"', false);
+        // Bahan utama dan kandidat substitusinya sama-sama membawa nilai per 100 g.
         $response->assertSee('"protein":2.9', false);
         $response->assertSee('"calcium":220', false);
         $response->assertSee('"vitamin_c":102', false);
+        // Bahan tanpa grup substitusi tetap ikut dihitung kalkulator gizi halaman.
+        $response->assertSee('"calories":360', false);
     }
 }

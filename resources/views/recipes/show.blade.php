@@ -191,7 +191,7 @@
 
 <script>
 (function () {
-    var SUBSTITUTION = @json($substitutionGroups);
+    var NUTRITION = @json((object) $nutrientMap->all());
     var NUTRIENTS = ['calories','protein','fat','carbohydrates','fiber','calcium','iron','vitamin_a','vitamin_c'];
     var UNITS = { calories: 'kkal', protein: 'g', fat: 'g', carbohydrates: 'g', fiber: 'g', calcium: 'mg', iron: 'mg', vitamin_a: 'mcg', vitamin_c: 'mg' };
 
@@ -204,15 +204,12 @@
         var totals = {};
         NUTRIENTS.forEach(function (k) { totals[k] = 0; });
 
-        document.querySelectorAll('.ingredient-item[data-group]').forEach(function (item) {
-            if (!item.dataset.group) return;
+        document.querySelectorAll('.ingredient-item').forEach(function (item) {
             var grams = parseFloat(item.dataset.grams) || 0;
-            var ingId = parseInt(item.dataset.current, 10);
-            var group = SUBSTITUTION[item.dataset.group] || [];
-            var ing = group.find(function (x) { return x.id === ingId; });
+            var ing = NUTRITION[item.dataset.current];
             if (!ing) return;
             var factor = grams / 100;
-            NUTRIENTS.forEach(function (k) { totals[k] += ing.per100[k] * factor; });
+            NUTRIENTS.forEach(function (k) { totals[k] += ing[k] * factor; });
         });
 
         NUTRIENTS.forEach(function (k) {
