@@ -39,6 +39,7 @@ class RegisterTest extends TestCase
             ->assertSee('id="auth-error-summary"', false)
             ->assertSee('role="alert"', false)
             ->assertSee('id="password-error"', false)
+            ->assertSee('Password minimal 8 karakter.')
             ->assertSee('value="Ibu Uji"', false)
             ->assertSee('value="baru@example.test"', false);
     }
