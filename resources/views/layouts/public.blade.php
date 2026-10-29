@@ -35,7 +35,7 @@
     <nav class="navbar" id="navbar">
         <div class="container navbar-content">
             <a href="/" class="navbar-brand">
-                <img src="{{ asset('images/ceting_nasiku.png') }}" alt="CETING NASIKU Logo" class="navbar-logo navbar-logo-main">
+                <img src="{{ asset('images/ceting_nasiku-mark.png') }}" alt="CETING NASIKU Logo" class="navbar-logo navbar-logo-main">
                 <img src="{{ asset('images/logo_dinas.png') }}" alt="Logo Dinas" class="navbar-logo navbar-logo-dinas">
             </a>
 
@@ -50,6 +50,9 @@
                 <li><a href="/cek-risiko" class="{{ request()->is('cek-risiko') ? 'active' : '' }}"><i class="fas fa-clipboard-check"></i> Cek Risiko</a></li>
                 <li><a href="/edukasi" class="{{ request()->is('edukasi*') ? 'active' : '' }}"><i class="fas fa-graduation-cap"></i> Edukasi</a></li>
                 <li><a href="/kalkulator" class="{{ request()->is('kalkulator') ? 'active' : '' }}"><i class="fas fa-calculator"></i> Kalkulator Gizi</a></li>
+                @guest
+                <li><a href="{{ route('login') }}" class="btn btn-sm btn-accent navbar-login"><i class="fas fa-right-to-bracket"></i> Masuk</a></li>
+                @endguest
                 @auth
                 <li><a href="{{ route('profil.index') }}" class="{{ request()->is('profil*') ? 'active' : '' }}"><i class="fas fa-child"></i> Pantau Tumbuh Kembang</a></li>
                 @if(auth()->user()->isAdmin())

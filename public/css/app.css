@@ -222,6 +222,15 @@ h4 { font-size: 1.25rem; }
     transition: var(--transition);
 }
 
+/* Tombol masuk di ujung kanan menu */
+.navbar-menu .navbar-login {
+    margin-left: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    white-space: nowrap;
+}
+
 .brand-icon {
     width: 42px;
     height: 42px;
@@ -3369,6 +3378,13 @@ a.ceting-page-btn:hover {
 
     .navbar-menu li {
         width: 100%;
+    }
+
+    .navbar-menu .navbar-login {
+        margin: 0.5rem 0 0;
+        width: 100%;
+        justify-content: center;
+        padding: 0.7rem 0.85rem;
     }
 
     /* Panel mobile selalu putih: paksa tautan gelap, jangan ikut gaya di atas hero */
