@@ -73,7 +73,7 @@ PROMPT;
     private const RATE_LIMIT_PER_MINUTE = 10;
 
     /**
-     * Kirim pesan ke provider AI Cartethyia (OpenAI-compatible) dan kembalikan balasan.
+     * Kirim pesan ke provider AI InferHub (OpenAI-compatible) dan kembalikan balasan.
      */
     public function send(Request $request)
     {
@@ -98,10 +98,10 @@ PROMPT;
             'history.*.content' => 'required|string|max:'.self::MAX_HISTORY_ITEM_LENGTH,
         ]);
 
-        $config = config('services.cartethyia');
+        $config = config('services.inferhub');
 
         if (empty($config['key'])) {
-            Log::error('Cartethyia API key belum dikonfigurasi.');
+            Log::error('InferHub API key belum dikonfigurasi.');
 
             return response()->json(['error' => 'API key tidak ditemukan.'], 500);
         }
@@ -166,7 +166,7 @@ PROMPT;
             if ($response->failed()) {
                 // Hanya status yang dicatat; body upstream tidak dikirim ke klien
                 // dan tidak dilog penuh untuk menghindari kebocoran data.
-                Log::error('Cartethyia API Error', ['status' => $response->status()]);
+                Log::error('InferHub API Error', ['status' => $response->status()]);
 
                 return response()->json([
                     'error' => 'Maaf, terjadi kesalahan saat menghubungi AI. Silakan coba lagi.',
@@ -179,7 +179,7 @@ PROMPT;
             $choice = $data['choices'][0]['message'] ?? null;
 
             if (! $choice || ! isset($choice['content'])) {
-                Log::error('Cartethyia unexpected body', ['status' => $response->status()]);
+                Log::error('InferHub unexpected body', ['status' => $response->status()]);
 
                 return response()->json(['error' => 'Tidak ada respons dari AI.'], 500);
             }

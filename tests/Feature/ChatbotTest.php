@@ -10,19 +10,19 @@ class ChatbotTest extends TestCase
 {
     private const TEST_KEY = 'rk_test_dummy_key_123';
 
-    private const TEST_BASE = 'https://carte.risun.web.id/v1';
+    private const TEST_BASE = 'https://api.inferhub.dev/v1';
 
-    private const TEST_MODEL = 'bansos/deepseek-v4.1-flash';
+    private const TEST_MODEL = 'zai/glm-5.3-flash';
 
     protected function setUp(): void
     {
         parent::setUp();
 
         config([
-            'services.cartethyia.base_url' => self::TEST_BASE,
-            'services.cartethyia.key' => self::TEST_KEY,
-            'services.cartethyia.model' => self::TEST_MODEL,
-            'services.cartethyia.timeout' => 60,
+            'services.inferhub.base_url' => self::TEST_BASE,
+            'services.inferhub.key' => self::TEST_KEY,
+            'services.inferhub.model' => self::TEST_MODEL,
+            'services.inferhub.timeout' => 60,
         ]);
 
         // Pastikan limiter bersih di setiap test agar tidak saling memengaruhi.
@@ -40,7 +40,7 @@ class ChatbotTest extends TestCase
         ]);
     }
 
-    public function test_success_sends_request_to_cartethyia_with_configured_model_and_bearer_key(): void
+    public function test_success_sends_request_to_inferhub_with_configured_model_and_bearer_key(): void
     {
         $this->fakeSuccess();
 

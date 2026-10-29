@@ -37,11 +37,11 @@ return [
         'model'    => env('OPENAGENTIC_MODEL', 'ali-z-image-turbo'),
     ],
 
-    'cartethyia' => [
-        'base_url' => env('CARTETHYIA_BASE_URL', 'https://carte.risun.web.id/v1'),
-        'key'      => env('CARTETHYIA_API_KEY'),
-        'model'    => env('CARTETHYIA_MODEL', 'bansos/deepseek-v4.1-flash'),
-        'timeout'  => (int) env('CARTETHYIA_TIMEOUT', 60),
+    'inferhub' => [
+        'base_url' => env('INFERHUB_BASE_URL', 'https://api.inferhub.dev/v1'),
+        'key'      => env('INFERHUB_API_KEY'),
+        'model'    => env('INFERHUB_MODEL', 'zai/glm-5.3-flash'),
+        'timeout'  => (int) env('INFERHUB_TIMEOUT', 60),
     ],
 
 ];
