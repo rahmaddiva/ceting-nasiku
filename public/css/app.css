@@ -338,14 +338,6 @@ body:not(.page-inner) .navbar:not(.scrolled) .navbar-menu a:not(.btn) {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
 }
 
-/* Logo berdiri di atas foto: beri alas putih agar tetap tajam */
-body:not(.page-inner) .navbar:not(.scrolled) .navbar-brand {
-    background: rgba(255, 255, 255, 0.94);
-    padding: 0.3rem 0.7rem;
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 14px -6px rgba(0, 0, 0, 0.45);
-}
-
 body:not(.page-inner) .navbar:not(.scrolled) .navbar-menu a:not(.btn):hover,
 body:not(.page-inner) .navbar:not(.scrolled) .navbar-menu a:not(.btn).active {
     color: #fff;
