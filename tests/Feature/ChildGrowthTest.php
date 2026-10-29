@@ -23,7 +23,7 @@ class ChildGrowthTest extends TestCase
     {
         $response = $this->get('/register');
 
-        $response->assertOk()->assertSee('Buat Akun Baru');
+        $response->assertOk()->assertSee('action="/register"', false);
 
         $this->post('/register', [
             'name' => 'Ibu Siti',
