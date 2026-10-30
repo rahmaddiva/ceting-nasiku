@@ -18,8 +18,6 @@ class TrackSiteVisits
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $response = $next($request);
-
         try {
             $today = now()->toDateString();
 
@@ -42,11 +40,12 @@ class TrackSiteVisits
                 ];
             });
 
+            // Harus dibagikan sebelum $next() agar sudah tersedia saat view dirender.
             View::share('visitStats', $stats);
         } catch (\Throwable $e) {
             report($e);
         }
 
-        return $response;
+        return $next($request);
     }
 }

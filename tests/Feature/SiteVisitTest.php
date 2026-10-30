@@ -27,7 +27,11 @@ class SiteVisitTest extends TestCase
 
     public function test_footer_shows_total_and_today_visits(): void
     {
-        $this->get('/resep');
+        // Kunjungan pertama harus langsung terlihat di footer (tanpa jeda satu request).
+        $this->get('/resep')
+            ->assertOk()
+            ->assertSee('<strong>1</strong> Total Pengunjung', false)
+            ->assertSee('Hari Ini');
 
         // Kunjungan berikutnya (sesi berbeda) menambah hitungan.
         $this->flushSession();
@@ -37,8 +41,6 @@ class SiteVisitTest extends TestCase
 
         $this->get('/edukasi')
             ->assertOk()
-            ->assertSee('Total Pengunjung')
-            ->assertSee('Hari Ini')
-            ->assertSeeInOrder(['2', 'Total Pengunjung']);
+            ->assertSee('<strong>2</strong> Total Pengunjung', false);
     }
 }
