@@ -98,7 +98,21 @@
                     <div class="footer-brand">
                         <img src="{{ asset('images/ceting_nasiku.png') }}" alt="CETING NASIKU Logo" style="height: 50px; width: auto; object-fit: contain; margin-bottom: 10px;">
                     </div>
-                    <p>Panduan resep makanan bergizi seimbang untuk mencegah stunting dan mendukung tumbuh kembang anak Indonesia.</p>
+                    <p>
+                        Panduan resep makanan bergizi seimbang untuk mencegah stunting dan mendukung tumbuh kembang anak Indonesia.
+                        Lengkap dengan kalkulator gizi, cek risiko stunting, kurva pertumbuhan WHO, modul edukasi
+                        pola asuh &amp; PHBS, serta asisten AI <strong>NASI</strong> yang siap menjawab pertanyaan gizi kapan saja.
+                    </p>
+                    <div class="footer-visits">
+                        <span title="Total kunjungan sejak penghitung diaktifkan">
+                            <i class="fas fa-users" aria-hidden="true"></i>
+                            <strong>{{ number_format($visitStats['total'] ?? 0, 0, ',', '.') }}</strong> Total Pengunjung
+                        </span>
+                        <span>
+                            <i class="fas fa-user-clock" aria-hidden="true"></i>
+                            <strong>{{ number_format($visitStats['today'] ?? 0, 0, ',', '.') }}</strong> Hari Ini
+                        </span>
+                    </div>
                 </div>
                 <div class="footer-links">
                     <h4>Navigasi</h4>

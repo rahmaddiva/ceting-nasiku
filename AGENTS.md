@@ -37,6 +37,7 @@ app/
       StuntingController.php
     Middleware/
       AdminMiddleware.php  # Guard untuk route /admin/*
+      TrackSiteVisits.php  # Hitung kunjungan harian → footer (tabel site_visits)
   Models/
     Category.php
     Ingredient.php

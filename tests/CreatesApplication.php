@@ -16,6 +16,15 @@ trait CreatesApplication
 
         $app->make(Kernel::class)->bootstrap();
 
+        // Test suite tidak boleh menyentuh database pengembangan, walau shell
+        // mengekspor DB_CONNECTION/DB_DATABASE atau .env berisi MySQL.
+        if ($app->environment('testing')) {
+            $app['config']->set('database.default', 'sqlite');
+            $app['config']->set('database.connections.sqlite.database', ':memory:');
+            $app['config']->set('cache.default', 'array');
+            $app['config']->set('session.driver', 'array');
+        }
+
         return $app;
     }
 }
