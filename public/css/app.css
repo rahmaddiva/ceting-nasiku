@@ -2636,6 +2636,24 @@ a.ceting-page-btn:hover {
     gap: 2rem;
 }
 
+.stunting-stats-source {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-100);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+.stunting-stats-source i {
+    margin-top: 0.15rem;
+    color: var(--accent-600);
+    flex: 0 0 auto;
+}
+
 .stunting-stat-item {
     display: flex;
     align-items: center;

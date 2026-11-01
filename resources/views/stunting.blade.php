@@ -33,8 +33,8 @@
             <div class="stunting-stat-item">
                 <div class="stunting-stat-icon"><i class="fas fa-globe-asia"></i></div>
                 <div>
-                    <div class="stunting-stat-number">21,6%</div>
-                    <div class="stunting-stat-desc">Prevalensi stunting di Indonesia (2022)</div>
+                    <div class="stunting-stat-number">18,8%</div>
+                    <div class="stunting-stat-desc">Prevalensi stunting nasional (2025)</div>
                 </div>
             </div>
             <div class="stunting-stat-item">
@@ -52,6 +52,11 @@
                 </div>
             </div>
         </div>
+        <p class="stunting-stats-source">
+            <i class="fas fa-circle-info" aria-hidden="true"></i>
+            Sumber: Survei Status Gizi Indonesia (SSGI) 2024 &amp; capaian prevalensi 2025 — Kementerian Kesehatan RI dan Kemendukbangga/BKKBN.
+            Turun dari 24,4% (2021) → 21,6% (2022) → 21,5% (2023) → 19,8% (2024) → 18,8% (2025).
+        </p>
     </div>
 </section>
 
@@ -72,7 +77,7 @@
                 <p>Kekurangan gizi terjadi sejak bayi dalam kandungan dan pada masa awal setelah bayi lahir. Namun, kondisi stunting baru nampak setelah bayi berusia 2 tahun.</p>
                 <div class="nutrition-highlight">
                     <h4><i class="fas fa-chart-bar"></i> Fakta Penting</h4>
-                    <p>Menurut WHO, Indonesia termasuk negara dengan prevalensi stunting cukup tinggi. Stunting dapat dicegah dengan intervensi gizi yang tepat selama 1000 hari pertama kehidupan.</p>
+                    <p>Prevalensi stunting nasional turun dari 24,4% (2021) menjadi 18,8% (2025) — pertama kali di bawah 20%. Meski begitu, sekitar 1 dari 5 anak Indonesia masih mengalami stunting, dan penurunannya belum merata antarprovinsi. Stunting dapat dicegah dengan intervensi gizi yang tepat selama 1000 hari pertama kehidupan.</p>
                 </div>
             </div>
         </div>
