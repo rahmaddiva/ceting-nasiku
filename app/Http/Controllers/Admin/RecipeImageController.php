@@ -7,13 +7,14 @@ use App\Models\Recipe;
 use App\Services\RecipeImageService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class RecipeImageController extends Controller
 {
     public function generate(Request $request, RecipeImageService $service): JsonResponse
     {
         $request->validate([
-            'model' => 'nullable|string',
+            'model' => ['nullable', 'string', Rule::in(array_keys(config('services.openagentic.models')))],
         ]);
 
         $result = $service->generateForRecipes(null, $request->input('model'));
@@ -30,7 +31,7 @@ class RecipeImageController extends Controller
     {
         $request->validate([
             'id' => 'required|exists:recipes,id',
-            'model' => 'nullable|string',
+            'model' => ['nullable', 'string', Rule::in(array_keys(config('services.openagentic.models')))],
         ]);
 
         $recipe = Recipe::findOrFail($request->input('id'));

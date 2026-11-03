@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Recipe;
+use App\Services\RecipeImageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -39,7 +40,8 @@ class RecipeController extends Controller
             ],
             ['title', 'age_group'],
             function (Recipe $recipe, int $no) {
-                $image = $recipe->image
+                $hasImage = $recipe->image && is_file(RecipeImageService::imagePath($recipe->image));
+                $image = $hasImage
                     ? '<img src="'.asset($recipe->image).'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">'
                     : '<div style="width:48px;height:48px;background:#f3f4f6;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#9ca3af;"><i class="fas fa-image"></i></div>';
 
@@ -47,7 +49,7 @@ class RecipeController extends Controller
                     ? '<span class="badge badge-success">Publik</span>'
                     : '<span class="badge badge-warning">Draft</span>';
 
-                $generateBtn = $recipe->image
+                $generateBtn = $hasImage
                     ? ''
                     : ' <button class="btn-icon generate" title="Generate Gambar" onclick="generateSingleImage('.$recipe->id.', this)"><i class="fas fa-wand-magic-sparkles"></i></button>';
 
@@ -151,6 +153,8 @@ class RecipeController extends Controller
         $data = $request->only(['title', 'category_id', 'description', 'instructions', 'servings', 'age_group']);
         $data['is_published'] = $request->boolean('is_published');
 
+        $oldImage = $recipe->image;
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
@@ -164,6 +168,10 @@ class RecipeController extends Controller
 
         $recipe->update($data);
 
+        if ($request->hasFile('image') && $oldImage) {
+            RecipeImageService::deleteFile($oldImage);
+        }
+
         // Sync ingredients
         $syncData = [];
         foreach ($request->ingredients as $ing) {
@@ -176,8 +184,12 @@ class RecipeController extends Controller
 
     public function destroy(Recipe $recipe)
     {
+        $image = $recipe->image;
+
         $recipe->ingredients()->detach();
         $recipe->delete();
+
+        RecipeImageService::deleteFile($image);
 
         return redirect('/admin/recipes')->with('success', 'Resep berhasil dihapus!');
     }

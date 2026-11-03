@@ -32,16 +32,22 @@ return [
     ],
 
     'openagentic' => [
-        'base_url' => env('OPENAGENTIC_BASE_URL', 'https://openagentic.id/api/v1'),
-        'key'      => env('OPENAGENTIC_API_KEY'),
-        'model'    => env('OPENAGENTIC_MODEL', 'ali-z-image-turbo'),
+        'base_url' => env('OPENAGENTIC_BASE_URL', 'https://bansos-ai.digitalindotech.cloud/v1'),
+        'key' => env('OPENAGENTIC_API_KEY'),
+        'model' => env('OPENAGENTIC_MODEL', 'antigravity/gemini-3.1-flash-image'),
+        'image_dir' => env('OPENAGENTIC_IMAGE_DIR'),
+
+        // Hanya model yang benar-benar punya rute imageGeneration di gateway.
+        'models' => [
+            'antigravity/gemini-3.1-flash-image' => 'Gemini 3.1 Flash Image',
+        ],
     ],
 
     'inferhub' => [
         'base_url' => env('INFERHUB_BASE_URL', 'https://api.inferhub.dev/v1'),
-        'key'      => env('INFERHUB_API_KEY'),
-        'model'    => env('INFERHUB_MODEL', 'zai/glm-5.3-flash'),
-        'timeout'  => (int) env('INFERHUB_TIMEOUT', 60),
+        'key' => env('INFERHUB_API_KEY'),
+        'model' => env('INFERHUB_MODEL', 'zai/glm-5.3-flash'),
+        'timeout' => (int) env('INFERHUB_TIMEOUT', 60),
     ],
 
 ];

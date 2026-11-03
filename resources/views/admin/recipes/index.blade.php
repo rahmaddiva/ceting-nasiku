@@ -11,14 +11,9 @@
     <div style="display:flex; align-items:center; gap:0.75rem; padding:0.75rem 1rem; border-bottom:1px solid #e5e7eb;">
         <label for="image-model-index" style="font-size:0.8rem; color:#6b7280; white-space:nowrap;">Model Generate:</label>
         <select id="image-model-index" style="padding:0.35rem 0.5rem; border:1px solid #d1d5db; border-radius:6px; font-size:0.8rem;">
-            <option value="ali-z-image-turbo">Z Image Turbo (Free)</option>
-            <option value="flux-2-klein-4b">Flux 2 Klein (Free)</option>
-            <option value="ali-qwen-image-plus">Qwen Image Plus</option>
-            <option value="ali-qwen-image-2.0">Qwen Image 2.0</option>
-            <option value="ali-qwen-image-2.0-pro">Qwen Image 2.0 Pro</option>
-            <option value="ali-qwen-image-max">Qwen Image Max</option>
-            <option value="ali-wan2.7-image">Wan2.7 Image</option>
-            <option value="ali-wan2.7-image-pro">Wan2.7 Image Pro</option>
+            @foreach(config('services.openagentic.models') as $modelId => $modelLabel)
+                <option value="{{ $modelId }}">{{ $modelLabel }}</option>
+            @endforeach
         </select>
     </div>
     <table id="recipesTable" class="data-table" style="width:100%">
@@ -89,7 +84,8 @@ function generateSingleImage(recipeId, btn) {
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            btn.outerHTML = '<img src="' + data.image + '?' + Date.now() + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">';
+            const cell = btn.closest('tr').cells[1];
+            cell.innerHTML = '<img src="' + data.image + '?' + Date.now() + '" style="width:48px;height:48px;object-fit:cover;border-radius:6px;">';
         } else {
             alert('Gagal: ' + (data.error || 'Unknown error'));
             btn.disabled = false;

@@ -57,7 +57,10 @@ routes/web.php             # semua route publik + admin
 | `INFERHUB_API_KEY` | API key InferHub untuk chatbot NASI |
 | `INFERHUB_MODEL` | Model chatbot (default `zai/glm-5.3-flash`) |
 | `INFERHUB_TIMEOUT` | Timeout request chatbot (detik) |
-| `OPENAGENTIC_API_KEY` | API key OpenAgentic untuk generate gambar resep (admin) |
+| `OPENAGENTIC_API_KEY` | API key gateway gambar (`bansos-ai.digitalindotech.cloud`) untuk generate gambar resep (admin) |
+| `OPENAGENTIC_BASE_URL` | Base URL gateway gambar (default `https://bansos-ai.digitalindotech.cloud/v1`) |
+| `OPENAGENTIC_MODEL` | Model gambar (default `antigravity/gemini-3.1-flash-image`); daftar model ada di `config/services.php` → `openagentic.models` |
+| `OPENAGENTIC_IMAGE_DIR` | Folder tulis gambar resep; wajib diisi di produksi (`/home/cetingnasiku/public_html/images/recipes`) karena docroot bukan `public/` aplikasi |
 | `DB_*` | Koneksi database standar Laravel |
 Jangan pernah commit nilai `.env`. Gunakan `.env.example` sebagai referensi.
 
