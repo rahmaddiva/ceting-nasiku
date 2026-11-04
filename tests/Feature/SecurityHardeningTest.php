@@ -73,7 +73,12 @@ class SecurityHardeningTest extends TestCase
         }
 
         $dir = 'images/_security_test';
-        $file = UploadedFile::fake()->image('payload.php', 10, 10);
+        // Nama klien berakhiran .php tapi isinya PNG asli: ekstensi tersimpan harus
+        // mengikuti isi file, bukan nama kiriman.
+        $png = base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==');
+        $tmp = tempnam(sys_get_temp_dir(), 'up').'.php';
+        file_put_contents($tmp, $png);
+        $file = new UploadedFile($tmp, 'payload.php', 'image/png', null, true);
 
         $path = $controller->store($file, $dir);
 
@@ -82,5 +87,6 @@ class SecurityHardeningTest extends TestCase
 
         @unlink(public_path($path));
         @rmdir(public_path($dir));
+        @unlink($tmp);
     }
 }

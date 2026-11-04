@@ -56,26 +56,21 @@ class PublicRecipeController extends Controller
             'vitamin_c' => $ing->vitamin_c,
         ];
 
-        $substitutionGroups = Ingredient::whereNotNull('substitution_group')
-            ->get()
+        $substitutes = Ingredient::whereNotNull('substitution_group')
+            ->select(['id', 'name', 'unit', 'substitution_group', 'calories', 'protein', 'fat', 'carbohydrates', 'fiber', 'calcium', 'iron', 'vitamin_a', 'vitamin_c'])
+            ->orderBy('name')
+            ->get();
+
+        $substitutionGroups = $substitutes
             ->groupBy('substitution_group')
-            ->map(fn ($group) => $group->map(fn (Ingredient $ing) => [
-                'id' => $ing->id,
-                'name' => $ing->name,
-                'unit' => $ing->unit,
-                'per100' => $per100($ing),
-            ])->values());
+            ->map(fn ($group) => $group->values());
 
         // Nilai gizi per 100 g untuk SEMUA bahan pada resep ini dan semua
         // kandidat substitusinya; dipakai JS untuk hitung ulang saat bahan diganti.
         $nutrientMap = $recipe->ingredients
+            ->merge($substitutes)
+            ->unique('id')
             ->mapWithKeys(fn (Ingredient $ing) => [$ing->id => $per100($ing)]);
-
-        foreach ($substitutionGroups as $group) {
-            foreach ($group as $option) {
-                $nutrientMap[$option['id']] = $option['per100'];
-            }
-        }
 
         return view('recipes.show', compact('recipe', 'related', 'substitutionGroups', 'nutrientMap'));
     }

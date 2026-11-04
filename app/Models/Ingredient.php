@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Ingredient extends Model
 {
-    use HasFactory;
-
     protected $fillable = [
         'name', 'unit', 'substitution_group', 'calories', 'protein', 'fat',
         'carbohydrates', 'fiber', 'calcium', 'iron',
@@ -32,21 +29,6 @@ class Ingredient extends Model
         return $this->belongsToMany(Recipe::class, 'recipe_ingredients')
             ->withPivot('quantity_grams')
             ->withTimestamps();
-    }
-
-    /**
-     * Bahan lain dalam grup substitusi yang sama (tanpa diri sendiri).
-     */
-    public function substitutes()
-    {
-        if (! $this->substitution_group) {
-            return collect();
-        }
-
-        return static::where('substitution_group', $this->substitution_group)
-            ->whereKeyNot($this->getKey())
-            ->orderBy('name')
-            ->get();
     }
 
     /**

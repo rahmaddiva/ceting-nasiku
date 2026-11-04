@@ -196,13 +196,8 @@ class RecipeImageService
      */
     private function extensionFor(string $binary): string
     {
-        $info = @getimagesizefromstring($binary);
+        $type = @exif_imagetype('data://application/octet-stream;base64,'.base64_encode($binary));
 
-        return match ($info[2] ?? null) {
-            IMAGETYPE_PNG => 'png',
-            IMAGETYPE_WEBP => 'webp',
-            IMAGETYPE_GIF => 'gif',
-            default => 'jpg',
-        };
+        return $type ? substr((string) image_type_to_extension($type, false), 0, 4) : 'jpg';
     }
 }

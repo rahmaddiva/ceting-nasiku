@@ -2,15 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Child extends Model
 {
-    use HasFactory;
-
     protected $fillable = ['user_id', 'name', 'gender', 'birth_date'];
 
     protected $casts = [
@@ -28,13 +25,13 @@ class Child extends Model
     }
 
     /**
-     * Umur dalam bulan pada tanggal tertentu (floor, 30.4375 hari/bulan).
+     * Umur dalam bulan penuh (WHO: floor dari selisih hari / rata-rata panjang bulan).
+     * Month-arithmetic (diffInMonths) membulatkan ke atas/gagal memplot titik
+     * pengukuran yang jadwalnya meleset beberapa hari dari tanggal lahir.
      */
     public function ageInMonthsAt(\DateTimeInterface $date): int
     {
-        $days = $this->birth_date->diffInDays($date);
-
-        return max(0, (int) floor($days / 30.4375));
+        return max(0, (int) floor($this->birth_date->diffInDays($date) / 30.4375));
     }
 
     /**
