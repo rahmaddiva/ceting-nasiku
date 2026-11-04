@@ -213,13 +213,14 @@
             position: fixed;
             bottom: 100px;
             right: 28px;
-            width: 370px;
+            width: 400px;
             max-width: calc(100vw - 32px);
-            height: 520px;
-            max-height: calc(100vh - 120px);
+            height: 620px;
+            max-height: calc(100vh - 130px);
             background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 16px 60px rgba(0, 0, 0, .18);
+            border: 1px solid var(--primary-100);
+            border-radius: 22px;
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .22), 0 2px 8px rgba(8, 145, 178, .08);
             display: flex;
             flex-direction: column;
             z-index: 9998;
@@ -293,6 +294,82 @@
             background: rgba(255, 255, 255, .3);
         }
 
+        /* Bottom dock: live prompt strip above chips + input */
+        .cb-dock {
+            background: #fff;
+            border-top: 1px solid var(--primary-100);
+            flex-shrink: 0;
+        }
+
+        .cb-status {
+            display: none;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 9px 14px;
+            background: var(--primary-50);
+            border-bottom: 1px solid var(--primary-100);
+            font-size: .72rem;
+            line-height: 1.45;
+            color: var(--primary-800);
+        }
+
+        .cb-status.show {
+            display: flex;
+        }
+
+        .cb-status i {
+            font-size: .7rem;
+            margin-top: 2px;
+            color: var(--primary-600);
+            animation: status-spin 1s linear infinite;
+        }
+
+        @keyframes status-spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .cb-status.show.failed {
+            background: #fef2f2;
+            border-bottom-color: #fecaca;
+            color: #991b1b;
+        }
+
+        .cb-status.show.failed i {
+            color: var(--danger);
+            animation: none;
+        }
+
+        .cb-msg.bot.error {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .cb-status-text {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        .cb-status-text b {
+            font-variant-numeric: tabular-nums;
+            color: var(--primary-700);
+        }
+
+        .cb-status-prompt {
+            display: block;
+            margin-top: 3px;
+            padding-left: 8px;
+            border-left: 2px solid var(--primary-300);
+            color: var(--gray-600);
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
         /* Messages */
         .cb-messages {
             flex: 1 1 auto;
@@ -302,6 +379,8 @@
             flex-direction: column;
             gap: 10px;
             background: var(--gray-50);
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary-200) transparent;
         }
 
         .cb-messages::-webkit-scrollbar {
@@ -365,48 +444,6 @@
             margin: 4px 0;
         }
 
-        /* Typing indicator */
-        .cb-typing {
-            display: flex;
-            gap: 5px;
-            align-items: center;
-            padding: 10px 14px;
-            background: #fff;
-            border: 1px solid var(--primary-100);
-            border-bottom-left-radius: 4px;
-            border-radius: 18px;
-            align-self: flex-start;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, .06);
-        }
-
-        .cb-typing span {
-            width: 7px;
-            height: 7px;
-            background: var(--primary-500);
-            border-radius: 50%;
-            animation: bounce-dot .9s infinite;
-        }
-
-        .cb-typing span:nth-child(2) {
-            animation-delay: .15s;
-        }
-
-        .cb-typing span:nth-child(3) {
-            animation-delay: .3s;
-        }
-
-        @keyframes bounce-dot {
-
-            0%,
-            80%,
-            100% {
-                transform: translateY(0);
-            }
-
-            40% {
-                transform: translateY(-6px);
-            }
-        }
 
         /* Input area */
         .cb-footer {
@@ -467,7 +504,7 @@
 
         /* Quick suggestions */
         .cb-suggestions {
-            padding: 0 14px 10px;
+            padding: 8px 14px 10px;
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
@@ -487,46 +524,110 @@
             font-family: var(--font-body);
         }
 
+        .cb-suggestion-btn:disabled {
+            opacity: .55;
+            cursor: default;
+        }
+
         .cb-suggestion-btn:hover {
             background: var(--primary-200);
         }
+        .cb-online {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-400);
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        #cb-input:focus-visible,
+        #cb-send:focus-visible {
+            outline: 2px solid var(--primary-400);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 520px) {
+            #chatbot-panel {
+                bottom: 0;
+                right: 0;
+                width: 100vw;
+                max-width: 100vw;
+                height: 100dvh;
+                max-height: 100dvh;
+                border: none;
+                border-radius: 0;
+            }
+
+            #chatbot-fab {
+                bottom: 18px;
+                right: 18px;
+            }
+
+            .cb-msg {
+                max-width: 90%;
+            }
+
+            .cb-suggestions {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                scrollbar-width: none;
+            }
+
+            .cb-suggestions::-webkit-scrollbar {
+                display: none;
+            }
+
+            .cb-suggestion-btn {
+                flex: 0 0 auto;
+            }
+        }
+
     </style>
 
-    <!-- FAB Button -->
-    <button id="chatbot-fab" title="Chat dengan NASI – Asisten Stunting" aria-label="Buka chatbot stunting">
-        <i class="fas fa-robot"></i>
+    <!-- NASI Assistant -->
+    <button id="chatbot-fab" type="button" title="Chat dengan NASI – Asisten Stunting" aria-label="Buka chatbot NASI" aria-controls="chatbot-panel" aria-expanded="false">
+        <i class="fas fa-robot" aria-hidden="true"></i>
         <span class="chatbot-badge">AI</span>
     </button>
 
-    <!-- Chat Panel -->
-    <div id="chatbot-panel" role="dialog" aria-label="Chatbot NASI">
-        <!-- Header -->
+    <div id="chatbot-panel" role="dialog" aria-modal="false" aria-labelledby="cb-title">
         <div class="cb-header">
-            <div class="cb-header-avatar"><i class="fas fa-seedling"></i></div>
+            <div class="cb-header-avatar"><i class="fas fa-seedling" aria-hidden="true"></i></div>
             <div class="cb-header-info">
-                <strong>NASI – Asisten Stunting</strong>
-                <span>Tanya seputar gizi, resep & pencegahan stunting</span>
+                <strong id="cb-title">NASI – Asisten Stunting</strong>
+                <span><i class="cb-online" aria-hidden="true"></i>Tanya seputar gizi, resep & pencegahan stunting</span>
             </div>
-            <button class="cb-header-close" id="chatbot-close" aria-label="Tutup chatbot">
-                <i class="fas fa-times"></i>
+            <button type="button" class="cb-header-close" id="chatbot-close" aria-label="Tutup chatbot">
+                <i class="fas fa-times" aria-hidden="true"></i>
             </button>
         </div>
 
-        <!-- Messages -->
-        <div class="cb-messages" id="cb-messages"></div>
+        <div class="cb-messages" id="cb-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
 
-        <!-- Quick suggestions (hidden after first send) -->
-        <div class="cb-suggestions" id="cb-suggestions">
-            <button class="cb-suggestion-btn" data-q="Resep MPASI bergizi untuk bayi 6 bulan?">🍼 MPASI bayi 6 bulan</button>
-            <button class="cb-suggestion-btn" data-q="Apa itu stunting dan bagaimana mencegahnya?">❓ Apa itu stunting?</button>
-            <button class="cb-suggestion-btn" data-q="Makanan tinggi protein yang murah untuk anak?">🥗 Protein murah</button>
-            <button class="cb-suggestion-btn" data-q="Tips pola asuh anak agar tidak stunting?">👶 Pola asuh</button>
-        </div>
+        <div class="cb-dock">
+            <!-- Live status: what NASI is doing with the prompt right now -->
+            <div class="cb-status" id="cb-status" aria-hidden="true">
+                <i class="fas fa-circle-notch" aria-hidden="true"></i>
+                <div class="cb-status-text">
+                    <span id="cb-status-label">Memproses…</span>
+                    <b id="cb-status-time">0,0 dtk</b>
+                    <span class="cb-status-prompt" id="cb-status-prompt"></span>
+                </div>
+            </div>
 
-        <!-- Input -->
-        <div class="cb-footer">
-            <textarea id="cb-input" rows="1" placeholder="Tanya tentang stunting, resep, gizi…" aria-label="Pesan chatbot"></textarea>
-            <button id="cb-send" aria-label="Kirim pesan"><i class="fas fa-paper-plane"></i></button>
+            <div class="cb-suggestions" id="cb-suggestions">
+                <button type="button" class="cb-suggestion-btn" data-q="Resep MPASI bergizi untuk bayi 6 bulan?">🍼 MPASI bayi 6 bulan</button>
+                <button type="button" class="cb-suggestion-btn" data-q="Apa itu stunting dan bagaimana mencegahnya?">❓ Apa itu stunting?</button>
+                <button type="button" class="cb-suggestion-btn" data-q="Makanan tinggi protein yang murah untuk anak?">🥗 Protein murah</button>
+                <button type="button" class="cb-suggestion-btn" data-q="Tips pola asuh anak agar tidak stunting?">👶 Pola asuh</button>
+            </div>
+
+            <div class="cb-footer">
+                <textarea id="cb-input" rows="1" maxlength="2000" placeholder="Tanya tentang stunting, resep, gizi…" aria-label="Pesan untuk NASI"></textarea>
+                <button type="button" id="cb-send" aria-label="Kirim pesan"><i class="fas fa-paper-plane" aria-hidden="true"></i></button>
+            </div>
         </div>
     </div>
 
@@ -539,43 +640,57 @@
             const input = document.getElementById('cb-input');
             const sendBtn = document.getElementById('cb-send');
             const suggestEl = document.getElementById('cb-suggestions');
+            const statusEl = document.getElementById('cb-status');
+            const statusLabel = document.getElementById('cb-status-label');
+            const statusTime = document.getElementById('cb-status-time');
+            const statusPrompt = document.getElementById('cb-status-prompt');
 
-            let history = []; // multi-turn conversation history
+            const ENDPOINT = @json(route('chatbot.send'));
+            const MAX_TURNS = 10; // server juga memotong ke 10 pasangan
+
+            let history = [];
             let isOpen = false;
             let isLoading = false;
             let greeted = false;
+            let statusTimer = null;
+            let statusStart = 0;
 
             // ---- Toggle panel ----
             function openPanel() {
                 panel.classList.add('open');
                 isOpen = true;
+                fab.setAttribute('aria-expanded', 'true');
                 fab.querySelector('.chatbot-badge').style.display = 'none';
-                input.focus();
                 if (!greeted) {
                     greet();
                     greeted = true;
                 }
+                input.focus();
             }
 
             function closePanel() {
                 panel.classList.remove('open');
                 isOpen = false;
+                fab.setAttribute('aria-expanded', 'false');
+                fab.focus();
             }
-            fab.addEventListener('click', () => isOpen ? closePanel() : openPanel());
+
+            fab.addEventListener('click', () => (isOpen ? closePanel() : openPanel()));
             closeBtn.addEventListener('click', closePanel);
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && isOpen) closePanel();
+            });
 
-            // ---- Greeting ----
+            // ---- Messages ----
             function greet() {
-                appendMsg('bot', '👋 Halo! Saya <strong>NASI</strong>, asisten gizi dan pencegahan stunting dari <strong>CETING NASIKU</strong>.\n\nSilakan tanya apa saja seputar resep bergizi, pola makan, atau cara mencegah stunting. Saya siap membantu! 🌱');
+                appendMsg('bot', '👋 Halo! Saya NASI, asisten gizi dan pencegahan stunting dari CETING NASIKU.\n\nSilakan tanya apa saja seputar resep bergizi, pola makan, atau cara mencegah stunting. Saya siap membantu! 🌱');
             }
 
-            // ---- Append message ----
-            function appendMsg(role, text) {
+            function appendMsg(role, text, isError) {
                 const div = document.createElement('div');
-                div.className = 'cb-msg ' + role;
+                div.className = 'cb-msg ' + role + (isError ? ' error' : '');
                 if (role === 'bot') {
-                    // Render markdown-lite: bold, newlines, bullet points
-                    div.innerHTML = renderMarkdown(text);
+                    div.append(...renderMarkdown(text));
                 } else {
                     div.textContent = text;
                 }
@@ -584,90 +699,194 @@
                 return div;
             }
 
+            /*
+             * Markdown-lite untuk balasan model, dibangun dari node DOM (bukan
+             * innerHTML), jadi HTML di dalam teks AI tidak pernah dieksekusi.
+             * Didukung: ## judul, **bold**, *miring*, `kode`, -/•/1. daftar.
+             */
             function renderMarkdown(text) {
-                return text
-                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                    .replace(/^[-•]\s+(.+)$/gm, '<li>$1</li>')
-                    .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
-                    .replace(/\n{2,}/g, '</p><p>')
-                    .replace(/\n/g, '<br>')
-                    .replace(/^(.+)$/, '<p>$1</p>');
-            }
+                const frag = document.createDocumentFragment();
+                const inline = (str) => {
+                    const nodes = [];
+                    const re = /\*\*(.+?)\*\*|\*(.+?)\*|`([^`]+)`/g;
+                    let last = 0, m;
+                    while ((m = re.exec(str))) {
+                        if (m.index > last) nodes.push(document.createTextNode(str.slice(last, m.index)));
+                        if (m[1] !== undefined) {
+                            const b = document.createElement('strong');
+                            b.textContent = m[1];
+                            nodes.push(b);
+                        } else if (m[2] !== undefined) {
+                            const em = document.createElement('em');
+                            em.textContent = m[2];
+                            nodes.push(em);
+                        } else {
+                            const code = document.createElement('code');
+                            code.textContent = m[3];
+                            nodes.push(code);
+                        }
+                        last = re.lastIndex;
+                    }
+                    if (last < str.length) nodes.push(document.createTextNode(str.slice(last)));
+                    return nodes;
+                };
 
-            // ---- Typing indicator ----
-            function showTyping() {
-                const el = document.createElement('div');
-                el.className = 'cb-typing';
-                el.id = 'cb-typing';
-                el.innerHTML = '<span></span><span></span><span></span>';
-                msgBox.appendChild(el);
-                scrollBottom();
-            }
+                const lines = String(text).replace(/\r\n?/g, '\n').split('\n');
+                let list = null;   // ul|ol yang sedang dibangun
+                let para = [];     // baris paragraf terkumpul
 
-            function hideTyping() {
-                const el = document.getElementById('cb-typing');
-                if (el) el.remove();
+                const flushPara = () => {
+                    if (!para.length) return;
+                    const p = document.createElement('p');
+                    para.forEach((line, i) => {
+                        if (i) p.appendChild(document.createElement('br'));
+                        p.append(...inline(line));
+                    });
+                    frag.appendChild(p);
+                    para = [];
+                };
+                const flushList = () => {
+                    if (list) frag.appendChild(list);
+                    list = null;
+                };
+
+                for (const raw of lines) {
+                    const line = raw.trim();
+                    if (!line) {
+                        flushPara();
+                        flushList();
+                        continue;
+                    }
+                    const bullet = line.match(/^[-•*]\s+(.*)$/);
+                    const number = line.match(/^\d+[.)]\s+(.*)$/);
+                    const heading = line.match(/^#{1,4}\s+(.*)$/);
+
+                    if (heading) {
+                        flushPara();
+                        flushList();
+                        const h = document.createElement('p');
+                        const strong = document.createElement('strong');
+                        strong.textContent = heading[1].replace(/\*\*/g, '');
+                        h.appendChild(strong);
+                        frag.appendChild(h);
+                        continue;
+                    }
+                    if (bullet || number) {
+                        flushPara();
+                        const tag = bullet ? 'UL' : 'OL';
+                        if (!list || list.tagName !== tag) {
+                            flushList();
+                            list = document.createElement(tag);
+                        }
+                        const li = document.createElement('li');
+                        li.append(...inline((bullet || number)[1]));
+                        list.appendChild(li);
+                        continue;
+                    }
+                    flushList();
+                    para.push(line);
+                }
+                flushPara();
+                flushList();
+                return Array.from(frag.childNodes);
             }
 
             function scrollBottom() {
                 msgBox.scrollTop = msgBox.scrollHeight;
             }
 
-            // ---- Send message ----
-            async function sendMessage(text) {
-                if (!text.trim() || isLoading) return;
-                isLoading = true;
-                sendBtn.disabled = true;
-                suggestEl.style.display = 'none';
+            // ---- Live status ----
+            function fmt(sec) {
+                return sec.toFixed(1).replace('.', ',') + ' dtk';
+            }
 
+            function startStatus(promptText) {
+                statusStart = performance.now();
+                statusLabel.textContent = 'Menganalisis pertanyaan…';
+                statusTime.textContent = '0,0 dtk';
+                statusPrompt.textContent = '“' + promptText.replace(/\s+/g, ' ').trim() + '”';
+                statusEl.classList.add('show');
+                statusEl.setAttribute('aria-hidden', 'false');
+
+                clearInterval(statusTimer);
+                statusTimer = setInterval(() => {
+                    const s = (performance.now() - statusStart) / 1000;
+                    statusTime.textContent = fmt(s);
+                    if (s > 12) statusLabel.textContent = 'Menyusun jawaban bergizi…';
+                    else if (s > 5) statusLabel.textContent = 'Mencari rujukan gizi…';
+                }, 100);
+            }
+
+            function stopStatus(errorText) {
+                clearInterval(statusTimer);
+                statusTimer = null;
+                if (errorText) {
+                    const s = (performance.now() - statusStart) / 1000;
+                    statusLabel.textContent = 'Gagal memproses';
+                    statusTime.textContent = fmt(s);
+                    statusEl.classList.add('show', 'failed');
+                    return;
+                }
+                statusEl.classList.remove('show', 'failed');
+                statusEl.setAttribute('aria-hidden', 'true');
+            }
+
+            // ---- Send ----
+            function setBusy(busy) {
+                isLoading = busy;
+                sendBtn.disabled = busy;
+                suggestEl.querySelectorAll('.cb-suggestion-btn').forEach(b => { b.disabled = busy; });
+            }
+
+            async function sendMessage(raw) {
+                const text = raw.trim();
+                if (!text || isLoading) return;
+
+                setBusy(true);
                 appendMsg('user', text);
                 input.value = '';
                 input.style.height = 'auto';
-
-                showTyping();
+                startStatus(text);
 
                 try {
-                    const res = await fetch('{{ route("chatbot.send") }}', {
+                    const res = await fetch(ENDPOINT, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
+                            'Accept': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         },
-                        body: JSON.stringify({
-                            message: text,
-                            history: history
-                        }),
+                        body: JSON.stringify({ message: text, history: history }),
                     });
 
-                    const data = await res.json();
-                    hideTyping();
+                    let data = {};
+                    try { data = await res.json(); } catch (_) { /* body bukan JSON */ }
 
-                    if (data.error) {
-                        appendMsg('bot', '⚠️ ' + data.error);
+                    if (!res.ok || data.error) {
+                        const msg = data.error || (res.status === 429
+                            ? 'Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.'
+                            : 'Maaf, terjadi kesalahan. Silakan coba lagi.');
+                        stopStatus(msg);
+                        appendMsg('bot', '⚠️ ' + msg, true);
                     } else {
                         const reply = data.reply || '(Tidak ada respons)';
+                        stopStatus();
                         appendMsg('bot', reply);
-
-                        // Save to history for multi-turn
-                        history.push({ role: 'user', content: text });
-                        history.push({ role: 'assistant', content: reply });
-
-                        // Keep history bounded (last 20 turns = 10 pairs)
-                        if (history.length > 20) history = history.slice(-20);
+                        history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+                        if (history.length > MAX_TURNS * 2) history = history.slice(-MAX_TURNS * 2);
                     }
                 } catch (err) {
-                    hideTyping();
-                    appendMsg('bot', '⚠️ Koneksi bermasalah. Pastikan jaringan internet tersedia.');
+                    const msg = 'Koneksi bermasalah. Pastikan jaringan internet tersedia.';
+                    stopStatus(msg);
+                    appendMsg('bot', '⚠️ ' + msg, true);
                     console.error('Chatbot error:', err);
                 }
 
-                isLoading = false;
-                sendBtn.disabled = false;
+                setBusy(false);
                 input.focus();
             }
 
-            // ---- Event listeners ----
+            // ---- Events ----
             sendBtn.addEventListener('click', () => sendMessage(input.value));
 
             input.addEventListener('keydown', function(e) {
@@ -677,13 +896,11 @@
                 }
             });
 
-            // Auto-resize textarea
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = Math.min(this.scrollHeight, 90) + 'px';
             });
 
-            // Quick suggestion buttons
             suggestEl.querySelectorAll('.cb-suggestion-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     if (!greeted) {
