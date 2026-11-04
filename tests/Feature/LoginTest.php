@@ -9,6 +9,14 @@ class LoginTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Login dibatasi throttle:5,1 per IP; pakai IP unik per test (lihat RegisterTest).
+        $this->withServerVariables(['REMOTE_ADDR' => '10.'.random_int(0, 255).'.'.random_int(0, 255).'.'.random_int(1, 254)]);
+    }
+
     public function test_login_page_exposes_labelled_fields_for_assistive_tech(): void
     {
         $response = $this->get('/login');

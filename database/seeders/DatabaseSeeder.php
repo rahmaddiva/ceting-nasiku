@@ -8,26 +8,17 @@ use App\Models\Recipe;
 use App\Models\User;
 use App\Services\RecipeImageService;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create admin user
-        $admin = User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@cetingnasiku.com',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
-        ]);
-
-        // Create regular user
-        User::create([
-            'name' => 'Pengguna',
-            'email' => 'user@cetingnasiku.com',
-            'password' => bcrypt('password'),
-            'role' => 'user',
-        ]);
+        // Password tidak lagi hardcoded: dibuat acak dan hanya ditampilkan sekali.
+        // Untuk produksi, set ADMIN_PASSWORD / DEMO_PASSWORD di .env agar nilainya diketahui.
+        $this->seedUser('Administrator', 'admin@cetingnasiku.com', 'admin', 'ADMIN_PASSWORD');
+        $this->seedUser('Pengguna', 'user@cetingnasiku.com', 'user', 'DEMO_PASSWORD');
 
         // Create categories
         $categories = [
@@ -597,5 +588,22 @@ class DatabaseSeeder extends Seeder
                 $this->command->warn("  - {$error}");
             }
         }
+    }
+
+    /**
+     * Buat user seed dengan password dari .env (jika ada) atau acak.
+     */
+    private function seedUser(string $name, string $email, string $role, string $envKey): void
+    {
+        $password = env($envKey) ?: Str::password(16);
+
+        User::create([
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'role' => $role,
+        ]);
+
+        $this->command->warn("  {$role}: {$email} / {$password}");
     }
 }

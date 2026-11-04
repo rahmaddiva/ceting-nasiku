@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\DataTableQuery;
+use App\Http\Controllers\Admin\Concerns\StoresUploadedImage;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Ingredient;
@@ -14,6 +15,7 @@ use Illuminate\Support\Str;
 class RecipeController extends Controller
 {
     use DataTableQuery;
+    use StoresUploadedImage;
 
     public function index()
     {
@@ -106,14 +108,7 @@ class RecipeController extends Controller
         $data['is_published'] = $request->boolean('is_published');
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
-            $dir = public_path('images/recipes');
-            if (! is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-            $file->move($dir, $filename);
-            $data['image'] = 'images/recipes/'.$filename;
+            $data['image'] = $this->storeImage($request->file('image'), 'images/recipes');
         }
 
         $recipe = Recipe::create($data);
@@ -156,14 +151,7 @@ class RecipeController extends Controller
         $oldImage = $recipe->image;
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
-            $dir = public_path('images/recipes');
-            if (! is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-            $file->move($dir, $filename);
-            $data['image'] = 'images/recipes/'.$filename;
+            $data['image'] = $this->storeImage($request->file('image'), 'images/recipes');
         }
 
         $recipe->update($data);

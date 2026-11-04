@@ -26,10 +26,10 @@ Route::get('/edukasi/pola-asuh', [EducationController::class, 'polaAsuh'])->name
 Route::get('/edukasi/phbs', [EducationController::class, 'phbs'])->name('edukasi.phbs');
 Route::get('/edukasi/kehamilan', [EducationController::class, 'kehamilan'])->name('edukasi.kehamilan');
 Route::get('/kalkulator', [NutritionCalculatorController::class, 'index'])->name('calculator');
-Route::post('/kalkulator/hitung', [NutritionCalculatorController::class, 'calculate'])->name('calculator.calculate');
+Route::post('/kalkulator/hitung', [NutritionCalculatorController::class, 'calculate'])->name('calculator.calculate')->middleware('throttle:60,1');
 
 // Chatbot (public – no auth required)
-Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send');
+Route::post('/chatbot/send', [ChatbotController::class, 'send'])->name('chatbot.send')->middleware('throttle:20,1');
 
 // Sitemap XML
 Route::get('/sitemap.xml', function () {
@@ -79,9 +79,9 @@ Route::get('/sitemap.xml', function () {
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');

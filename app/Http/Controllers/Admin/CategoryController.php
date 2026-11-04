@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Admin\Concerns\DataTableQuery;
+use App\Http\Controllers\Admin\Concerns\StoresUploadedImage;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -11,6 +12,7 @@ use Illuminate\Support\Str;
 class CategoryController extends Controller
 {
     use DataTableQuery;
+    use StoresUploadedImage;
 
     public function index()
     {
@@ -68,14 +70,7 @@ class CategoryController extends Controller
         $data['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
-            $dir = public_path('images/categories');
-            if (! is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-            $file->move($dir, $filename);
-            $data['image'] = 'images/categories/'.$filename;
+            $data['image'] = $this->storeImage($request->file('image'), 'images/categories');
         }
 
         Category::create($data);
@@ -100,14 +95,7 @@ class CategoryController extends Controller
         $data['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            $file = $request->file('image');
-            $filename = Str::random(40).'.'.$file->getClientOriginalExtension();
-            $dir = public_path('images/categories');
-            if (! is_dir($dir)) {
-                mkdir($dir, 0755, true);
-            }
-            $file->move($dir, $filename);
-            $data['image'] = 'images/categories/'.$filename;
+            $data['image'] = $this->storeImage($request->file('image'), 'images/categories');
         }
 
         $category->update($data);

@@ -26,7 +26,9 @@ class ChatbotTest extends TestCase
         ]);
 
         // Pastikan limiter bersih di setiap test agar tidak saling memengaruhi.
+        // Route punya throttle:20,1 berbasis IP (RegisterTest-style IP unik dipakai).
         RateLimiter::clear('chatbot:127.0.0.1');
+        $this->withServerVariables(['REMOTE_ADDR' => '10.'.random_int(0, 255).'.'.random_int(0, 255).'.'.random_int(1, 254)]);
     }
 
     private function fakeSuccess(string $reply = 'Ini jawaban gizi yang sehat.'): void

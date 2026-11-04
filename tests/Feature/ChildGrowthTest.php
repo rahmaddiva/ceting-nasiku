@@ -17,6 +17,9 @@ class ChildGrowthTest extends TestCase
         parent::setUp();
 
         $this->seed(WhoGrowthStandardSeeder::class);
+
+        // Register dibatasi throttle:10,1 per IP; pakai IP unik per test.
+        $this->withServerVariables(['REMOTE_ADDR' => '10.'.random_int(0, 255).'.'.random_int(0, 255).'.'.random_int(1, 254)]);
     }
 
     public function test_user_can_register(): void

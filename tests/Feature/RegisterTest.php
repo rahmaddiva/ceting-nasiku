@@ -9,6 +9,16 @@ class RegisterTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Register dibatasi throttle:10,1 per IP. Rate limiter Laravel menghitung
+        // berdasarkan user id ATAU IP; di test user belum login, jadi setiap test
+        // memakai IP unik agar hitungannya tidak menumpuk antar test.
+        $this->withServerVariables(['REMOTE_ADDR' => '10.'.random_int(0, 255).'.'.random_int(0, 255).'.'.random_int(1, 254)]);
+    }
+
     public function test_register_page_exposes_labelled_password_fields(): void
     {
         $response = $this->get('/register');

@@ -64,6 +64,8 @@ routes/web.php             # semua route publik + admin
 | `DB_*` | Koneksi database standar Laravel |
 Jangan pernah commit nilai `.env`. Gunakan `.env.example` sebagai referensi.
 
+Password akun seed (`admin@cetingnasiku.com`, `user@cetingnasiku.com`) tidak lagi hardcoded: set `ADMIN_PASSWORD` / `DEMO_PASSWORD` di `.env`, atau biarkan kosong agar `DatabaseSeeder` membuat password acak dan menampilkannya sekali di output seeder.
+
 ## Setup Lokal
 
 ```bash
