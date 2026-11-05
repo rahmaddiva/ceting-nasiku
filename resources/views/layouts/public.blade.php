@@ -128,6 +128,7 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; {{ date('Y') }} CETING NASIKU. Semua hak dilindungi.</p>
+                <p class="footer-version">Versi {{ config('app.version') }}</p>
             </div>
         </div>
     </footer>

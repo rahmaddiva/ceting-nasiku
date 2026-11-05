@@ -4073,3 +4073,10 @@ a.ceting-page-btn:hover {
         width: 100%;
     }
 }
+
+/* Versi aplikasi di footer */
+.footer-version {
+    margin-top: 2px;
+    font-size: .78rem;
+    color: var(--gray-500, #64748b);
+}
