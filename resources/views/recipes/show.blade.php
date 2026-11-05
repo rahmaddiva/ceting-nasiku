@@ -70,7 +70,7 @@
                     <div class="ingredient-substitute" data-slot="ing-slot-{{ $ingredient->id }}" data-group="{{ $ingredient->substitution_group }}">
                         <span class="sub-label">Ganti:</span>
                         @foreach($groupOptions as $option)
-                        <button type="button" class="sub-pill{{ $option['id'] === $ingredient->id ? ' active' : '' }}" data-ing="{{ $option['id'] }}" data-name="{{ $option['name'] }}">{{ $option['name'] }}</button>
+                        <button type="button" class="sub-pill{{ $option->id === $ingredient->id ? ' active' : '' }}" data-ing="{{ $option->id }}" data-name="{{ $option->name }}">{{ $option->name }}</button>
                         @endforeach
                     </div>
                     @endif
